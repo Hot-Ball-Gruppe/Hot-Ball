@@ -2,14 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/Inga/Documents/felix/HotBall/src/hotball/universe/player/TeamColor.java</file>
-            <file>file:/C:/Users/Inga/Documents/felix/HotBall/src/hotball/universe/player/Team.java</file>
-            <file>file:/C:/Users/Inga/Documents/felix/HotBall/src/hotball/universe/player/Player.java</file>
-            <file>file:/C:/Users/Inga/Documents/felix/HotBall/src/hotball/universe/zone/TackleZone.java</file>
-            <file>file:/C:/Users/Inga/Documents/felix/HotBall/src/hotball/universe/ball/Controlled.java</file>
-            <file>file:/C:/Users/Inga/Documents/felix/HotBall/src/hotball/universe/ball/InAir.java</file>
-            <file>file:/C:/Users/Inga/Documents/felix/HotBall/src/test/TestFrame.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
