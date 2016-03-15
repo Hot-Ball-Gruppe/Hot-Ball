@@ -1,0 +1,47 @@
+Pseudocode-Ball Carrier KI
+k=1;
+
+if (Chance to Score >x%)
+	%Anmerkung: Richtungsvektor ist Korbposi-Spielerposi
+	k=1;
+	for i=1:5 
+		if (Radiusfunktion(gegnerischer Spielerposi(i), Richtungsvektor)- Tackelzoneradius)>0
+			do nothing
+		else
+			k=0;
+	end
+	if k=1
+		Wirf zu Punkt (Korb)
+	else
+		Bandenfunktion(Ballposi)
+		k=1;
+		for i=1:5
+			if (Banden-Radiusfunktion1(gegnerischer Spielerposi(i), Richtungsvektor)- Tackelzoneradius)>0 
+				 if (Banden-Radiusfunktion2(gegnerischer Spielerposi(i), Richtungsvektor)- Tackelzoneradius)>0
+					do nothing
+			else
+				k=0;
+		end
+		if k=1
+			Wirf zu BandenPunkt
+		else
+			Teilbaum A
+		
+else (das hier ist TeilBaum A)
+	for i=1:4
+		Ballposi(1)=Ballposi + (pixelanzahl, 0)
+		Ballposi(2)=Ballposi + (0, pixelanzahl)
+		Ballposi(3)=Ballposi + (-pixelanzahl, 0)
+		Ballposi(4)=Ballposi + (0, -pixelanzahl)
+		k=1;
+		for j=1:5 
+			if (Radiusfunktion(gegnerischer Spielerposi(j), Richtungsvektor, Ballposi(i))- Tackelzoneradius)>0
+				do nothing
+			else
+				k=0;
+		end
+		if k=1
+			Gehe zu Ballposi(i)
+		else
+			do nothing
+	end
