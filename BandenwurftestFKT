@@ -1,0 +1,40 @@
+%Diese Funktion testet
+%ob sich ein Spieler 
+%ein Spieler zwischen dem
+%Ballcarrier und dem Korb
+%befindet (mit Tackelzone)
+
+BandenwurftestFKT = (oben, unten)
+k=1;
+for i=1:max(gegner Player)	
+	if (BandenRadiusfunktion1(gegnerischer Spielerposi(i), Ballposi, Richtungsvektor(vom Ball zur Bande)-Tackelzoneradius)>0 
+		if (BandenRadiusfunktion2(gegnerischer Spielerposi(i), Richtungsvektor(von der Bande zum Korb)-Tackelzoneradius)>0
+			do nothing
+		else
+			k=0;
+	else
+		k=0;
+end
+if k=1
+	oben=True;
+	unten=False;
+else
+	k=1;
+	for i=1:max(gegner Player)	
+		if (BandenRadiusfunktion3(gegnerischer Spielerposi(i), Ballposi, Richtungsvektor(vom Ball zur Bande)-Tackelzoneradius)>0 
+			if (BandenRadiusfunktion3(gegnerischer Spielerposi(i), Richtungsvektor(von der Bande zum Korb)-Tackelzoneradius)>0
+				do nothing
+			else
+				k=0;
+		else
+			k=0;
+	end
+	if k=1
+		oben=False;
+		unten=True;
+	else
+		oben=False;
+		unten=False;
+
+	
+	

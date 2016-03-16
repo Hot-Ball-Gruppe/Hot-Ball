@@ -1,190 +1,94 @@
-Pseudocode-Ball Carrier KI
-k=1;
-g=0;
-Liste4=[0,0,0,0]
-Liste4a=[0,0,0,0]
-Liste5=[0,0,0,0,0]
-sum=0;
-if (Chance to Score >x%)
-	%Anmerkung: Richtungsvektor ist Korbposi-Spielerposi
-	k=1;
-	for i=1:5 
-		if (Radiusfunktion(gegnerischer Spielerposi(i), Richtungsvektor)- Tackelzoneradius)>0
-			do nothing
-		else
-			k=0;
-	end
-	if k=1
-		Wirf zu Punkt (Korb)
+%Main KI
+
+if (Chance to Score >CONSTANT_x%)
+	if(WurftestFKT=1)
+		Wirf zu Punkt(Korb)
 	else
-		Bandenfunktion(Ballposi)
-		k=1;
-		for i=1:5
-			if (Banden-Radiusfunktion1(gegnerischer Spielerposi(i), Richtungsvektor)- Tackelzoneradius)>0 
-				 if (Banden-Radiusfunktion2(gegnerischer Spielerposi(i), Richtungsvektor)- Tackelzoneradius)>0
-					do nothing
-				else
-					k=0;
-			else
-				k=0;
-		end
-		if k=1
-			Wirf zu BandenPunkt
+		if BandenwurftestFKT=(True, False)
+			Wirf zu Punkt(obere Bande(Bandenfunktion)
+		else if BandenwurftestFKT=(False ,True)
+			Wirf zu Punkt(untere Bande(Bandenfunktion))
 		else
-			Teilbaum A
-		
-else 
-	$TeilBaum A:
-		Ballposi(1)=Ballposi + (pixelanzahl, 0)
-		Ballposi(2)=Ballposi + (0, pixelanzahl)
-		Ballposi(3)=Ballposi + (-pixelanzahl, 0)
-		Ballposi(4)=Ballposi + (0, -pixelanzahl)
-		for i=1:4
-			k=1;
-			for j=1:5 
-				if (Radiusfunktion(gegnerischer Spielerposi(j), Richtungsvektor, Ballposi(i))- Tackelzoneradius)>0
-					do nothing
-				else
-					k=0;
-			end
-			if k=1
-				Laufe zu Ballposi(i)
-				g=1;
-				break;
-			else
-				do nothing
-		end
-		if g=1
+			TeilBaumA
+else
+$TeilBaumA:
+	Ballposi(1)=Ballposi + (CONSTANT_TestSchritt, 0)
+	Ballposi(2)=Ballposi + (0, CONSTANT_TestSchritt)
+	Ballposi(3)=Ballposi + (-CONSTANT_TestSchritt, 0)
+	Ballposi(4)=Ballposi + (0, -CONSTANT_TestSchritt)
+	for i=1:4
+		if WurftestFKT(Ballposi(i))=1
+			Laufe zu Ballposi(i)
+			break(beende die komplette KI);
+		else
 			do nothing
+	end
+	ListemitWahrscheinlichkeiten; %für jeden Spieler die wahrscheinlichkeit einen Korb zu werfen
+	ListemitWahrscheinlichkeiten2=[];
+	sum=0;
+	for i=1:max(player deines Teams)-1
+		if ListemitWahrscheinlichkeiten(i)>CONSTANT_x%
+			ListemitWahrscheinlichkeiten2(i)=True;
+			sum=sum+1;
 		else
-			%Anmerkung: Richtungsvektor ist Korbposi-Spielerposi(j)
-			k=1;
-			for j=1:4
-				for i=1:5 
-					if (Radiusfunktion(gegnerischer Spielerposi(i), Richtungsvektor, Spielerposi(j))- Tackelzoneradius)>0
-						do nothing
-					else
-						k=0;
-				end
-				if k=0
-					k=1;
-					for i=1:5
-					if (Banden-Radiusfunktion1(gegnerischer Spielerposi(i), Richtungsvektor)- Tackelzoneradius)>0 
-						if (Banden-Radiusfunktion2(gegnerischer Spielerposi(i), Richtungsvektor)- Tackelzoneradius)>0
-							do nothing
-					else
-						k=0;
-						else
-							k=0;
-					end
-					if k=1
-						Liste4(j)=1;
-					else
-						do nothing
+			ListemitWahrscheinlichkeiten2(i)=False;
+	end
+	if sum>0
+		for i=1:max(player deines Teams)-1
+				if WurftestFKT(Player(i))=True && ListemitWahrscheinlichkeiten2(i)=True
+					Wirf Ball zu Spieler(i)
+					break;
+				elseif BandenwurftestFKT(Player(i)=True && ListemitWahrscheinlichkeiten2(i)=True
+					Wirf den Ball zu Spieler(i) mit Bandenfunktion
 				else
-					Liste4(j)=1;
-			sum=sum+Liste4(j);		
-			end
-			if (sum>0)
-			sum=0;
-			%Anmerkung: Richtungsvektor ist Ballposi-Spielerposi(j)
-				k=1;
-				for j=1:4
-					for i=1:5 
-						if (Radiusfunktion(gegnerischer Spielerposi(i), Richtungsvektor, Spielerposi(j))- Tackelzoneradius)>0
-							do nothing
-						else
-							k=0;
-					end
-					if k=0
-						k=1;
-						for i=1:5
-						if (Banden-Radiusfunktion1(gegnerischer Spielerposi(i), Richtungsvektor)- Tackelzoneradius)>0 
-							if (Banden-Radiusfunktion2(gegnerischer Spielerposi(i), Richtungsvektor)- Tackelzoneradius)>0
-								do nothing
-						else
-							k=0;
-							else
-								k=0;
-						end
-						if k=1
-							Liste4a(j)=1;
-						else
-							do nothing
-					else
-						Liste4a(j)=1;
-				if Liste4(j)+Liste4a(j)=2
-					Liste4(j)=2
-					sum=sum+1;
-				else
+					TeilBaum B
+		end
+	else
+		if Funktion(Bist du in Tackelzone des Gegner)=True
+			for i=1:max(player deines Teams)-1
+				if WurftestFKT(Player(i))=True
+					Wirf Ball zu Spieler(i)
+					break(beende die komplette KI)
+				else 
 					do nothing
-				end
-				if (sum>0)
-					for i=1:4
-						if Liste4(i)=2
-							Liste4a(i)=Ballposi-Spielerposi(i)
-						else
-							Liste4a(i)=9000;
-					end
-					nahesterSpieler=Minimun(Liste4a), davon der Index;
-					Wirf zu Spielerposition(nahesterSpieler)
-				else
-					Teilbaum B
-			if (du stehst in gegnerischer Tackelzone)
-				Richtungsvekor=DeinePosition-Spielerposi(in dessen Tackelzone du stehst);
-				Laufe zu DeinePosition+Richtungsvektor;
+			end
+			EigenerSpielerposi-TackelzoneSpielerposi=LaufRichtung
+			Bewege dich mit Richtungsvektor LaufRichtung
+			break(beende die Funktion)
+		else
+		$TeilBaumB:
+			for i=1:max(player deines Teams)-1
+				if WurftestFKT(Player(i))=True && X-Koordinate(Ballcarrier) > Koordinate(Spieler(i))
+					Wirf Ball zu Spieler(i)
+					break(beende die komplette KI)
+				elseif BandenwurftestFKT(Player(i)=True && X-Koordinate(Ballcarrier) > Koordinate(Spieler(i))
+					Wirf den Ball zu Spieler(i) mit Bandenfunktion
+					break(beende die komplette KI)
+			end
+			if Funktion(Ist gegnerischer Spieler in einem Raduis von CONSTANT_z)=False
+				Laufe nach Vorne
 			else
-				$TeilBaum B:
-					if (du bist DefensivSpieler)
-						%Anmerkung: Richtungsvektor ist Ballposi-Spielerposi(j)
-						k=1;
-						for j=1:4
-							for i=1:5 
-								if (Radiusfunktion(gegnerischer Spielerposi(i), Richtungsvektor, Spielerposi(j))- Tackelzoneradius)>0
-								do nothing
-							else
-								k=0;
-							end
-							if k=0
-								k=1;
-								for i=1:5
-									if (Banden-Radiusfunktion1(gegnerischer Spielerposi(i), Richtungsvektor)- Tackelzoneradius)>0 
-										if (Banden-Radiusfunktion2(gegnerischer Spielerposi(i), Richtungsvektor)- Tackelzoneradius)>0	
-										do nothing
-										else
-											k=0;
-									else
-										k=0;
-								end
-								if k=1
-									Liste4a(j)=1;
-								else
-									do nothing
-							else
-								Liste4a(j)=1;
-							if Liste4(j)+Liste4a(j)=2
-								Liste4(j)=2
-								sum=sum+1;
-							else
-								do nothing
-							end
-				if (sum>0)
-					for i=1:4
-						if Liste4(i)=2
-							Liste4a(i)=Ballposi-Spielerposi(i)
-						else
-							Liste4a(i)=9000;
+				for j=1:4
+					for i=1:max(player deines Teams)-1
+						if WurftestFKT(Player(i),Ballposi(j))=True
+							Gehe zu Ballposi(i)
+							break(beende die komplette KI)
+						elseif BandenwurftestFKT(Player(i), Ballposi(j))=True
+							Gehe zu Ballposi(i)
+							break(beende die komplette KI)
 					end
-					nahesterSpieler=Minimun(Liste4a), davon der Index;
-					Wirf zu Spielerposition(nahesterSpieler)
-				else
-					else
-				
-
-
-					
-				
+				end
+			if Funktion(Bist du in Tackelzone des Gegner)=True
+				EigenerSpielerposi-TackelzoneSpielerposi=LaufRichtung
+				Bewege dich mit Richtungsvektor LaufRichtung
+			else
+				Bleib stehen
 			
 
-				
+
+	
 		
+	
+		
+		
+	

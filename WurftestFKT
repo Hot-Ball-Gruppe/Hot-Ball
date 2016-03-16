@@ -1,0 +1,16 @@
+%Diese Funktion testet
+%ob sich ein Spieler sich
+%ein Spieler zwischen dem
+%Ballcarrier und dem Korb
+%befindet (mit Tackelzone)
+
+WurftestFKT = (moeglich)
+moeglich=True;
+for i=1:max(gegner Player)
+	%Anmerkung: bei keiner Angabe ist der Richtungsvektor=Korbposi-Spielerposi
+	if (Radiusfunktion(gegnerischer Spielerposi(i), Richtungsvektor, Ballposi)- Tackelzoneradius)>0
+		do nothing
+	else
+		moeglich=False;
+end
+	
