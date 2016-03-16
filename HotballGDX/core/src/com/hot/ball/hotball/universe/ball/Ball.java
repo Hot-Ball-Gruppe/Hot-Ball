@@ -5,6 +5,7 @@
  */
 package com.hot.ball.hotball.universe.ball;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.hot.ball.help.math.Position;
 import com.hot.ball.help.math.Vector;
 import com.hot.ball.hotball.universe.GameObject;
@@ -96,6 +97,11 @@ public class Ball extends GameObject {
     @Override
     public Stack<Zone> getInterferingZones() {
         return super.getInterferingZones(); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void draw(SpriteBatch batch, float time) {
+      //  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

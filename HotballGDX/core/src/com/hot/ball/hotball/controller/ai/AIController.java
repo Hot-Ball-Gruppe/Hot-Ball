@@ -28,8 +28,8 @@ public class AIController implements Controller {
                 && !player.equals(((InAir) Ball.get().getState()).getThrower())) {
             return new Vector(/*Math.min(500, player.getPosition().getDistance(Ball.get().getPosition()))*/1, player.getPosition().angleBetween(Ball.get().getPosition()), null);
         } else {
-            return Vector.NULL_VECTOR;
-        //    return new Vector(0.5, player.getCurrentVelocity().getTheta()+0.2, null);
+        //    return Vector.NULL_VECTOR;
+            return new Vector(0.5, player.getCurrentVelocity().getTheta()+0.1, null);
         }
     }
 

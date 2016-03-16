@@ -5,19 +5,19 @@
  */
 package com.hot.ball.test;
 
-import help.math.Position;
-import help.ui.old.DoubleBufferedPanel;
-import hotball.controller.ai.AIController;
-import hotball.controller.HumanController;
-import hotball.logic.LogicCore;
-import hotball.ui.KeyBinding;
-import hotball.ui.UserInput;
-import hotball.universe.GameObject;
-import hotball.universe.player.Player;
-import hotball.universe.ball.Ball;
-import hotball.universe.collision.CollisionModell;
-import hotball.universe.player.Team;
-import hotball.universe.player.TeamColor;
+import com.hot.ball.help.math.Position;
+import com.hot.ball.help.ui.old.DoubleBufferedPanel;
+import com.hot.ball.hotball.controller.HumanController;
+import com.hot.ball.hotball.controller.ai.AIController;
+import com.hot.ball.hotball.logic.LogicCore;
+import com.hot.ball.hotball.ui.KeyBinding;
+import com.hot.ball.hotball.ui.UserInput;
+import com.hot.ball.hotball.universe.GameObject;
+import com.hot.ball.hotball.universe.ball.Ball;
+import com.hot.ball.hotball.universe.collision.CollisionModell;
+import com.hot.ball.hotball.universe.player.Player;
+import com.hot.ball.hotball.universe.player.Team;
+import com.hot.ball.hotball.universe.player.TeamColor;
 import javax.swing.JFrame;
 
 /**

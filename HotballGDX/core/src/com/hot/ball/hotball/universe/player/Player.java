@@ -6,10 +6,11 @@
 package com.hot.ball.hotball.universe.player;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.hot.ball.help.math.Position;
 import com.hot.ball.hotball.controller.Controller;
 import com.hot.ball.hotball.controller.HumanController;
@@ -19,12 +20,6 @@ import com.hot.ball.hotball.universe.ball.Controlled;
 import com.hot.ball.hotball.universe.zone.TackleZone;
 import com.hot.ball.hotball.universe.zone.Zone;
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 /**
  *
@@ -67,12 +62,17 @@ public class Player extends GameObject {
         return controller instanceof HumanController;
     }
 
-    private static final BufferedImage[][] TEXTURES;
-
+   // private static final BufferedImage[][] TEXTURES;
+    private static final Animation ANIMATION;
+    
     static {
-        TEXTURES = new BufferedImage[3][2];
-        FileHandle internal = Gdx.files.internal("   ");
-        Sprite s = new Sprite
+        Texture spritesheet = new Texture(Gdx.files.internal("res/spritesheet.png"));
+        TextureRegion[][] split=TextureRegion.split(spritesheet, 64, 64);
+        ANIMATION = new Animation(1f/4,new TextureRegion[]{split[0][2],split[0][1],split[0][2],split[0][0]});
+        
+      /*  TEXTURES = new BufferedImage[3][2];
+//        FileHandle internal = Gdx.files.internal("   ");
+     //   Sprite s = new Sprite
         try {
             TEXTURES[0][0] = ImageIO.read(new File("res/player_B_N.png"));
             TEXTURES[0][1] = ImageIO.read(new File("res/player_B_W.png"));
@@ -82,7 +82,7 @@ public class Player extends GameObject {
             TEXTURES[2][1] = ImageIO.read(new File("res/player_Y_W.png"));
         } catch (IOException ioe) {
             ioe.printStackTrace();
-        }
+        }*/
     }
 
     public double getFacing() {
@@ -93,20 +93,20 @@ public class Player extends GameObject {
     public void draw(Graphics2D g) {
         tackleZone.draw(g);
         int spriteColor = isHuman() ? 2 : ((team.getColor() == TeamColor.Blue) ? 0 : 1);
-        BufferedImage texture = TEXTURES[spriteColor][Ball.get().isControlledBy(this) ? 1 : 0];
-        AffineTransform tx = AffineTransform.getRotateInstance(facing + Math.PI / 2, texture.getWidth() / 2, texture.getHeight() / 2);
-        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-        g.drawImage(op.filter(texture, null), (int) (getPosition().getX() - getSize()), (int) (getPosition().getY() - getSize()), null);
+      //  BufferedImage texture = TEXTURES[spriteColor][Ball.get().isControlledBy(this) ? 1 : 0];
+    //    AffineTransform tx = AffineTransform.getRotateInstance(facing + Math.PI / 2, texture.getWidth() / 2, texture.getHeight() / 2);
+    //    AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+      //  g.drawImage(op.filter(texture, null), (int) (getPosition().getX() - getSize()), (int) (getPosition().getY() - getSize()), null);
     }
 
     @Override
-    public void draw(SpriteBatch batch) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void draw(SpriteBatch batch,float time) {
+        batch.draw(ANIMATION.getKeyFrame(time, true),getPosition().getRoundX(), getPosition().getRoundY(), 33, 29, 64, 64, 1, 1, (float) Math.toDegrees(facing-Math.PI/2));
     }
 
     private final static double TAKEDOWNTIME = 2.5;
     private double currentTakeDownTime = 0;
-
+ 
     @Override
     public void action(double timeDiff) {
         int enemyTZ = 0;

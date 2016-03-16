@@ -84,7 +84,7 @@ public class GameLoop implements Runnable {
     public void run() {
         while (active) {
             // System.out.println("act");
-            while (!UserInput.get().isPressed(KeyEvent.VK_SPACE)) {
+            while (Math.random()<10){//!UserInput.get().isPressed(KeyEvent.VK_SPACE)) {
                 // System.out.println("run");
                 long now = System.currentTimeMillis();
                 double timeDiff = (now - lastTime) / 1000d;

@@ -64,7 +64,7 @@ public abstract class GameObject {
 
     public abstract void draw(Graphics2D g);
     
-    public abstract void draw(SpriteBatch batch);
+    public abstract void draw(SpriteBatch batch, float time);
     
     public Position.DoublePosition getPosition() {
         return position;

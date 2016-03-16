@@ -1,18 +1,19 @@
 package com.hot.ball;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import help.math.Position;
-import hotball.controller.HumanController;
-import hotball.controller.ai.AIController;
-import hotball.logic.LogicCore;
-import hotball.universe.GameObject;
-import hotball.universe.ball.Ball;
-import hotball.universe.collision.CollisionModell;
-import hotball.universe.player.Player;
-import hotball.universe.player.Team;
-import hotball.universe.player.TeamColor;
+import com.hot.ball.help.math.Position;
+import com.hot.ball.hotball.controller.HumanController;
+import com.hot.ball.hotball.controller.ai.AIController;
+import com.hot.ball.hotball.logic.LogicCore;
+import com.hot.ball.hotball.universe.GameObject;
+import com.hot.ball.hotball.universe.ball.Ball;
+import com.hot.ball.hotball.universe.collision.CollisionModell;
+import com.hot.ball.hotball.universe.player.Player;
+import com.hot.ball.hotball.universe.player.Team;
+import com.hot.ball.hotball.universe.player.TeamColor;
 
 public class HotballGame extends ApplicationAdapter {
 
@@ -24,21 +25,25 @@ public class HotballGame extends ApplicationAdapter {
         HumanController.create();
         Team redTeam = new Team(TeamColor.Red);
         Team blueTeam = new Team(TeamColor.Blue);
-        Player ai2 = new Player(null, redTeam, new AIController(), new Position.DoublePosition(460, 500));
+        Player ai2 = new Player(null, redTeam, new AIController(), new Position.DoublePosition(70, 70));
       //  Player player = new Player(null, blueTeam, HumanController.get(), new Position.DoublePosition(400, 400));
-        Player ai = new Player(null, blueTeam, new AIController(), new Position.DoublePosition(300, 500));
+     //   Player ai = new Player(null, blueTeam, new AIController(), new Position.DoublePosition(300, 500));
         Ball.create(ai2);
         LogicCore.create();
         LogicCore.get().start();
         
         batch = new SpriteBatch();
     }
-
+    
+    private float time;
     @Override
     public void render() {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+	Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        time+=Gdx.graphics.getDeltaTime();
         batch.begin();
         for(GameObject toDraw:GameObject.ALL_GAMEOBJECTS){
-            toDraw.draw(batch);
+            toDraw.draw(batch,time);
         }
         batch.end();
     }
