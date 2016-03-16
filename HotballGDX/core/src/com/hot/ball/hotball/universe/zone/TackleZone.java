@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotball.universe.zone;
+package com.hot.ball.hotball.universe.zone;
 
-import hotball.universe.GameObject;
-import hotball.universe.player.Player;
+import com.hot.ball.hotball.universe.GameObject;
+import com.hot.ball.hotball.universe.player.Player;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;

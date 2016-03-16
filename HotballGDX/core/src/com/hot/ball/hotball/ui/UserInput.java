@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotball.ui;
+package com.hot.ball.hotball.ui;
 
-import help.math.Position;
-import help.math.Vector;
-import hotball.universe.ball.Ball;
-import hotball.universe.ball.Controlled;
-import hotball.universe.player.Player;
+import com.hot.ball.help.math.Position;
+import com.hot.ball.help.math.Vector;
+import com.hot.ball.hotball.universe.ball.Ball;
+import com.hot.ball.hotball.universe.ball.Controlled;
+import com.hot.ball.hotball.universe.player.Player;
 import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

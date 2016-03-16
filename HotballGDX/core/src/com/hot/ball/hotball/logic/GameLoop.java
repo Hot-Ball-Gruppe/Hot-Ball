@@ -3,19 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotball.logic;
+package com.hot.ball.hotball.logic;
 
-import com.sun.glass.events.KeyEvent;
-import hotball.controller.ai.AIController;
-import hotball.controller.HumanController;
-import hotball.ui.UserInput;
-import hotball.universe.GameObject;
-import hotball.universe.ball.Ball;
-import hotball.universe.ball.Controlled;
-import hotball.universe.ball.InAir;
-import hotball.universe.player.Player;
-import hotball.universe.player.TeamColor;
-import hotball.universe.zone.Zone;
+import com.hot.ball.hotball.ui.UserInput;
+import com.hot.ball.hotball.universe.GameObject;
+import com.hot.ball.hotball.universe.zone.Zone;
+import java.awt.event.KeyEvent;
+
 
 /**
  *

@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotball.universe.zone;
+package com.hot.ball.hotball.universe.zone;
 
-import hotball.universe.GameObject;
+import com.hot.ball.hotball.universe.GameObject;
 import java.util.Collection;
 import java.util.Stack;
 

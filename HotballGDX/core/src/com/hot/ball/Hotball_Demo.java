@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.Input.Keys;
 
-import java.io.File;
 /*
 public class Hotball implements ApplicationListener {
 	private OrthographicCamera camera;

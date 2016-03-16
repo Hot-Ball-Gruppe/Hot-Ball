@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotball.ui;
+package com.hot.ball.hotball.ui;
 
 import java.awt.event.KeyEvent;
 

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package help.math;
+package com.hot.ball.help.math;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;

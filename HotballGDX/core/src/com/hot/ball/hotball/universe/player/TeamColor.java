@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotball.universe.player;
+package com.hot.ball.hotball.universe.player;
 
 import java.awt.Color;
 

@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotball.universe.ball;
+package com.hot.ball.hotball.universe.ball;
 
-import hotball.controller.ai.AIController;
-import hotball.controller.HumanController;
-import hotball.universe.player.Player;
-import hotball.universe.player.TeamColor;
+import com.hot.ball.hotball.controller.HumanController;
+import com.hot.ball.hotball.controller.ai.AIController;
+import com.hot.ball.hotball.universe.player.Player;
+import com.hot.ball.hotball.universe.player.TeamColor;
 
 /**
  *

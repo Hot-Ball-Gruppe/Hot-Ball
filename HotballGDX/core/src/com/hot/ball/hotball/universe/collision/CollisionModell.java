@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotball.universe.collision;
+package com.hot.ball.hotball.universe.collision;
 
-import help.math.Position;
-import help.math.Vector;
-import hotball.universe.GameObject;
-import hotball.universe.player.Player;
+import com.hot.ball.help.math.Position;
+import com.hot.ball.help.math.Vector;
+import com.hot.ball.hotball.universe.GameObject;
+import com.hot.ball.hotball.universe.player.Player;
 
 /**
  *

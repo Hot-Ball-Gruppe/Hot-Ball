@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package help.math;
+package com.hot.ball.help.math;
 
 import java.io.Serializable;
 

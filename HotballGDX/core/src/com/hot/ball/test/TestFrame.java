@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package test;
+package com.hot.ball.test;
 
 import help.math.Position;
 import help.ui.old.DoubleBufferedPanel;

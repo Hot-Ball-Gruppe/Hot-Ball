@@ -3,16 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotball.universe.player;
+package com.hot.ball.hotball.universe.player;
 
-import hotball.universe.zone.TackleZone;
-import help.math.Position;
-import hotball.controller.Controller;
-import hotball.controller.HumanController;
-import hotball.universe.GameObject;
-import hotball.universe.ball.Ball;
-import hotball.universe.ball.Controlled;
-import hotball.universe.zone.Zone;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.hot.ball.help.math.Position;
+import com.hot.ball.hotball.controller.Controller;
+import com.hot.ball.hotball.controller.HumanController;
+import com.hot.ball.hotball.universe.GameObject;
+import com.hot.ball.hotball.universe.ball.Ball;
+import com.hot.ball.hotball.universe.ball.Controlled;
+import com.hot.ball.hotball.universe.zone.TackleZone;
+import com.hot.ball.hotball.universe.zone.Zone;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -66,6 +71,8 @@ public class Player extends GameObject {
 
     static {
         TEXTURES = new BufferedImage[3][2];
+        FileHandle internal = Gdx.files.internal("   ");
+        Sprite s = new Sprite
         try {
             TEXTURES[0][0] = ImageIO.read(new File("res/player_B_N.png"));
             TEXTURES[0][1] = ImageIO.read(new File("res/player_B_W.png"));
@@ -90,13 +97,11 @@ public class Player extends GameObject {
         AffineTransform tx = AffineTransform.getRotateInstance(facing + Math.PI / 2, texture.getWidth() / 2, texture.getHeight() / 2);
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
         g.drawImage(op.filter(texture, null), (int) (getPosition().getX() - getSize()), (int) (getPosition().getY() - getSize()), null);
+    }
 
-        // g.setColor(team.getTransColor());
-        //  g.fillRect((int) (getPosition().getX() - getSize()), (int) (getPosition().getY() - getSize()), (int) (2 * getSize()), (int) (2 * getSize()));
-        //  g.fillOval((int) (getPosition().getX() - getSize()), (int) (getPosition().getY() - getSize()), (int) (2 * getSize()), (int) (2 * getSize()));
-        // g.setColor(Color.WHITE);
-        //   g.drawLine(getPosition().getRoundX(), getPosition().getRoundY(),
-        //    (int) (getPosition().getX() + getSize() * Math.cos(controller.getFacing(this))), (int) (getPosition().getY() + getSize() * Math.sin(controller.getFacing(this))));
+    @Override
+    public void draw(SpriteBatch batch) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private final static double TAKEDOWNTIME = 2.5;
@@ -105,9 +110,9 @@ public class Player extends GameObject {
     @Override
     public void action(double timeDiff) {
         int enemyTZ = 0;
-        Player closestEnemy=null;
-        double closestEnemyDistance=Double.POSITIVE_INFINITY;
-        
+        Player closestEnemy = null;
+        double closestEnemyDistance = Double.POSITIVE_INFINITY;
+
         int friendlyTZ = 0;
         for (Zone z : getInterferingZones()) {
             if ((z instanceof TackleZone)) {
@@ -118,7 +123,7 @@ public class Player extends GameObject {
                     } else {
                         enemyTZ++;
                         double enemyDistance = tackler.getPosition().getDistance(getPosition());
-                        if(enemyDistance<closestEnemyDistance){
+                        if (enemyDistance < closestEnemyDistance) {
                             closestEnemy = tackler;
                             closestEnemyDistance = enemyDistance;
                         }
@@ -131,17 +136,17 @@ public class Player extends GameObject {
         maxSpeed = TOTALMAXSPEED / (1 + Math.max(0, enemyTZ - friendlyTZ));
         if (enemyTZ > 0) {
             if (Ball.get().isControlledBy(this)) {
-                currentTakeDownTime = Math.min(TAKEDOWNTIME, currentTakeDownTime+timeDiff);
+                currentTakeDownTime = Math.min(TAKEDOWNTIME, currentTakeDownTime + timeDiff);
                 //System.out.println("TakoOver: "+currentTakeDownTime);
-                if(currentTakeDownTime >= TAKEDOWNTIME){
+                if (currentTakeDownTime >= TAKEDOWNTIME) {
                     Ball.get().setState(new Controlled(closestEnemy));
-                    currentTakeDownTime=0;
+                    currentTakeDownTime = 0;
                 }
             }
         } else {
             currentTakeDownTime = Math.max(0, currentTakeDownTime - timeDiff);
         }
-        
+
         clearInterfeeringZones();
         accelerate(timeDiff, controller.getMoveVector(this));
         facing = controller.getFacing(this);

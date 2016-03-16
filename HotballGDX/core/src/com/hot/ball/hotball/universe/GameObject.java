@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotball.universe;
+package com.hot.ball.hotball.universe;
 
-import help.math.Position;
-import help.math.Vector;
-import hotball.universe.collision.CollisionModell;
-import hotball.universe.zone.Zone;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.hot.ball.help.math.Position;
+import com.hot.ball.help.math.Vector;
+import com.hot.ball.hotball.universe.collision.CollisionModell;
+import com.hot.ball.hotball.universe.zone.Zone;
 import java.awt.Graphics2D;
 import java.util.Collection;
 import java.util.Stack;
@@ -62,7 +63,9 @@ public abstract class GameObject {
     public abstract void action(double timeDiff);
 
     public abstract void draw(Graphics2D g);
-
+    
+    public abstract void draw(SpriteBatch batch);
+    
     public Position.DoublePosition getPosition() {
         return position;
     }

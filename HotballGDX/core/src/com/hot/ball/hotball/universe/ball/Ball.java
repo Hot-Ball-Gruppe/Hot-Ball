@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotball.universe.ball;
+package com.hot.ball.hotball.universe.ball;
 
-import help.math.Position;
-import help.math.Vector;
-import hotball.universe.GameObject;
-import hotball.universe.player.Player;
-import hotball.universe.zone.Zone;
+import com.hot.ball.help.math.Position;
+import com.hot.ball.help.math.Vector;
+import com.hot.ball.hotball.universe.GameObject;
+import com.hot.ball.hotball.universe.player.Player;
+import com.hot.ball.hotball.universe.zone.Zone;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
