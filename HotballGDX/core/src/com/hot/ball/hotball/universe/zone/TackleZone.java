@@ -5,6 +5,10 @@
  */
 package com.hot.ball.hotball.universe.zone;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.hot.ball.help.math.Position;
 import com.hot.ball.hotball.universe.GameObject;
 import com.hot.ball.hotball.universe.player.Player;
 import java.awt.Graphics2D;
@@ -45,6 +49,14 @@ public class TackleZone implements Zone {
         //   g.fillOval((int) (player.getPosition().getX()-maxX*currentFactor), (int) (player.getPosition().getY()-maxY*currentFactor), (int) (2*maxX*currentFactor), (int) (2*maxY*currentFactor));
     }
 
+    
+    private static final Texture tackleZ = new Texture(Gdx.files.internal("res/tackleTest.png"));
+    public void draw(SpriteBatch batch) {
+        Position.DoublePosition position = player.getPosition();
+        batch.draw(tackleZ, (float)(position.getX()-maxX*currentFactor), (float)(position.getY()-maxY*currentFactor), (float)(maxX*currentFactor), (float)(maxY*currentFactor));
+    }
+    
+    
     @Override
     public boolean contains(GameObject go) {
         double cos = Math.cos(player.getFacing());
@@ -62,5 +74,6 @@ public class TackleZone implements Zone {
     public double getCurrentFactor() {
         return currentFactor;
     }
+
 
 }

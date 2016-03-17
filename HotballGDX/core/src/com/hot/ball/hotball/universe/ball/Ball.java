@@ -5,6 +5,8 @@
  */
 package com.hot.ball.hotball.universe.ball;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.hot.ball.help.math.Position;
 import com.hot.ball.help.math.Vector;
@@ -43,11 +45,13 @@ public class Ball extends GameObject {
     private Ball(Position.DoublePosition startingPos, BallState state) {
         super(startingPos, 16);
         this.state = state;
-        try {
-            texture = ImageIO.read(new File("res/ball.png"));
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
+
+        texture = new Texture(Gdx.files.internal("res/basketball 2.png"));
+        /* try {
+         textureImg = ImageIO.read(new File("res/ball.png"));
+         } catch (IOException ioe) {
+         ioe.printStackTrace();
+         }*/
     }
 
     @Override
@@ -64,19 +68,28 @@ public class Ball extends GameObject {
         return state;
     }
 
-    public boolean isControlledBy(Player p){
-        return (getState() instanceof Controlled) && p.equals(((Controlled)getState()).getBallCarrier());
+    public boolean isControlledBy(Player p) {
+        return (getState() instanceof Controlled) && p.equals(((Controlled) getState()).getBallCarrier());
     }
-    
-    private BufferedImage texture;
+
+    private BufferedImage textureImg;
 
     @Override
     public void draw(Graphics2D g) {
         if (getState() instanceof InAir) {
-            g.drawImage(texture, (int) (getPosition().getRoundX() - getSize()), (int) (getPosition().getRoundY() - getSize()), null);
+            g.drawImage(textureImg, (int) (getPosition().getRoundX() - getSize()), (int) (getPosition().getRoundY() - getSize()), null);
         }
         //  g.setColor(Color.ORANGE);
         // g.fillOval((int) (getPosition().getRoundX() - getSize()), (int) (getPosition().getRoundY() - getSize()), (int) (2 * getSize()), (int) (2 * getSize()));
+    }
+
+    private final Texture texture;
+
+    @Override
+    public void draw(SpriteBatch batch) {
+        if (getState() instanceof InAir) {
+            batch.draw(texture, getPosition().getRoundX() - texture.getWidth() / 2, getPosition().getRoundY() - texture.getHeight() / 2);
+        }
     }
 
     public void throwBall(Position.DoublePosition mousePosition) {
@@ -97,11 +110,6 @@ public class Ball extends GameObject {
     @Override
     public Stack<Zone> getInterferingZones() {
         return super.getInterferingZones(); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void draw(SpriteBatch batch, float time) {
-      //  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

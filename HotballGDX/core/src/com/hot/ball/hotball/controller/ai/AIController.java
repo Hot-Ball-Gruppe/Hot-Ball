@@ -25,7 +25,7 @@ public class AIController implements Controller {
     @Override
     public Vector getMoveVector(Player player) {
         if ((Ball.get().getState() instanceof InAir)
-                && !player.equals(((InAir) Ball.get().getState()).getThrower())) {
+                        && !player.equals(((InAir) Ball.get().getState()).getThrower())) {
             return new Vector(/*Math.min(500, player.getPosition().getDistance(Ball.get().getPosition()))*/1, player.getPosition().angleBetween(Ball.get().getPosition()), null);
         } else {
         //    return Vector.NULL_VECTOR;

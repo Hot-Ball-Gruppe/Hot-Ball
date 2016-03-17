@@ -6,9 +6,9 @@
 package com.hot.ball.hotball.universe.player;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.hot.ball.help.math.Position;
@@ -17,6 +17,7 @@ import com.hot.ball.hotball.controller.HumanController;
 import com.hot.ball.hotball.universe.GameObject;
 import com.hot.ball.hotball.universe.ball.Ball;
 import com.hot.ball.hotball.universe.ball.Controlled;
+import com.hot.ball.hotball.universe.ball.InAir;
 import com.hot.ball.hotball.universe.zone.TackleZone;
 import com.hot.ball.hotball.universe.zone.Zone;
 import java.awt.Graphics2D;
@@ -62,27 +63,28 @@ public class Player extends GameObject {
         return controller instanceof HumanController;
     }
 
-   // private static final BufferedImage[][] TEXTURES;
+    // private static final BufferedImage[][] TEXTURES;
     private static final Animation ANIMATION;
-    
+
     static {
-        Texture spritesheet = new Texture(Gdx.files.internal("res/spritesheet.png"));
-        TextureRegion[][] split=TextureRegion.split(spritesheet, 64, 64);
-        ANIMATION = new Animation(1f/4,new TextureRegion[]{split[0][2],split[0][1],split[0][2],split[0][0]});
-        
-      /*  TEXTURES = new BufferedImage[3][2];
-//        FileHandle internal = Gdx.files.internal("   ");
-     //   Sprite s = new Sprite
-        try {
-            TEXTURES[0][0] = ImageIO.read(new File("res/player_B_N.png"));
-            TEXTURES[0][1] = ImageIO.read(new File("res/player_B_W.png"));
-            TEXTURES[1][0] = ImageIO.read(new File("res/player_R_N.png"));
-            TEXTURES[1][1] = ImageIO.read(new File("res/player_R_W.png"));
-            TEXTURES[2][0] = ImageIO.read(new File("res/player_Y_N.png"));
-            TEXTURES[2][1] = ImageIO.read(new File("res/player_Y_W.png"));
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }*/
+        Texture spritesheet = new Texture(Gdx.files.internal("res/spritesheet 2.png"));
+        TextureRegion[][] split = TextureRegion.split(spritesheet, 64, 64);
+        int row = 0;
+        ANIMATION = new Animation(1f / 10, new TextureRegion[]{split[0][row], split[1][row], split[2][row], split[3][row], split[4][row], split[5][row], split[6][row], split[7][row]});
+
+        /*  TEXTURES = new BufferedImage[3][2];
+         //        FileHandle internal = Gdx.files.internal("   ");
+         //   Sprite s = new Sprite
+         try {
+         TEXTURES[0][0] = ImageIO.read(new File("res/player_B_N.png"));
+         TEXTURES[0][1] = ImageIO.read(new File("res/player_B_W.png"));
+         TEXTURES[1][0] = ImageIO.read(new File("res/player_R_N.png"));
+         TEXTURES[1][1] = ImageIO.read(new File("res/player_R_W.png"));
+         TEXTURES[2][0] = ImageIO.read(new File("res/player_Y_N.png"));
+         TEXTURES[2][1] = ImageIO.read(new File("res/player_Y_W.png"));
+         } catch (IOException ioe) {
+         ioe.printStackTrace();
+         }*/
     }
 
     public double getFacing() {
@@ -93,22 +95,28 @@ public class Player extends GameObject {
     public void draw(Graphics2D g) {
         tackleZone.draw(g);
         int spriteColor = isHuman() ? 2 : ((team.getColor() == TeamColor.Blue) ? 0 : 1);
-      //  BufferedImage texture = TEXTURES[spriteColor][Ball.get().isControlledBy(this) ? 1 : 0];
-    //    AffineTransform tx = AffineTransform.getRotateInstance(facing + Math.PI / 2, texture.getWidth() / 2, texture.getHeight() / 2);
-    //    AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-      //  g.drawImage(op.filter(texture, null), (int) (getPosition().getX() - getSize()), (int) (getPosition().getY() - getSize()), null);
+        //  BufferedImage texture = TEXTURES[spriteColor][Ball.get().isControlledBy(this) ? 1 : 0];
+        //    AffineTransform tx = AffineTransform.getRotateInstance(facing + Math.PI / 2, texture.getWidth() / 2, texture.getHeight() / 2);
+        //    AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+        //  g.drawImage(op.filter(texture, null), (int) (getPosition().getX() - getSize()), (int) (getPosition().getY() - getSize()), null);
     }
 
     @Override
-    public void draw(SpriteBatch batch,float time) {
-        batch.draw(ANIMATION.getKeyFrame(time, true),getPosition().getRoundX(), getPosition().getRoundY(), 33, 29, 64, 64, 1, 1, (float) Math.toDegrees(facing-Math.PI/2));
+    public void draw(SpriteBatch batch) {
+        //   tackleZone.draw(batch);
+        TextureRegion keyFrame = ANIMATION.getKeyFrame(totalTime, true);
+        batch.draw(keyFrame, getPosition().getRoundX() - keyFrame.getRegionWidth() / 2, getPosition().getRoundY() - keyFrame.getRegionHeight() / 2, 33, 29, keyFrame.getRegionWidth(), keyFrame.getRegionHeight(), 1, 1, (float) Math.toDegrees(facing - Math.PI / 2));
     }
 
     private final static double TAKEDOWNTIME = 2.5;
     private double currentTakeDownTime = 0;
- 
+
+    private float totalTime = (float) (Math.random() * 10);
+
     @Override
     public void action(double timeDiff) {
+        totalTime += timeDiff;
+
         int enemyTZ = 0;
         Player closestEnemy = null;
         double closestEnemyDistance = Double.POSITIVE_INFINITY;
@@ -151,6 +159,12 @@ public class Player extends GameObject {
         accelerate(timeDiff, controller.getMoveVector(this));
         facing = controller.getFacing(this);
         tackleZone.action(timeDiff);
+
+        if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
+            if (Ball.get().isControlledBy(this)) {
+                Ball.get().throwBall(new Position.DoublePosition(500 * Math.random(), 500 * Math.random()));
+            }
+        }
     }
 
     @Override

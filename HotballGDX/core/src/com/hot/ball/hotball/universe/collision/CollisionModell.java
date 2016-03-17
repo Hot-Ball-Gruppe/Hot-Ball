@@ -36,8 +36,8 @@ public class CollisionModell {
 
     }
 
-    private final static int xBound = 700;
-    private final static int yBound = 700;
+    private final static int xBound = 1200;
+    private final static int yBound = 600;
 
     public void checkCollision(GameObject go, double timeDiff) {
         Position.DoublePosition pos = go.getPosition();
