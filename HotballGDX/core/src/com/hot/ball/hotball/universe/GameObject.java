@@ -8,6 +8,7 @@ package com.hot.ball.hotball.universe;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.hot.ball.help.math.Position;
 import com.hot.ball.help.math.Vector;
+import com.hot.ball.hotball.ui.Graphics;
 import com.hot.ball.hotball.universe.collision.CollisionModell;
 import com.hot.ball.hotball.universe.zone.Zone;
 import java.awt.Graphics2D;
@@ -63,8 +64,8 @@ public abstract class GameObject {
     public abstract void action(double timeDiff);
 
     public abstract void draw(Graphics2D g);
-    
-    public abstract void draw(SpriteBatch batch);
+
+    public abstract void draw(Graphics g);
     
     public Position.DoublePosition getPosition() {
         return position;

@@ -8,17 +8,16 @@ package com.hot.ball.hotball.universe.ball;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.hot.ball.help.math.Position;
 import com.hot.ball.help.math.Vector;
+import com.hot.ball.hotball.ui.Graphics;
 import com.hot.ball.hotball.universe.GameObject;
 import com.hot.ball.hotball.universe.player.Player;
 import com.hot.ball.hotball.universe.zone.Zone;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Stack;
-import javax.imageio.ImageIO;
 
 /**
  *
@@ -46,7 +45,7 @@ public class Ball extends GameObject {
         super(startingPos, 16);
         this.state = state;
 
-        texture = new Texture(Gdx.files.internal("res/basketball 2.png"));
+        texture = new TextureRegion(new Texture(Gdx.files.internal("res/basketball 2.png")));
         /* try {
          textureImg = ImageIO.read(new File("res/ball.png"));
          } catch (IOException ioe) {
@@ -83,12 +82,12 @@ public class Ball extends GameObject {
         // g.fillOval((int) (getPosition().getRoundX() - getSize()), (int) (getPosition().getRoundY() - getSize()), (int) (2 * getSize()), (int) (2 * getSize()));
     }
 
-    private final Texture texture;
+    private final TextureRegion texture;
 
     @Override
-    public void draw(SpriteBatch batch) {
+    public void draw(Graphics g) {
         if (getState() instanceof InAir) {
-            batch.draw(texture, getPosition().getRoundX() - texture.getWidth() / 2, getPosition().getRoundY() - texture.getHeight() / 2);
+            g.drawImage(texture, getPosition().getRoundX(), getPosition().getRoundY(), getCurrentVelocity().getTheta());
         }
     }
 

@@ -5,10 +5,10 @@
  */
 package com.hot.ball.hotball.logic;
 
+import com.badlogic.gdx.Input.Keys;
 import com.hot.ball.hotball.ui.UserInput;
 import com.hot.ball.hotball.universe.GameObject;
 import com.hot.ball.hotball.universe.zone.Zone;
-import java.awt.event.KeyEvent;
 
 
 /**
@@ -84,7 +84,7 @@ public class GameLoop implements Runnable {
     public void run() {
         while (active) {
             // System.out.println("act");
-            while (Math.random()<10){//!UserInput.get().isPressed(KeyEvent.VK_SPACE)) {
+            while (!UserInput.get().isPressed(Keys.SPACE)) {
                 // System.out.println("run");
                 long now = System.currentTimeMillis();
                 double timeDiff = (now - lastTime) / 1000d;

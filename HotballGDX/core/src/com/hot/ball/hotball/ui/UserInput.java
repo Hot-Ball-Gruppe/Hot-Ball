@@ -7,6 +7,7 @@ package com.hot.ball.hotball.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.hot.ball.help.math.Position;
 import com.hot.ball.help.math.Vector;
@@ -98,7 +99,7 @@ public class UserInput implements MouseListener, KeyListener, MouseMotionListene
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (!isPressed(KeyEvent.VK_SPACE)) {
+        if (!isPressed(Input.Keys.SPACE)) {
             if (Ball.get().getState() instanceof Controlled) {
                 Ball.get().throwBall(mousePosition);
             }
@@ -144,12 +145,18 @@ public class UserInput implements MouseListener, KeyListener, MouseMotionListene
      @Override
     public boolean keyDown(int keycode) {
          pressedKeys[keycode]=true;
+         if(keycode == Keys.SPACE){
+             AudioManager.get().pause();
+         }
          return true;
     }
 
     @Override
     public boolean keyUp(int keycode) {
         pressedKeys[keycode]=false;
+         if(keycode == Keys.SPACE){
+             AudioManager.get().resume();
+         }
         return true;
     }
 

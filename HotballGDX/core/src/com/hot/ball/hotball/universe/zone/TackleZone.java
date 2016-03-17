@@ -7,10 +7,11 @@ package com.hot.ball.hotball.universe.zone;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.hot.ball.help.math.Position;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.hot.ball.hotball.ui.Graphics;
 import com.hot.ball.hotball.universe.GameObject;
 import com.hot.ball.hotball.universe.player.Player;
+import com.hot.ball.hotball.universe.player.TeamColor;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
@@ -21,10 +22,20 @@ import java.awt.geom.Ellipse2D;
  */
 public class TackleZone implements Zone {
 
+    private final static TextureRegion[] texture = new TextureRegion[3];
+    private final static double DRAW_SCALE;
+
     private final static double maxX = 100;
     private final static double maxY = 100;
-    private final static double minFactor = 0.25;
+    private final static double minFactor = 0.5;
     private final static double changePerSecond = 1;
+
+    static {
+        for (int i=0; i < 3; i++) {
+            texture[i] = new TextureRegion(new Texture(Gdx.files.internal("res/Tackle"+i+".png")));
+        }
+        DRAW_SCALE = 2 * maxX / texture[0].getRegionWidth();
+    }
 
     private final Player player;
     private double currentFactor = 10;
@@ -49,14 +60,11 @@ public class TackleZone implements Zone {
         //   g.fillOval((int) (player.getPosition().getX()-maxX*currentFactor), (int) (player.getPosition().getY()-maxY*currentFactor), (int) (2*maxX*currentFactor), (int) (2*maxY*currentFactor));
     }
 
-    
-    private static final Texture tackleZ = new Texture(Gdx.files.internal("res/tackleTest.png"));
-    public void draw(SpriteBatch batch) {
-        Position.DoublePosition position = player.getPosition();
-        batch.draw(tackleZ, (float)(position.getX()-maxX*currentFactor), (float)(position.getY()-maxY*currentFactor), (float)(maxX*currentFactor), (float)(maxY*currentFactor));
+    public void draw(Graphics g) {
+        int spriteColor = player.isHuman() ? 0 : ((player.getTeam().getColor() == TeamColor.Blue) ? 1 : 2);
+        g.drawImage(texture[spriteColor], player.getPosition().getRoundX(), player.getPosition().getRoundY(), DRAW_SCALE * currentFactor, null);
     }
-    
-    
+
     @Override
     public boolean contains(GameObject go) {
         double cos = Math.cos(player.getFacing());
@@ -64,7 +72,7 @@ public class TackleZone implements Zone {
         double dx = go.getPosition().getX() - player.getPosition().getX();
         double dy = go.getPosition().getY() - player.getPosition().getY();
         return Math.pow((cos * dx + sin * dy) / (maxX * currentFactor + go.getSize()), 2)
-                + Math.pow((sin * dx - cos * dy)/ (maxY * currentFactor + go.getSize()), 2)  <= 1;
+                + Math.pow((sin * dx - cos * dy) / (maxY * currentFactor + go.getSize()), 2) <= 1;
     }
 
     public Player getPlayer() {
@@ -74,6 +82,5 @@ public class TackleZone implements Zone {
     public double getCurrentFactor() {
         return currentFactor;
     }
-
 
 }

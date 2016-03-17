@@ -26,8 +26,11 @@ public class InAir implements BallState {
         Ball.get().setCurrentVelocity(direction);
     }
 
+    private double airTime = 0;
+
     @Override
     public void action(double timeDiff) {
+        airTime += timeDiff;
         int redTZ = 0;
         int blueTZ = 0;
         Stack<Player> possibleCatchers = new Stack<>();
@@ -66,6 +69,10 @@ public class InAir implements BallState {
         } else {
             Ball.get().accelerate(timeDiff, Vector.NULL_VECTOR);
         }
+    }
+
+    public double getAirTime() {
+        return airTime;
     }
 
     public Player getThrower() {
