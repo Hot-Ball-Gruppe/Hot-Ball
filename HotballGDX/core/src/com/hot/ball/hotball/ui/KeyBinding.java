@@ -5,6 +5,7 @@
  */
 package com.hot.ball.hotball.ui;
 
+import com.badlogic.gdx.Input.Keys;
 import java.awt.event.KeyEvent;
 
 /**
@@ -12,9 +13,14 @@ import java.awt.event.KeyEvent;
  * @author Dromlius
  */
 public class KeyBinding {
-    public static final KeyBinding WASD = new KeyBinding(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D);
+ 
+   public static final KeyBinding WASD = new KeyBinding(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D);
     public static final KeyBinding ARROWS = new KeyBinding(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
+  
     
+     public static final KeyBinding GDX_WASD = new KeyBinding(Keys.W, Keys.S, Keys.A, Keys.D);
+    public static final KeyBinding GDX_ARROWS = new KeyBinding(Keys.UP, Keys.DOWN, Keys.LEFT, Keys.RIGHT);
+  
     private final int up,down,left,right;
 
     public KeyBinding(int up, int down, int left, int right) {

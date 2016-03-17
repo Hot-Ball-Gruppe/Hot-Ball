@@ -5,6 +5,9 @@
  */
 package com.hot.ball.hotball.ui;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.hot.ball.help.math.Position;
 import com.hot.ball.help.math.Vector;
 import com.hot.ball.hotball.universe.ball.Ball;
@@ -21,10 +24,12 @@ import java.awt.event.MouseMotionListener;
  *
  * @author Dromlius
  */
-public class UserInput implements MouseListener, KeyListener, MouseMotionListener {
+public class UserInput implements MouseListener, KeyListener, MouseMotionListener,InputProcessor {
 
     private static UserInput singleton;
     private final ControlMode controlMode;
+
+   
 
     public static enum ControlMode {
 
@@ -39,6 +44,14 @@ public class UserInput implements MouseListener, KeyListener, MouseMotionListene
         c.addMouseListener(singleton);
         c.addMouseMotionListener(singleton);
         c.addKeyListener(singleton);
+    }
+    
+    public static void create(Input input , KeyBinding keyBinding, ControlMode controlMode) {
+        if (singleton != null) {
+            throw new RuntimeException("UserInput already created!");
+        }
+        singleton = new UserInput(keyBinding, controlMode);
+        input.setInputProcessor(singleton);
     }
 
     public static UserInput get() {
@@ -65,12 +78,12 @@ public class UserInput implements MouseListener, KeyListener, MouseMotionListene
 
     public Vector getMovementVector() {
          Vector movement = new Vector((pressedKeys[keyBinding.getLeft()] ? (-1) : 0) + (pressedKeys[keyBinding.getRight()] ? (1) : 0),
-                        (pressedKeys[keyBinding.getUp()] ? (-1) : 0) + (pressedKeys[keyBinding.getDown()] ? (1) : 0));
+                        (pressedKeys[keyBinding.getUp()] ? (1) : 0) + (pressedKeys[keyBinding.getDown()] ? (-1) : 0));
          movement.setLength(1);
          
          
         if(controlMode == ControlMode.MouseRelational){
-            movement.rotate(Player.humanPlayer.getPosition().angleBetween(mousePosition)+Math.PI/2);
+            movement.rotate(Player.humanPlayer.getPosition().angleBetween(mousePosition)-Math.PI/2);
         }
         return movement;
     }
@@ -125,5 +138,51 @@ public class UserInput implements MouseListener, KeyListener, MouseMotionListene
     @Override
     public void mouseMoved(MouseEvent e) {
         mousePosition.set(e.getPoint());
+    }
+    //------------------
+    
+     @Override
+    public boolean keyDown(int keycode) {
+         pressedKeys[keycode]=true;
+         return true;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        pressedKeys[keycode]=false;
+        return true;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        mousePressed(null);
+        return true;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        mousePosition.setX(screenX);
+        mousePosition.setY(Gdx.graphics.getHeight()-screenY);
+        return true;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }

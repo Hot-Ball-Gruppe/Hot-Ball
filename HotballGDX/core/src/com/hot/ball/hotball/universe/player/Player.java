@@ -17,7 +17,6 @@ import com.hot.ball.hotball.controller.HumanController;
 import com.hot.ball.hotball.universe.GameObject;
 import com.hot.ball.hotball.universe.ball.Ball;
 import com.hot.ball.hotball.universe.ball.Controlled;
-import com.hot.ball.hotball.universe.ball.InAir;
 import com.hot.ball.hotball.universe.zone.TackleZone;
 import com.hot.ball.hotball.universe.zone.Zone;
 import java.awt.Graphics2D;
