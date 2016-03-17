@@ -6,23 +6,40 @@
 
 BandenwurftestFKT = (oben, unten)
 k=1;
-for i=1:max(gegner Player)	
-	if (BandenRadiusfunktion1(gegnerischer Spielerposi(i), Ballposi, Richtungsvektor(vom Ball zur Bande)-Tackelzoneradius)>0 
-		if (BandenRadiusfunktion2(gegnerischer Spielerposi(i), Richtungsvektor(von der Bande zum Korb)-Tackelzoneradius)>0
-			do nothing
+if (BallKoordinate Y)> max(Y)/2
+	for i=1:max(gegner Player)	
+		if (BandenRadiusfunktion1(gegnerischer Spielerposi(i), Ballposi, Richtungsvektor(vom Ball zur Bande)-Tackelzoneradius)>0 
+			if (BandenRadiusfunktion2(gegnerischer Spielerposi(i), Richtungsvektor(von der Bande zum Korb)-Tackelzoneradius)>0
+				do nothing
+			else
+				k=0;
 		else
 			k=0;
+	end
+	if k=1
+		oben=True;
+		unten=False;
 	else
-		k=0;
-end
-if k=1
-	oben=True;
-	unten=False;
+		k=1;
+		for i=1:max(gegner Player)	
+			if (BandenRadiusfunktion3(gegnerischer Spielerposi(i), Ballposi, Richtungsvektor(vom Ball zur Bande)-Tackelzoneradius)>0 
+				if (BandenRadiusfunktion4(gegnerischer Spielerposi(i), Richtungsvektor(von der Bande zum Korb)-Tackelzoneradius)>0
+					do nothing
+				else
+					k=0;
+			else
+				k=0;
+		end
+		if k=1
+			oben=False;
+			unten=True;
+		else
+			oben=False;
+			unten=False;
 else
-	k=1;
 	for i=1:max(gegner Player)	
 		if (BandenRadiusfunktion3(gegnerischer Spielerposi(i), Ballposi, Richtungsvektor(vom Ball zur Bande)-Tackelzoneradius)>0 
-			if (BandenRadiusfunktion3(gegnerischer Spielerposi(i), Richtungsvektor(von der Bande zum Korb)-Tackelzoneradius)>0
+			if (BandenRadiusfunktion4(gegnerischer Spielerposi(i), Richtungsvektor(von der Bande zum Korb)-Tackelzoneradius)>0
 				do nothing
 			else
 				k=0;
@@ -33,8 +50,19 @@ else
 		oben=False;
 		unten=True;
 	else
-		oben=False;
-		unten=False;
-
-	
-	
+		k=1;
+		for i=1:max(gegner Player)	
+			if (BandenRadiusfunktion1(gegnerischer Spielerposi(i), Ballposi, Richtungsvektor(vom Ball zur Bande)-Tackelzoneradius)>0 
+				if (BandenRadiusfunktion2(gegnerischer Spielerposi(i), Richtungsvektor(von der Bande zum Korb)-Tackelzoneradius)>0
+					do nothing
+				else
+					k=0;
+			else
+				k=0;
+		end
+		if k=1
+			oben=True;
+			unten=False;
+		else
+			oben=False;
+			unten=False;
