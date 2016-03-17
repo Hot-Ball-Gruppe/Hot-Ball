@@ -45,6 +45,7 @@ public class Player extends GameObject {
         super(startingPos, 24);
         // this.name = name;
         this.team = team;
+        team.getMembers().add(this);
         // this.facing = facing;
         setController(controller);
         tackleZone = new TackleZone(this);
@@ -125,7 +126,7 @@ public class Player extends GameObject {
         g.drawImage(keyFrame, getPosition().getRoundX(), getPosition().getRoundY(), 32, 32, facing);
     }
 
-    private final static double TAKEDOWNTIME = 2.5;
+    private final static double TAKEDOWNTIME = 1.0;
     private double currentTakeDownTime = 0;
 
     private float totalTime = (float) (Math.random() * 10);
@@ -165,6 +166,7 @@ public class Player extends GameObject {
                 //System.out.println("TakoOver: "+currentTakeDownTime);
                 if (currentTakeDownTime >= TAKEDOWNTIME) {
                     Ball.get().setState(new Controlled(closestEnemy));
+                    tackleZone.reset();
                     currentTakeDownTime = 0;
                 }
             }

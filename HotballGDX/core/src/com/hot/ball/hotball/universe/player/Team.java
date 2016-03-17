@@ -6,7 +6,7 @@
 package com.hot.ball.hotball.universe.player;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -14,8 +14,9 @@ import java.util.Collection;
  */
 public class Team {
     private final TeamColor color;
-
-    private final Collection<Player> members;
+    private Team opponent;
+    
+    private final List<Player> members;
     
     public Team(TeamColor color) {
         this.color = color;
@@ -26,8 +27,16 @@ public class Team {
         return color;
     }
 
-    public Collection<Player> getMembers() {
+    public List<Player> getMembers() {
         return members;
+    }
+
+    public Team getOpponent() {
+        return opponent;
+    }
+
+    public void setOpponent(Team opponent) {
+        this.opponent = opponent;
     }
     
     

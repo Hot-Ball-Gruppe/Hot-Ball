@@ -7,7 +7,6 @@ package com.hot.ball.hotball.universe.ball;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.hot.ball.help.math.Position;
 import com.hot.ball.help.math.Vector;
@@ -98,12 +97,12 @@ public class Ball extends GameObject {
 
     @Override
     protected double getDECAY_FACTOR() {
-        return 0.5;
+        return 0.62;
     }
 
     @Override
     public double getMaxSpeed() {
-        return 500;
+        return 3000;
     }
 
     @Override

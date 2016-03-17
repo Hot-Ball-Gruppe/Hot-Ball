@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.hot.ball.hotball.ui.Graphics;
 import com.hot.ball.hotball.universe.GameObject;
+import com.hot.ball.hotball.universe.ball.Ball;
 import com.hot.ball.hotball.universe.player.Player;
 import com.hot.ball.hotball.universe.player.TeamColor;
 import java.awt.Graphics2D;
@@ -22,23 +23,24 @@ import java.awt.geom.Ellipse2D;
  */
 public class TackleZone implements Zone {
 
-    private final static TextureRegion[] texture = new TextureRegion[3];
+    private final static TextureRegion[] texture = new TextureRegion[4];
     private final static double DRAW_SCALE;
 
-    private final static double maxX = 100;
-    private final static double maxY = 100;
-    private final static double minFactor = 0.5;
-    private final static double changePerSecond = 1;
+    private final static double maxX = 85;
+    private final static double maxY = maxX;
+    private final static double minFactor = 0.75;
+    private final static double ballCarrierFactor = 1;
+    private final static double changePerSecond = 1.5;
 
     static {
-        for (int i=0; i < 3; i++) {
-            texture[i] = new TextureRegion(new Texture(Gdx.files.internal("res/Tackle"+i+".png")));
+        for (int i = 0; i < 4; i++) {
+            texture[i] = new TextureRegion(new Texture(Gdx.files.internal("res/Tackle" + i + ".png")));
         }
         DRAW_SCALE = 2 * maxX / texture[0].getRegionWidth();
     }
 
     private final Player player;
-    private double currentFactor = 10;
+    private double currentFactor = 1;
 
     @SuppressWarnings("LeakingThisInConstructor")
     public TackleZone(Player player) {
@@ -47,8 +49,12 @@ public class TackleZone implements Zone {
     }
 
     public void action(double timeDiff) {
-        currentFactor += (1 - player.getCurrentVelocity().getLength() / player.getMaxSpeed() - currentFactor) * changePerSecond * timeDiff;
-        currentFactor = Math.min(1, Math.max(minFactor, currentFactor));
+        if (currentFactor >= minFactor) {
+            currentFactor += (1 - player.getCurrentVelocity().getLength() / player.getMaxSpeed() - currentFactor) * changePerSecond * timeDiff;
+            currentFactor = Math.min(1, Math.max(minFactor, currentFactor));
+        } else {
+            currentFactor += timeDiff * changePerSecond / 4;
+        }
     }
 
     public void draw(Graphics2D g) {
@@ -61,8 +67,8 @@ public class TackleZone implements Zone {
     }
 
     public void draw(Graphics g) {
-        int spriteColor = player.isHuman() ? 0 : ((player.getTeam().getColor() == TeamColor.Blue) ? 1 : 2);
-        g.drawImage(texture[spriteColor], player.getPosition().getRoundX(), player.getPosition().getRoundY(), DRAW_SCALE * currentFactor, null);
+        int spriteColor = player.isHuman() ? 0 : ((player.getTeam().getColor() == TeamColor.Blue) ? 1 : ((Ball.get().isControlledBy(player) ? 3 : 2)));
+        g.drawImage(texture[spriteColor], player.getPosition().getRoundX(), player.getPosition().getRoundY(), DRAW_SCALE * currentFactor * getBallCarrierFactor(), null);
     }
 
     @Override
@@ -71,8 +77,8 @@ public class TackleZone implements Zone {
         double sin = Math.sin(player.getFacing());
         double dx = go.getPosition().getX() - player.getPosition().getX();
         double dy = go.getPosition().getY() - player.getPosition().getY();
-        return Math.pow((cos * dx + sin * dy) / (maxX * currentFactor + go.getSize()), 2)
-                + Math.pow((sin * dx - cos * dy) / (maxY * currentFactor + go.getSize()), 2) <= 1;
+        return Math.pow((cos * dx + sin * dy) / (maxX * currentFactor * getBallCarrierFactor() + go.getSize()), 2)
+                + Math.pow((sin * dx - cos * dy) / (maxY * currentFactor * getBallCarrierFactor() + go.getSize()), 2) <= 1;
     }
 
     public Player getPlayer() {
@@ -82,5 +88,15 @@ public class TackleZone implements Zone {
     public double getCurrentFactor() {
         return currentFactor;
     }
+
+    public void reset() {
+        currentFactor = 0;
+    }
+
+    public double getBallCarrierFactor() {
+        return Ball.get().isControlledBy(player)?ballCarrierFactor:1;
+    }
+    
+    
 
 }

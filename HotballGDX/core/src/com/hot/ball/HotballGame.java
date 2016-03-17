@@ -20,21 +20,26 @@ import com.hot.ball.hotball.universe.player.Team;
 import com.hot.ball.hotball.universe.player.TeamColor;
 
 public class HotballGame extends ApplicationAdapter {
-    
+
     private Graphics g;
-    private  Texture field ;
+    private Texture field;
+
     @Override
     public void create() {
         CollisionModell.generate();
         UserInput.create(Gdx.input, KeyBinding.GDX_WASD, UserInput.ControlMode.ScreenRelational);
         HumanController.create();
         Team redTeam = new Team(TeamColor.Red);
-        Team blueTeam = new Team(TeamColor.Blue); 
-        Player ai1 = new Player(null, redTeam, new AIController(), new Position.DoublePosition(170, 170));
-      
-        Player ai2 = new Player(null, blueTeam, new AIController(), new Position.DoublePosition(70, 70));
-        Player player = new Player(null, blueTeam, HumanController.get(), new Position.DoublePosition(400, 400));
-     //   Player ai = new Player(null, blueTeam, new AIController(), new Position.DoublePosition(300, 500));
+        Team blueTeam = new Team(TeamColor.Blue);
+        redTeam.setOpponent(blueTeam);
+        blueTeam.setOpponent(redTeam);
+        for (int i = 0; i < 2; i++) {
+            new Player(null, redTeam, new AIController(), new Position.DoublePosition(1200-70, i*100+100));
+            new Player(null, blueTeam, new AIController(), new Position.DoublePosition(70, i*100+100));
+        }
+        new Player(null, redTeam, new AIController(), new Position.DoublePosition(1200-70, 300));
+        Player player = new Player(null, blueTeam, HumanController.get(), new Position.DoublePosition(70, 300));
+        //   Player ai = new Player(null, blueTeam, new AIController(), new Position.DoublePosition(300, 500));
         Ball.create(player);
         LogicCore.create();
         LogicCore.get().start();
@@ -43,18 +48,18 @@ public class HotballGame extends ApplicationAdapter {
         field = new Texture(Gdx.files.internal("res/Holzfeld.png"));
         g = new Graphics();
     }
-    
+
     @Override
     public void render() {
         Gdx.gl.glClearColor(0, 0, 0, 1);
-	Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         g.ready();
         g.drawBackgroungImage(field);
-         for(GameObject toDraw:GameObject.ALL_GAMEOBJECTS){
+        for (GameObject toDraw : GameObject.ALL_GAMEOBJECTS) {
             toDraw.draw(g);
         }
         g.draw();
     }
-    
+
 }

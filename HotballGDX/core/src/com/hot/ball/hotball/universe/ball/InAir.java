@@ -33,12 +33,14 @@ public class InAir implements BallState {
         airTime += timeDiff;
         int redTZ = 0;
         int blueTZ = 0;
+        boolean inSafeZone = false;
         Stack<Player> possibleCatchers = new Stack<>();
         for (Zone z : Ball.get().getInterferingZones()) {
             if ((z instanceof TackleZone)) {
                 TackleZone tz = (TackleZone) z;
                 Player tackler = tz.getPlayer();
                 if (tackler.equals(thrower)) {
+                    inSafeZone = true;
                     continue;
                 }
                 if (tackler.getTeam().getColor() == TeamColor.Blue) {
@@ -56,6 +58,9 @@ public class InAir implements BallState {
             Player closestCatcher = null;
             double bestCatchDist = Double.POSITIVE_INFINITY;
             for (Player catcher : possibleCatchers) {
+                if (inSafeZone && catcher.getTeam().getColor() != thrower.getTeam().getColor()) {
+                    continue;
+                }
                 if ((catcher.getTeam().getColor() == TeamColor.Red && redTZ >= blueTZ) || (catcher.getTeam().getColor() == TeamColor.Blue && redTZ <= blueTZ)) {
                     double catchDistance = catcher.getPosition().getDistance(Ball.get().getPosition());
                     if (catchDistance < bestCatchDist) {
@@ -64,11 +69,13 @@ public class InAir implements BallState {
                     }
                 }
             }
-            Ball.get().setState(new Controlled(closestCatcher));
-            Ball.get().action(timeDiff);
-        } else {
-            Ball.get().accelerate(timeDiff, Vector.NULL_VECTOR);
+            if (closestCatcher != null) {
+                Ball.get().setState(new Controlled(closestCatcher));
+                Ball.get().action(timeDiff);
+                return;
+            }
         }
+        Ball.get().accelerate(timeDiff, Vector.NULL_VECTOR);
     }
 
     public double getAirTime() {

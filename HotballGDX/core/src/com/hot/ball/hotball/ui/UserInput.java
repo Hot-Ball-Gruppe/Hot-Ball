@@ -14,6 +14,7 @@ import com.hot.ball.help.math.Vector;
 import com.hot.ball.hotball.universe.ball.Ball;
 import com.hot.ball.hotball.universe.ball.Controlled;
 import com.hot.ball.hotball.universe.player.Player;
+import com.hot.ball.hotball.universe.player.Team;
 import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -25,12 +26,10 @@ import java.awt.event.MouseMotionListener;
  *
  * @author Dromlius
  */
-public class UserInput implements MouseListener, KeyListener, MouseMotionListener,InputProcessor {
+public class UserInput implements MouseListener, KeyListener, MouseMotionListener, InputProcessor {
 
     private static UserInput singleton;
     private final ControlMode controlMode;
-
-   
 
     public static enum ControlMode {
 
@@ -46,8 +45,8 @@ public class UserInput implements MouseListener, KeyListener, MouseMotionListene
         c.addMouseMotionListener(singleton);
         c.addKeyListener(singleton);
     }
-    
-    public static void create(Input input , KeyBinding keyBinding, ControlMode controlMode) {
+
+    public static void create(Input input, KeyBinding keyBinding, ControlMode controlMode) {
         if (singleton != null) {
             throw new RuntimeException("UserInput already created!");
         }
@@ -78,13 +77,12 @@ public class UserInput implements MouseListener, KeyListener, MouseMotionListene
     }
 
     public Vector getMovementVector() {
-         Vector movement = new Vector((pressedKeys[keyBinding.getLeft()] ? (-1) : 0) + (pressedKeys[keyBinding.getRight()] ? (1) : 0),
-                        (pressedKeys[keyBinding.getUp()] ? (1) : 0) + (pressedKeys[keyBinding.getDown()] ? (-1) : 0));
-         movement.setLength(1);
-         
-         
-        if(controlMode == ControlMode.MouseRelational){
-            movement.rotate(Player.humanPlayer.getPosition().angleBetween(mousePosition)-Math.PI/2);
+        Vector movement = new Vector((pressedKeys[keyBinding.getLeft()] ? (-1) : 0) + (pressedKeys[keyBinding.getRight()] ? (1) : 0),
+                (pressedKeys[keyBinding.getUp()] ? (1) : 0) + (pressedKeys[keyBinding.getDown()] ? (-1) : 0));
+        movement.setLength(1);
+
+        if (controlMode == ControlMode.MouseRelational) {
+            movement.rotate(Player.humanPlayer.getPosition().angleBetween(mousePosition) - Math.PI / 2);
         }
         return movement;
     }
@@ -101,7 +99,9 @@ public class UserInput implements MouseListener, KeyListener, MouseMotionListene
     public void mousePressed(MouseEvent e) {
         if (!isPressed(Input.Keys.SPACE)) {
             if (Ball.get().getState() instanceof Controlled) {
-                Ball.get().throwBall(mousePosition);
+                if (((Controlled) Ball.get().getState()).getBallCarrier().isHuman()) {
+                    Ball.get().throwBall(mousePosition);
+                }
             }
         }
     }
@@ -141,22 +141,33 @@ public class UserInput implements MouseListener, KeyListener, MouseMotionListene
         mousePosition.set(e.getPoint());
     }
     //------------------
-    
-     @Override
+
+    @Override
     public boolean keyDown(int keycode) {
-         pressedKeys[keycode]=true;
-         if(keycode == Keys.SPACE){
-             AudioManager.get().pause();
-         }
-         return true;
+        pressedKeys[keycode] = true;
+        if (keycode == Keys.SPACE) {
+            AudioManager.get().pause();
+        }
+        if(keycode == Keys.ESCAPE){
+            Team blue = Player.humanPlayer.getTeam();
+            Team red = blue.getOpponent();
+            for(int i=0;i<blue.getMembers().size();i++){
+                blue.getMembers().get(i).getPosition().setX(70);
+                red.getMembers().get(i).getPosition().setX(1200-70);
+                blue.getMembers().get(i).getPosition().setY(i*100+100);
+                red.getMembers().get(i).getPosition().setY(i*100+100);
+                Ball.get().setState(new Controlled(Player.humanPlayer));
+            }
+        }
+        return true;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        pressedKeys[keycode]=false;
-         if(keycode == Keys.SPACE){
-             AudioManager.get().resume();
-         }
+        pressedKeys[keycode] = false;
+        if (keycode == Keys.SPACE) {
+            AudioManager.get().resume();
+        }
         return true;
     }
 
@@ -184,7 +195,7 @@ public class UserInput implements MouseListener, KeyListener, MouseMotionListene
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         mousePosition.setX(screenX);
-        mousePosition.setY(Gdx.graphics.getHeight()-screenY);
+        mousePosition.setY(Gdx.graphics.getHeight() - screenY);
         return true;
     }
 

@@ -36,40 +36,44 @@ public class CollisionModell {
 
     }
 
-    private final static int xBound = 1200;
-    private final static int yBound = 600;
+    public  final static int xBound = 1200;
+    public  final static int yBound = 600;
 
     public void checkCollision(GameObject go, double timeDiff) {
         Position.DoublePosition pos = go.getPosition();
-        double x =pos.getX();
+        double x = pos.getX();
         double y = pos.getY();
         double size = go.getSize();
-        double dx = go.getCurrentVelocity().getdX()*timeDiff;
-        double dy = go.getCurrentVelocity().getdY()*timeDiff;
-        double newX=x+dx;
-        double newY=y+dy;
-        
-        if(newX-size<0&&dx<0 || newX+size>xBound && dx>0){
-            go.getCurrentVelocity().flipdX();
+        double dx = go.getCurrentVelocity().getdX() * timeDiff;
+        double dy = go.getCurrentVelocity().getdY() * timeDiff;
+        double newX = x + dx;
+        double newY = y + dy;
+
+        if (newX - size < 0 && dx < 0) {
+            //go.getPosition().setX(xBound - newX);
+           go.getCurrentVelocity().flipdX();
         }
-        
-         if(newY-size<0&&dy<0 || newY+size>yBound && dy>0){
+        if (newX + size > xBound && dx > 0) {
+          //  go.getPosition().setX(newX - xBound);
+             go.getCurrentVelocity().flipdX();
+        }
+        if (newY - size < 0 && dy < 0 || newY + size > yBound && dy > 0) {
             go.getCurrentVelocity().flipdY();
         }
-         
-         for(GameObject other:GameObject.ALL_GAMEOBJECTS){
-             if(go.equals(other)){
-                 continue;
-             }
-             if(pos.getDistance(other.getPosition())<size+other.getSize()){
-                 collide(go,other);
-             }
-         }
+
+        for (GameObject other : GameObject.ALL_GAMEOBJECTS) {
+            if (go.equals(other)) {
+                continue;
+            }
+            if (pos.getDistance(other.getPosition()) < size + other.getSize()) {
+                collide(go, other);
+            }
+        }
 
     }
 
     private void collide(GameObject go, GameObject other) {
-        if(go instanceof Player && other instanceof Player){
+        if (go instanceof Player && other instanceof Player) {
             go.setCurrentVelocity(new Vector(go.getCurrentVelocity().getLength(), other.getPosition().angleBetween(go.getPosition()), null));
             other.setCurrentVelocity(new Vector(other.getCurrentVelocity().getLength(), go.getPosition().angleBetween(other.getPosition()), null));
         }
