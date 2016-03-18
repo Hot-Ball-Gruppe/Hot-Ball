@@ -6,8 +6,9 @@
 package com.hot.ball.hotball.universe.ball;
 
 import com.hot.ball.help.math.Vector;
+import com.hot.ball.hotball.universe.collision.CollisionModell;
 import com.hot.ball.hotball.universe.player.Player;
-import com.hot.ball.hotball.universe.player.TeamColor;
+import com.hot.ball.hotball.universe.player.Team;
 import com.hot.ball.hotball.universe.zone.TackleZone;
 import com.hot.ball.hotball.universe.zone.Zone;
 import java.util.Stack;
@@ -18,11 +19,16 @@ import java.util.Stack;
  */
 public class InAir implements BallState {
 
+    private final int id;
+    
     private final Player thrower;
+    private final double chance;
     // private double power;
 
-    public InAir(Player thrower, Vector direction) {
+    public InAir(Player thrower, Vector direction, double chance) {
+        id = Ball.BALL_ID++;
         this.thrower = thrower;
+        this.chance = chance;
         Ball.get().setCurrentVelocity(direction);
     }
 
@@ -43,12 +49,12 @@ public class InAir implements BallState {
                     inSafeZone = true;
                     continue;
                 }
-                if (tackler.getTeam().getColor() == TeamColor.Blue) {
+                if (Team.BLUE.isMember(tackler)) {
                     blueTZ++;
                     possibleCatchers.add(tackler);
                 }
 
-                if (tackler.getTeam().getColor() == TeamColor.Red) {
+                if (Team.RED.isMember(tackler)) {
                     redTZ++;
                     possibleCatchers.add(tackler);
                 }
@@ -58,10 +64,10 @@ public class InAir implements BallState {
             Player closestCatcher = null;
             double bestCatchDist = Double.POSITIVE_INFINITY;
             for (Player catcher : possibleCatchers) {
-                if (inSafeZone && catcher.getTeam().getColor() != thrower.getTeam().getColor()) {
+                if (inSafeZone && !catcher.getTeam().isMember(thrower)) {
                     continue;
                 }
-                if ((catcher.getTeam().getColor() == TeamColor.Red && redTZ >= blueTZ) || (catcher.getTeam().getColor() == TeamColor.Blue && redTZ <= blueTZ)) {
+                if ((Team.RED.isMember(catcher) && redTZ >= blueTZ) || (Team.BLUE.isMember(catcher) && redTZ <= blueTZ)) {
                     double catchDistance = catcher.getPosition().getDistance(Ball.get().getPosition());
                     if (catchDistance < bestCatchDist) {
                         closestCatcher = catcher;
@@ -75,7 +81,13 @@ public class InAir implements BallState {
                 return;
             }
         }
-        Ball.get().accelerate(timeDiff, Vector.NULL_VECTOR);
+        if (Ball.get().getPosition().getX() < 0 || Ball.get().getPosition().getX() > CollisionModell.xBound) {
+            Vector vector = new Vector(Ball.get().getCurrentVelocity());
+            vector.multiply(1d / Ball.get().getMaxSpeed());
+            Ball.get().accelerate(timeDiff, vector);
+        } else {
+            Ball.get().accelerate(timeDiff, Vector.NULL_VECTOR);
+        }
     }
 
     public double getAirTime() {
@@ -85,4 +97,15 @@ public class InAir implements BallState {
     public Player getThrower() {
         return thrower;
     }
+
+    public double getChance() {
+        return chance;
+    }
+
+    @Override
+    public int getID() {
+        return id;
+    }
+    
+    
 }

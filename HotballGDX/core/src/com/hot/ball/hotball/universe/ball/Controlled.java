@@ -8,7 +8,7 @@ package com.hot.ball.hotball.universe.ball;
 import com.hot.ball.hotball.controller.HumanController;
 import com.hot.ball.hotball.controller.ai.AIController;
 import com.hot.ball.hotball.universe.player.Player;
-import com.hot.ball.hotball.universe.player.TeamColor;
+import com.hot.ball.hotball.universe.player.Team;
 
 /**
  *
@@ -16,13 +16,16 @@ import com.hot.ball.hotball.universe.player.TeamColor;
  */
 public class Controlled implements BallState {
 
+    private final int id;
+
     private final Player ballCarrier;
 
     public Controlled(Player ballCarrier) {
+        id = Ball.BALL_ID++;
         this.ballCarrier = ballCarrier;
-        if (ballCarrier.getTeam().getColor() == TeamColor.Blue && !ballCarrier.isHuman()) {
-            Player.humanPlayer.setController(new AIController());
-            ballCarrier.setController(HumanController.get());
+        if (Team.BLUE.isMember(ballCarrier) && !ballCarrier.isHuman()) {
+//            Player.humanPlayer.setController(new AIController());
+       //     ballCarrier.setController(HumanController.get());
         }
     }
 
@@ -35,4 +38,8 @@ public class Controlled implements BallState {
         Ball.get().getPosition().set(ballCarrier.getPosition());
     }
 
+    @Override
+    public int getID() {
+        return id;
+    }
 }

@@ -7,7 +7,15 @@ package com.hot.ball.hotball.universe.collision;
 
 import com.hot.ball.help.math.Position;
 import com.hot.ball.help.math.Vector;
+import com.hot.ball.hotball.logic.GameLoop;
+import com.hot.ball.hotball.logic.LogicCore;
+import com.hot.ball.hotball.ui.BallScoreAnimation;
 import com.hot.ball.hotball.universe.GameObject;
+import com.hot.ball.hotball.universe.ball.Ball;
+import com.hot.ball.hotball.universe.ball.BallState;
+import com.hot.ball.hotball.universe.ball.InAir;
+import com.hot.ball.hotball.universe.court.Basket;
+import com.hot.ball.hotball.universe.court.Court;
 import com.hot.ball.hotball.universe.player.Player;
 
 /**
@@ -36,8 +44,8 @@ public class CollisionModell {
 
     }
 
-    public  final static int xBound = 1200;
-    public  final static int yBound = 600;
+    public final static int xBound = 1111;
+    public final static int yBound = 600;
 
     public void checkCollision(GameObject go, double timeDiff) {
         Position.DoublePosition pos = go.getPosition();
@@ -49,18 +57,28 @@ public class CollisionModell {
         double newX = x + dx;
         double newY = y + dy;
 
-        if (newX - size < 0 && dx < 0) {
-            //go.getPosition().setX(xBound - newX);
-           go.getCurrentVelocity().flipdX();
-        }
-        if (newX + size > xBound && dx > 0) {
-          //  go.getPosition().setX(newX - xBound);
-             go.getCurrentVelocity().flipdX();
+        if (go instanceof Ball) {
+            if (newX - size < -Court.getOFFSET_X() && dx < 0) {
+                //go.getPosition().setX(xBound - newX);
+                go.getCurrentVelocity().flipdX();
+            }
+            if (newX + size > xBound + Court.getOFFSET_X() && dx > 0) {
+                //  go.getPosition().setX(newX - xBound);
+                go.getCurrentVelocity().flipdX();
+            }
+        } else {
+            if (newX - size < 0 && dx < 0) {
+                //go.getPosition().setX(xBound - newX);
+                go.getCurrentVelocity().flipdX();
+            }
+            if (newX + size > xBound && dx > 0) {
+                //  go.getPosition().setX(newX - xBound);
+                go.getCurrentVelocity().flipdX();
+            }
         }
         if (newY - size < 0 && dy < 0 || newY + size > yBound && dy > 0) {
             go.getCurrentVelocity().flipdY();
         }
-
         for (GameObject other : GameObject.ALL_GAMEOBJECTS) {
             if (go.equals(other)) {
                 continue;
@@ -76,6 +94,23 @@ public class CollisionModell {
         if (go instanceof Player && other instanceof Player) {
             go.setCurrentVelocity(new Vector(go.getCurrentVelocity().getLength(), other.getPosition().angleBetween(go.getPosition()), null));
             other.setCurrentVelocity(new Vector(other.getCurrentVelocity().getLength(), go.getPosition().angleBetween(other.getPosition()), null));
+        }
+        if (go instanceof Ball && other instanceof Basket) {
+            Basket basket = (Basket) other;
+            BallState bs = ((Ball) go).getState();
+            if (basket.getLastAttack() == bs.getID()) {
+                return;
+            }
+
+            InAir state = (InAir) bs;
+
+            boolean success = Math.random() < state.getChance();
+
+            GameLoop.get().addBlockCondition(new BallScoreAnimation(state.getThrower().getTeam(), state.getChance(), success));
+            basket.setLastAttack(bs.getID());
+            if (success) {
+                LogicCore.get().reset();
+            }
         }
     }
 }

@@ -10,5 +10,8 @@ package com.hot.ball.hotball.universe.ball;
  * @author Dromlius
  */
 public interface BallState {
+
+    public int getID();
+
     public void action(double timeDiff);
 }

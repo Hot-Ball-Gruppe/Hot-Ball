@@ -11,8 +11,13 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.hot.ball.help.math.Position;
 import com.hot.ball.help.math.Vector;
+import com.hot.ball.hotball.controller.HumanController;
+import com.hot.ball.hotball.controller.ai.AIController;
+import com.hot.ball.hotball.logic.GameLoop;
+import com.hot.ball.hotball.logic.LogicCore;
 import com.hot.ball.hotball.universe.ball.Ball;
 import com.hot.ball.hotball.universe.ball.Controlled;
+import com.hot.ball.hotball.universe.court.Court;
 import com.hot.ball.hotball.universe.player.Player;
 import com.hot.ball.hotball.universe.player.Team;
 import java.awt.Component;
@@ -21,6 +26,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.List;
 
 /**
  *
@@ -97,7 +103,7 @@ public class UserInput implements MouseListener, KeyListener, MouseMotionListene
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (!isPressed(Input.Keys.SPACE)) {
+        if (GameLoop.get().isRunning()) {
             if (Ball.get().getState() instanceof Controlled) {
                 if (((Controlled) Ball.get().getState()).getBallCarrier().isHuman()) {
                     Ball.get().throwBall(mousePosition);
@@ -145,19 +151,15 @@ public class UserInput implements MouseListener, KeyListener, MouseMotionListene
     @Override
     public boolean keyDown(int keycode) {
         pressedKeys[keycode] = true;
-        if (keycode == Keys.SPACE) {
-            AudioManager.get().pause();
+        if (keycode == Keys.ESCAPE) {
+            LogicCore.get().reset();
         }
-        if(keycode == Keys.ESCAPE){
-            Team blue = Player.humanPlayer.getTeam();
-            Team red = blue.getOpponent();
-            for(int i=0;i<blue.getMembers().size();i++){
-                blue.getMembers().get(i).getPosition().setX(70);
-                red.getMembers().get(i).getPosition().setX(1200-70);
-                blue.getMembers().get(i).getPosition().setY(i*100+100);
-                red.getMembers().get(i).getPosition().setY(i*100+100);
-                Ball.get().setState(new Controlled(Player.humanPlayer));
-            }
+
+        if (keycode == Keys.TAB && !Ball.get().isControlledBy(Player.humanPlayer))  {
+            List<Player> members = Team.BLUE.getMembers();
+            int indx = members.indexOf(Player.humanPlayer);
+            members.get(indx).setController(new AIController());
+            members.get((indx+1)%members.size()).setController(HumanController.get());
         }
         return true;
     }
@@ -165,9 +167,6 @@ public class UserInput implements MouseListener, KeyListener, MouseMotionListene
     @Override
     public boolean keyUp(int keycode) {
         pressedKeys[keycode] = false;
-        if (keycode == Keys.SPACE) {
-            AudioManager.get().resume();
-        }
         return true;
     }
 
@@ -194,7 +193,7 @@ public class UserInput implements MouseListener, KeyListener, MouseMotionListene
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        mousePosition.setX(screenX);
+        mousePosition.setX(screenX - Court.getOFFSET_X());
         mousePosition.setY(Gdx.graphics.getHeight() - screenY);
         return true;
     }

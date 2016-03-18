@@ -5,11 +5,12 @@
  */
 package com.hot.ball.hotball.logic;
 
-import com.badlogic.gdx.Input.Keys;
-import com.hot.ball.hotball.ui.UserInput;
+import com.hot.ball.hotball.ui.AudioManager;
 import com.hot.ball.hotball.universe.GameObject;
 import com.hot.ball.hotball.universe.zone.Zone;
-
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -41,6 +42,7 @@ public class GameLoop implements Runnable {
 
     private GameLoop() {
         loop = new Thread(this);
+        blockConditions = new LinkedList<>();
     }
 
     public void start() {
@@ -48,8 +50,7 @@ public class GameLoop implements Runnable {
             throw new RuntimeException("GameLoop already started");
         }
         active = true;
-        lastTime = System.currentTimeMillis();
-       // resume();
+        resume();
         loop.start();
     }
 
@@ -59,50 +60,53 @@ public class GameLoop implements Runnable {
         }
         running = true;
         active = false;
+        AudioManager.get().stop();
     }
 
-    /* public void pause() {
+    private void pause() {
         if (!running) {
             return;
             //  throw new RuntimeException("GameLoop already paused");
         }
         running = false;
+        AudioManager.get().pause();
     }
 
-    public void resume() {
+    private void resume() {
         if (running) {
             return;
             //throw new RuntimeException("GameLoop already resumed");
         }
         lastTime = System.currentTimeMillis();
         running = true;
-    }*/
+        AudioManager.get().resume();
+    }
+
+    private final List<BlockCondition> blockConditions;
+
     private long lastTime = -1;
 
     @Override
     @SuppressWarnings("SleepWhileInLoop")
     public void run() {
         while (active) {
-            // System.out.println("act");
-            while (!UserInput.get().isPressed(Keys.SPACE)) {
+            checkBlocked();
+            while (running) {
                 // System.out.println("run");
                 long now = System.currentTimeMillis();
                 double timeDiff = (now - lastTime) / 1000d;
                 for (GameObject go : GameObject.ALL_GAMEOBJECTS) {
-                    for(Zone z:Zone.ALL_ZONES){
-                        if(z.contains(go)){
+                    for (Zone z : Zone.ALL_ZONES) {
+                        if (z.contains(go)) {
                             go.addZone(z);
                         }
                     }
                     go.action(timeDiff);
-                    
+
                 }
                 lastTime = now;
 
-                
-                
-                
-              /*  if (Ball.get().getState() instanceof InAir) {
+                /*  if (Ball.get().getState() instanceof InAir) {
                     for (GameObject go : GameObject.ALL_GAMEOBJECTS) {
                         if (go instanceof Player) {
                             Player player = (Player) go;
@@ -118,6 +122,7 @@ public class GameLoop implements Runnable {
                         }
                     }
                 }*/
+                checkBlocked();
                 try {
                     Thread.sleep(12);
                 } catch (InterruptedException ie) {
@@ -132,6 +137,27 @@ public class GameLoop implements Runnable {
             }
         }
         System.out.println("GameEnd");
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void addBlockCondition(BlockCondition bc) {
+       blockConditions.add(bc);
+    }
+
+    private void checkBlocked() {
+        for (Iterator<BlockCondition> iterator = blockConditions.iterator(); iterator.hasNext();) {
+            BlockCondition bc = iterator.next();
+            if (bc.isBlocking()) {
+                pause();
+                return;
+            } else if (!bc.isPermanent()) {
+                iterator.remove();
+            }
+        }
+        resume();
     }
 
 }

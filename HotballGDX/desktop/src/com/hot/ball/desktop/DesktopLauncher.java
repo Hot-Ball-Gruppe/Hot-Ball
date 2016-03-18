@@ -10,7 +10,7 @@ public class DesktopLauncher {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
         config.title = "Hotball";
-        config.width = 1200;
+        config.width = 1600;
         config.height = 600;
         config.fullscreen = false;
         config.resizable = false;

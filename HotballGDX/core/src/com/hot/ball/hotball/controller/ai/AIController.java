@@ -23,26 +23,27 @@ public class AIController implements Controller {
      public double getFacing(Player player) {
      return player.getCurrentVelocity().getTheta();
      }*/
-    private final static double force=100;
-    
-     @Override
+    @Override
     public Vector getMoveVector(Player player) {
-         Position.DoublePosition position = player.getPosition();
-         Vector aiMoveVector = getAIMoveVector(player);
-     //    aiMoveVector.addVector(new Vector(force/(position.getX()*position.getX()), 0));
-      //   aiMoveVector.addVector(new Vector( 0,force/(position.getY())));
-      //   aiMoveVector.addVector(new Vector( force/((1200-position.getX())*(1200-position.getX())),0));
-      //   aiMoveVector.addVector(new Vector( 0,force/((600-position.getY()))));
-         return aiMoveVector.setLength(Math.min(1, aiMoveVector.getLength()));
+        Position.DoublePosition position = player.getPosition();
+        Vector aiMoveVector = getAIMoveVector(player);
+        //    aiMoveVector.addVector(new Vector(force/(position.getX()*position.getX()), 0));
+        //   aiMoveVector.addVector(new Vector( 0,force/(position.getY())));
+        //   aiMoveVector.addVector(new Vector( force/((1200-position.getX())*(1200-position.getX())),0));
+        //   aiMoveVector.addVector(new Vector( 0,force/((600-position.getY()))));
+        return aiMoveVector.setLength(Math.min(1, aiMoveVector.getLength()));
     }
-    
+
     private Vector getAIMoveVector(Player player) {
-        if(Ball.get().isControlledBy(player)){
-          //  return ballCarrierAI(player);
+        if (Ball.get().isControlledBy(player)) {
+            if (player.getChanceToHit() > 0.4 + Math.random() * 0.3) {
+                Ball.get().throwBall(player.getTeam().getAttacking().getPosition());
+            } else {
+                return new Vector(1, player.getPosition().angleBetween(player.getTeam().getAttacking().getPosition()), null);
+            }
+            //  return ballCarrierAI(player);
         }
-        
-        
-        
+
         if (Ball.get().getState() instanceof InAir) {
             if (!player.equals(((InAir) Ball.get().getState()).getThrower())) {
                 return new Vector(/*Math.min(500, player.getPosition().getDistance(Ball.get().getPosition()))*/1, player.getPosition().angleBetween(Ball.get().getPosition()), null);
@@ -62,17 +63,15 @@ public class AIController implements Controller {
                 if (closestDist < 300) {
                     return new Vector(1, closestOpponent.getPosition().angleBetween(player.getPosition()), null);
                 }
-            } else {
-                if (ballCarrier.getTeam().getColor() != player.getTeam().getColor()) {
-                    return new Vector(1, player.getPosition().angleBetween(ballCarrier.getPosition()), null);
-                }
+            } else if (!ballCarrier.getTeam().isMember(player)) {
+                return new Vector(1, player.getPosition().angleBetween(ballCarrier.getPosition()), null);
             }
         }
         return new Vector(0.6, player.getCurrentVelocity().getTheta() + 0.1, null);
     }
 
     private Vector ballCarrierAI(Player player) {
-       return null;
+        return null;
     }
 
 }

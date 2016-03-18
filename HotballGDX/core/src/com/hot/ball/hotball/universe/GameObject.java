@@ -5,7 +5,6 @@
  */
 package com.hot.ball.hotball.universe;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.hot.ball.help.math.Position;
 import com.hot.ball.help.math.Vector;
 import com.hot.ball.hotball.ui.Graphics;

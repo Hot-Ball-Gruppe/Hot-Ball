@@ -6,10 +6,8 @@
 package com.hot.ball.hotball.universe.player;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.hot.ball.help.math.Position;
 import com.hot.ball.hotball.controller.Controller;
@@ -20,6 +18,7 @@ import com.hot.ball.hotball.universe.ball.Ball;
 import com.hot.ball.hotball.universe.ball.BallState;
 import com.hot.ball.hotball.universe.ball.Controlled;
 import com.hot.ball.hotball.universe.ball.InAir;
+import com.hot.ball.hotball.universe.court.Court;
 import com.hot.ball.hotball.universe.zone.TackleZone;
 import com.hot.ball.hotball.universe.zone.Zone;
 import java.awt.Graphics2D;
@@ -124,6 +123,9 @@ public class Player extends GameObject {
             keyFrame = STANDING_TEXTURE[spriteColor];
         }
         g.drawImage(keyFrame, getPosition().getRoundX(), getPosition().getRoundY(), 32, 32, facing);
+        if (isHuman() && Ball.get().isControlledBy(this) && getChanceToHit()>0) {
+            g.drawString("" + (int) (100 * getChanceToHit()), 10, 40);
+        }
     }
 
     private final static double TAKEDOWNTIME = 1.0;
@@ -159,6 +161,7 @@ public class Player extends GameObject {
                 //   System.out.println("I "+getId()+ "("+getTeam()+") am in TZ of: "+((TackleZone)z).getPlayer().getId());
             }
         }
+        calcChanceToHit(enemyTZ);
         maxSpeed = TOTALMAXSPEED / (1 + Math.max(0, enemyTZ - friendlyTZ));
         if (enemyTZ > 0) {
             if (Ball.get().isControlledBy(this)) {
@@ -179,11 +182,16 @@ public class Player extends GameObject {
         facing = controller.getFacing(this);
         tackleZone.action(timeDiff);
 
-        if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
+        /*if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
             if (Ball.get().isControlledBy(this)) {
                 Ball.get().throwBall(new Position.DoublePosition(500 * Math.random(), 500 * Math.random()));
             }
-        }
+        }*/
+    }
+
+    public void calcChanceToHit(int enemyTZ) {
+        double dist = getPosition().getDistance(getTeam().getAttacking().getPosition());
+        chanceToHit = Math.max(0, Math.min(0.99, -dist / MAX_DIST + (float) Court.getBASKET_DIST_FROM_OUTLINE() / MAX_DIST + 1)) / Math.pow(2, enemyTZ);
     }
 
     @Override
@@ -200,4 +208,11 @@ public class Player extends GameObject {
         return maxSpeed;
     }
 
+    private final static double MAX_DIST = 300;
+
+    private double chanceToHit;
+
+    public double getChanceToHit() {
+        return chanceToHit;
+    }
 }

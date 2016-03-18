@@ -24,10 +24,12 @@ import java.util.Stack;
  */
 public class Ball extends GameObject {
 
+    public static int BALL_ID = 0;
+
     private static Ball theBall;
 
     public static void create(Position.DoublePosition startingPosition) {
-        theBall = new Ball(startingPosition, new InAir(null, Vector.NULL_VECTOR));
+        theBall = new Ball(startingPosition, new InAir(null, Vector.NULL_VECTOR, 0));
     }
 
     public static void create(Player ballCarrier) {
@@ -92,7 +94,7 @@ public class Ball extends GameObject {
 
     public void throwBall(Position.DoublePosition mousePosition) {
         Player carrier = ((Controlled) getState()).getBallCarrier();
-        setState(new InAir(carrier, new Vector(1000, getPosition().angleBetween(mousePosition), null)));
+        setState(new InAir(carrier, new Vector(1000, getPosition().angleBetween(mousePosition), null), carrier.getChanceToHit()));
     }
 
     @Override
