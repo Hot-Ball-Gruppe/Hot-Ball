@@ -6,8 +6,7 @@
 package com.hot.ball.hotball.universe.player;
 
 import com.hot.ball.hotball.universe.court.Basket;
-import java.util.ArrayList;
-import java.util.List;
+import com.hot.ball.hotball.universe.court.Court;
 import java.util.Objects;
 
 /**
@@ -15,29 +14,39 @@ import java.util.Objects;
  * @author Inga
  */
 public class Team {
-    public static final  Team BLUE = new Team(TeamColor.Blue);
-    public static final  Team RED = new Team(TeamColor.Red);
-    
-    static{
+
+    public static void generate(Player[] blueTeam, Player[] redTeam, Basket blueBasket, Basket redBasket) {
+        BLUE = new Team(TeamColor.Blue, blueTeam, redBasket);
+        RED = new Team(TeamColor.Red, redTeam, blueBasket);
         BLUE.setOpponent(RED);
         RED.setOpponent(BLUE);
     }
+
+    public static Team BLUE;
+    public static Team RED;
+
     private final TeamColor color;
-    private Basket attacking;
+    private final Basket attacking;
     private Team opponent;
-    
-    private final List<Player> members;
-    
-    private Team(TeamColor color) {
+
+    private final Player[] members;
+
+    @SuppressWarnings("LeakingThisInConstructor")
+    private Team(TeamColor color, Player[] team, Basket attacking) {
         this.color = color;
-        members = new ArrayList<>();
+        this.attacking = attacking;
+        members = team;
+        for(Player p:members){
+            p.setTeam(this);
+        }
+        reset();
     }
 
     public TeamColor getColor() {
         return color;
     }
 
-    public List<Player> getMembers() {
+    public Player[] getMembers() {
         return members;
     }
 
@@ -45,7 +54,7 @@ public class Team {
         return opponent;
     }
 
-    public void setOpponent(Team opponent) {
+    private void setOpponent(Team opponent) {
         this.opponent = opponent;
     }
 
@@ -53,14 +62,14 @@ public class Team {
         return attacking;
     }
 
-    public void setAttacking(Basket attacking) {
-        this.attacking = attacking;
+    public boolean isMember(Player p) {
+        for (Player member : members) {
+            if (member.equals(p)) {
+                return true;
+            }
+        }
+        return false;
     }
-    
-    public boolean isMember(Player p){
-        return getMembers().contains(p);
-    }
-
 
     @Override
     public int hashCode() {
@@ -86,6 +95,13 @@ public class Team {
         }
         return true;
     }
-    
-    
+
+    public final void reset() {
+        int x = (color == TeamColor.Blue) ? 70 : Court.COURT_WIDTH - 70;
+        for (int i = 0; i < members.length; i++) {
+            members[i].getPosition().setX(x);
+            members[i].getPosition().setY((i+1)*80);
+        }
+    }
+
 }

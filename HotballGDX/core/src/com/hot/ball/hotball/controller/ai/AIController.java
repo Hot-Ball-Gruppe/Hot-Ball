@@ -37,7 +37,7 @@ public class AIController implements Controller {
     private Vector getAIMoveVector(Player player) {
         if (Ball.get().isControlledBy(player)) {
             if (player.getChanceToHit() > 0.4 + Math.random() * 0.3) {
-                Ball.get().throwBall(player.getTeam().getAttacking().getPosition());
+                Ball.get().throwBall(player.getTeam().getAttacking().getPosition(), player.getThrowPower());
             } else {
                 return new Vector(1, player.getPosition().angleBetween(player.getTeam().getAttacking().getPosition()), null);
             }

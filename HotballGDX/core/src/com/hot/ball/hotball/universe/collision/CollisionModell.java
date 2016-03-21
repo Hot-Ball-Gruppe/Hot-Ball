@@ -41,11 +41,10 @@ public class CollisionModell {
     }
 
     private CollisionModell() {
-
     }
 
-    public final static int xBound = 1111;
-    public final static int yBound = 600;
+    public final static int X_BOUND = 1111;
+    public final static int Y_BOUND = 600;
 
     public void checkCollision(GameObject go, double timeDiff) {
         Position.DoublePosition pos = go.getPosition();
@@ -58,25 +57,25 @@ public class CollisionModell {
         double newY = y + dy;
 
         if (go instanceof Ball) {
-            if (newX - size < -Court.getOFFSET_X() && dx < 0) {
-                //go.getPosition().setX(xBound - newX);
+            if (newX - size < -Court.OFFSET_X && dx < 0) {
+                //go.getPosition().setX(X_BOUND - newX);
                 go.getCurrentVelocity().flipdX();
             }
-            if (newX + size > xBound + Court.getOFFSET_X() && dx > 0) {
-                //  go.getPosition().setX(newX - xBound);
+            if (newX + size > X_BOUND + Court.OFFSET_X && dx > 0) {
+                //  go.getPosition().setX(newX - X_BOUND);
                 go.getCurrentVelocity().flipdX();
             }
         } else {
             if (newX - size < 0 && dx < 0) {
-                //go.getPosition().setX(xBound - newX);
+                //go.getPosition().setX(X_BOUND - newX);
                 go.getCurrentVelocity().flipdX();
             }
-            if (newX + size > xBound && dx > 0) {
-                //  go.getPosition().setX(newX - xBound);
+            if (newX + size > X_BOUND && dx > 0) {
+                //  go.getPosition().setX(newX - X_BOUND);
                 go.getCurrentVelocity().flipdX();
             }
         }
-        if (newY - size < 0 && dy < 0 || newY + size > yBound && dy > 0) {
+        if (newY - size < 0 && dy < 0 || newY + size > Y_BOUND && dy > 0) {
             go.getCurrentVelocity().flipdY();
         }
         for (GameObject other : GameObject.ALL_GAMEOBJECTS) {

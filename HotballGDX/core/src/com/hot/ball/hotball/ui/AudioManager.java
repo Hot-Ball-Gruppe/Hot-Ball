@@ -41,8 +41,8 @@ public class AudioManager {
     }
 
     public void start() {
-      //  timeBreak.play();
-    //    realTime.play();
+        timeBreak.play();
+        realTime.play();
     }
     
     public void pause(){

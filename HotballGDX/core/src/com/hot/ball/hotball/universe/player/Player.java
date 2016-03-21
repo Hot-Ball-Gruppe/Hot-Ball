@@ -9,9 +9,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.hot.ball.help.math.Position;
+import com.hot.ball.help.math.Position.DoublePosition;
 import com.hot.ball.hotball.controller.Controller;
 import com.hot.ball.hotball.controller.HumanController;
+import com.hot.ball.hotball.controller.ai.AIController;
+import com.hot.ball.hotball.controller.ai.roles.Role;
 import com.hot.ball.hotball.ui.Graphics;
 import com.hot.ball.hotball.universe.GameObject;
 import com.hot.ball.hotball.universe.ball.Ball;
@@ -21,44 +23,108 @@ import com.hot.ball.hotball.universe.ball.InAir;
 import com.hot.ball.hotball.universe.court.Court;
 import com.hot.ball.hotball.universe.zone.TackleZone;
 import com.hot.ball.hotball.universe.zone.Zone;
-import java.awt.Graphics2D;
 
 /**
  *
  * @author Dromlius
  */
 public class Player extends GameObject {
+//---------DEFAULT PLAYERS----------------------
 
-    public static Player humanPlayer;
+    public static Player Felix = new Player("Felix", new Stats(7, 4, 2), null);
+    public static Player Adrian = new Player("Adrian", new Stats(4, 4, 7), null);
+    public static Player Leo = new Player("Leo", new Stats(3, 8, 5), null);
+    public static Player Patryk = new Player("Patryk", new Stats(2, 5, 8), null);
+    public static Player Friedrich = new Player("Friedrich", new Stats(6, 4, 4), null);
+    public static Player Thomas = new Player("Thomas", new Stats(2, 4, 5), null);
 
-    //  private final String name;
-    private final Team team;
+    /*
+    public static Player Dummy1 = new Player("Dummy1", new Stats(1, 1, 1), null);
+    public static Player Dummy2 = new Player("Dummy2", new Stats(1, 1, 1), null);
+    public static Player Dummy3 = new Player("Dummy3", new Stats(1, 1, 1), null);
+    public static Player Dummy4 = new Player("Dummy4", new Stats(1, 1, 1), null);
+    public static Player Dummy5 = new Player("Dummy5", new Stats(1, 1, 1), null);
+    public static Player Dummy6 = new Player("Dummy6", new Stats(1, 1, 1), null);*/
+
+    @Override
+    protected double getDECAY_FACTOR() {
+        return 4;
+    }
+
+    private static Player humanPlayer;
+
+    public static Player getHumanPlayer() {
+        return humanPlayer;
+    }
+
+    public static void setHumanPlayer(Player human) {
+        if (!human.equals(humanPlayer)) {
+            human.setController(HumanController.get());
+            if (humanPlayer != null) {
+                humanPlayer.setController(new AIController());
+            }
+            humanPlayer = human;
+        }
+    }
+
+    private final String name;
+    private Team team;
 
     private Controller controller;
 
     private double facing;
 
     private final TackleZone tackleZone;
+    private final Role role;
 
-    public Player(String name, Team team, Controller controller, Position.DoublePosition startingPos) {
-        super(startingPos, 24);
-        // this.name = name;
+    private final double totalMaxSpeed;
+    private final int throwPower;
+
+    private double currentMaxSpeed;
+
+    private Player(String name, Stats stats, Role role) {
+        super(new DoublePosition(0, 0), 24);
+        this.name = name;
+
+        totalMaxSpeed = 200 * stats.getSpeed();
+        throwPower = (int) (1000 * stats.getPower());
+        tackleZone = new TackleZone(this, (int) (85* stats.getTackle()));
+
+        currentMaxSpeed = totalMaxSpeed;
+
+        this.role = role;
+        controller = new AIController();
+
+        this.facing = Math.random() * 2 * Math.PI;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getThrowPower() {
+        return throwPower;
+    }
+
+    public void setTeam(Team team) {
         this.team = team;
-        team.getMembers().add(this);
-        // this.facing = facing;
-        setController(controller);
-        tackleZone = new TackleZone(this);
     }
 
     public Team getTeam() {
         return team;
     }
 
-    public final void setController(Controller controller) {
+    public Role getRole() {
+        return role;
+    }
+
+    @Override
+    public double getCurrentMaxSpeed() {
+        return currentMaxSpeed;
+    }
+
+    private void setController(Controller controller) {
         this.controller = controller;
-        if (controller instanceof HumanController) {
-            humanPlayer = this;
-        }
     }
 
     public boolean isHuman() {
@@ -71,6 +137,8 @@ public class Player extends GameObject {
     private static final TextureRegion[] STANDING_TEXTURE;
     private static final TextureRegion[] HOLDING_TEXTURE;
     private static final TextureRegion[] THROWING_TEXTURE;
+
+    private float totalAnimationTime = (float) (Math.random() * 10);
 
     static {
         TextureRegion[][][] split = new TextureRegion[][][]{TextureRegion.split(new Texture(Gdx.files.internal("res/player0.png")), 64, 64), TextureRegion.split(new Texture(Gdx.files.internal("res/player1.png")), 64, 64), TextureRegion.split(new Texture(Gdx.files.internal("res/player2.png")), 64, 64)};
@@ -94,16 +162,6 @@ public class Player extends GameObject {
     }
 
     @Override
-    public void draw(Graphics2D g) {
-        tackleZone.draw(g);
-        int spriteColor = isHuman() ? 2 : ((team.getColor() == TeamColor.Blue) ? 0 : 1);
-        //  BufferedImage texture = TEXTURES[spriteColor][Ball.get().isControlledBy(this) ? 1 : 0];
-        //    AffineTransform tx = AffineTransform.getRotateInstance(facing + Math.PI / 2, texture.getWidth() / 2, texture.getHeight() / 2);
-        //    AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-        //  g.drawImage(op.filter(texture, null), (int) (getPosition().getX() - getSize()), (int) (getPosition().getY() - getSize()), null);
-    }
-
-    @Override
     public void draw(Graphics g) {
         tackleZone.draw(g);
         int spriteColor = isHuman() ? 0 : ((team.getColor() == TeamColor.Blue) ? 1 : 2);
@@ -113,9 +171,9 @@ public class Player extends GameObject {
             keyFrame = THROWING_TEXTURE[spriteColor];
         } else if (getCurrentVelocity().getLength() > 12) {
             if (Ball.get().isControlledBy(this)) {
-                keyFrame = DRIBBLING_ANIMATION[spriteColor].getKeyFrame(totalTime, true);
+                keyFrame = DRIBBLING_ANIMATION[spriteColor].getKeyFrame(totalAnimationTime, true);
             } else {
-                keyFrame = WALKING_ANIMATION[spriteColor].getKeyFrame(totalTime, true);
+                keyFrame = WALKING_ANIMATION[spriteColor].getKeyFrame(totalAnimationTime, true);
             }
         } else if (Ball.get().isControlledBy(this)) {
             keyFrame = HOLDING_TEXTURE[spriteColor];
@@ -123,19 +181,28 @@ public class Player extends GameObject {
             keyFrame = STANDING_TEXTURE[spriteColor];
         }
         g.drawImage(keyFrame, getPosition().getRoundX(), getPosition().getRoundY(), 32, 32, facing);
-        if (isHuman() && Ball.get().isControlledBy(this) && getChanceToHit()>0) {
+        if (isHuman() && Ball.get().isControlledBy(this) && getChanceToHit() > 0) {
             g.drawString("" + (int) (100 * getChanceToHit()), 10, 40);
         }
     }
 
+    public final static double MAX_THROW_DIST = 300;
+    private double chanceToHit;
     private final static double TAKEDOWNTIME = 1.0;
     private double currentTakeDownTime = 0;
 
-    private float totalTime = (float) (Math.random() * 10);
+    public void calcChanceToHit(int enemyTZ) {
+        double dist = getPosition().getDistance(getTeam().getAttacking().getPosition());
+        chanceToHit = Math.max(0, Math.min(0.99, -dist / MAX_THROW_DIST + (float) Court.BASKET_DIST_FROM_OUTLINE / MAX_THROW_DIST + 1)) / Math.pow(2, enemyTZ);
+    }
+
+    public double getChanceToHit() {
+        return chanceToHit;
+    }
 
     @Override
     public void action(double timeDiff) {
-        totalTime += timeDiff;
+        totalAnimationTime += timeDiff;
 
         int enemyTZ = 0;
         Player closestEnemy = null;
@@ -157,16 +224,13 @@ public class Player extends GameObject {
                         }
                     }
                 }
-
-                //   System.out.println("I "+getId()+ "("+getTeam()+") am in TZ of: "+((TackleZone)z).getPlayer().getId());
             }
         }
         calcChanceToHit(enemyTZ);
-        maxSpeed = TOTALMAXSPEED / (1 + Math.max(0, enemyTZ - friendlyTZ));
+        currentMaxSpeed = totalMaxSpeed / (1 + Math.max(0, enemyTZ - friendlyTZ));
         if (enemyTZ > 0) {
             if (Ball.get().isControlledBy(this)) {
                 currentTakeDownTime = Math.min(TAKEDOWNTIME, currentTakeDownTime + timeDiff);
-                //System.out.println("TakoOver: "+currentTakeDownTime);
                 if (currentTakeDownTime >= TAKEDOWNTIME) {
                     Ball.get().setState(new Controlled(closestEnemy));
                     tackleZone.reset();
@@ -181,38 +245,6 @@ public class Player extends GameObject {
         accelerate(timeDiff, controller.getMoveVector(this));
         facing = controller.getFacing(this);
         tackleZone.action(timeDiff);
-
-        /*if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
-            if (Ball.get().isControlledBy(this)) {
-                Ball.get().throwBall(new Position.DoublePosition(500 * Math.random(), 500 * Math.random()));
-            }
-        }*/
     }
 
-    public void calcChanceToHit(int enemyTZ) {
-        double dist = getPosition().getDistance(getTeam().getAttacking().getPosition());
-        chanceToHit = Math.max(0, Math.min(0.99, -dist / MAX_DIST + (float) Court.getBASKET_DIST_FROM_OUTLINE() / MAX_DIST + 1)) / Math.pow(2, enemyTZ);
-    }
-
-    @Override
-    protected double getDECAY_FACTOR() {
-        return 4;
-    }
-
-    private static final double TOTALMAXSPEED = 200;
-
-    private double maxSpeed = TOTALMAXSPEED;
-
-    @Override
-    public double getMaxSpeed() {
-        return maxSpeed;
-    }
-
-    private final static double MAX_DIST = 300;
-
-    private double chanceToHit;
-
-    public double getChanceToHit() {
-        return chanceToHit;
-    }
 }

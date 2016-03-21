@@ -52,7 +52,7 @@ public abstract class GameObject {
         interferingZones.add(z);
     }
 
-    protected Stack<Zone> getInterferingZones() {
+    public Stack<Zone> getInterferingZones() {
         return interferingZones;
     }
 
@@ -61,8 +61,6 @@ public abstract class GameObject {
     }
 
     public abstract void action(double timeDiff);
-
-    public abstract void draw(Graphics2D g);
 
     public abstract void draw(Graphics g);
     
@@ -89,14 +87,14 @@ public abstract class GameObject {
 
     public void accelerate(double timeDiff, Vector accDir) {
         double decayRate = Math.pow(DECAY_BASE, getDECAY_FACTOR() * (-timeDiff));
-        accDir.multiply(getMaxSpeed());
+        accDir.multiply(getCurrentMaxSpeed());
         currentVelocity.setdX(decayRate * (currentVelocity.getdX() - accDir.getdX()) + accDir.getdX());
         currentVelocity.setdY(decayRate * (currentVelocity.getdY() - accDir.getdY()) + accDir.getdY());
         CollisionModell.get().checkCollision(this, timeDiff);
         getPosition().addVector(currentVelocity, timeDiff);
     }
 
-    public abstract double getMaxSpeed();
+    public abstract double getCurrentMaxSpeed();
 
     @Override
     public int hashCode() {

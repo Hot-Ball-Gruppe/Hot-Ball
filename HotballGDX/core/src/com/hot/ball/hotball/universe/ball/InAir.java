@@ -23,7 +23,6 @@ public class InAir implements BallState {
     
     private final Player thrower;
     private final double chance;
-    // private double power;
 
     public InAir(Player thrower, Vector direction, double chance) {
         id = Ball.BALL_ID++;
@@ -81,9 +80,9 @@ public class InAir implements BallState {
                 return;
             }
         }
-        if (Ball.get().getPosition().getX() < 0 || Ball.get().getPosition().getX() > CollisionModell.xBound) {
+        if (Ball.get().getPosition().getX() < 0 || Ball.get().getPosition().getX() > CollisionModell.X_BOUND) {
             Vector vector = new Vector(Ball.get().getCurrentVelocity());
-            vector.multiply(1d / Ball.get().getMaxSpeed());
+            vector.multiply(1d / Ball.get().getCurrentMaxSpeed());
             Ball.get().accelerate(timeDiff, vector);
         } else {
             Ball.get().accelerate(timeDiff, Vector.NULL_VECTOR);

@@ -82,27 +82,27 @@ public class Graphics {
     }
 
     public void drawImageNotCetral(Texture img, int x, int y) {
-        spriteBatch.draw(img, x + Court.getOFFSET_X(), y);
+        spriteBatch.draw(img, x + Court.OFFSET_X, y);
     }
 
     public void drawImage(Texture img, int x, int y) {
-        spriteBatch.draw(img, x - img.getWidth() / 2 + Court.getOFFSET_X(), y - img.getHeight() / 2);
+        spriteBatch.draw(img, x - img.getWidth() / 2 + Court.OFFSET_X, y - img.getHeight() / 2);
     }
 
     public void drawImage(TextureRegion img, int x, int y) {
-        spriteBatch.draw(img, x - img.getRegionWidth() / 2 + Court.getOFFSET_X(), y - img.getRegionHeight() / 2);
+        spriteBatch.draw(img, x - img.getRegionWidth() / 2 + Court.OFFSET_X, y - img.getRegionHeight() / 2);
     }
 
     public void drawImage(TextureRegion img, int x, int y, double theta) {
-        spriteBatch.draw(img, x - img.getRegionWidth() / 2 + Court.getOFFSET_X(), y - img.getRegionHeight() / 2, img.getRegionWidth() / 2, img.getRegionHeight() / 2, img.getRegionWidth(), img.getRegionHeight(), 1, 1, (float) Math.toDegrees(theta - Math.PI / 2));
+        spriteBatch.draw(img, x - img.getRegionWidth() / 2 + Court.OFFSET_X, y - img.getRegionHeight() / 2, img.getRegionWidth() / 2, img.getRegionHeight() / 2, img.getRegionWidth(), img.getRegionHeight(), 1, 1, (float) Math.toDegrees(theta - Math.PI / 2));
     }
 
     public void drawImage(TextureRegion img, int x, int y, int origin_x, int origin_y, double theta) {
-        spriteBatch.draw(img, x - img.getRegionWidth() / 2 + Court.getOFFSET_X(), y - img.getRegionHeight() / 2, origin_x, origin_y, img.getRegionWidth(), img.getRegionHeight(), 1, 1, (float) Math.toDegrees(theta - Math.PI / 2));
+        spriteBatch.draw(img, x - img.getRegionWidth() / 2 + Court.OFFSET_X, y - img.getRegionHeight() / 2, origin_x, origin_y, img.getRegionWidth(), img.getRegionHeight(), 1, 1, (float) Math.toDegrees(theta - Math.PI / 2));
     }
 
     public void drawImage(TextureRegion img, int x, int y, double factor, Object nullObj) {
-        spriteBatch.draw(img, x - img.getRegionWidth() / 2 + Court.getOFFSET_X(), y - img.getRegionHeight() / 2, img.getRegionWidth() / 2, img.getRegionHeight() / 2, img.getRegionWidth(), img.getRegionHeight(), (float) factor, (float) factor, 0);
+        spriteBatch.draw(img, x - img.getRegionWidth() / 2 + Court.OFFSET_X, y - img.getRegionHeight() / 2, img.getRegionWidth() / 2, img.getRegionHeight() / 2, img.getRegionWidth(), img.getRegionHeight(), (float) factor, (float) factor, 0);
     }
 
     @Deprecated

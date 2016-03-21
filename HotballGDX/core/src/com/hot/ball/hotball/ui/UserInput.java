@@ -11,8 +11,6 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.hot.ball.help.math.Position;
 import com.hot.ball.help.math.Vector;
-import com.hot.ball.hotball.controller.HumanController;
-import com.hot.ball.hotball.controller.ai.AIController;
 import com.hot.ball.hotball.logic.GameLoop;
 import com.hot.ball.hotball.logic.LogicCore;
 import com.hot.ball.hotball.universe.ball.Ball;
@@ -20,36 +18,18 @@ import com.hot.ball.hotball.universe.ball.Controlled;
 import com.hot.ball.hotball.universe.court.Court;
 import com.hot.ball.hotball.universe.player.Player;
 import com.hot.ball.hotball.universe.player.Team;
-import java.awt.Component;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.util.List;
 
 /**
  *
  * @author Dromlius
  */
-public class UserInput implements MouseListener, KeyListener, MouseMotionListener, InputProcessor {
+public class UserInput implements InputProcessor {
 
     private static UserInput singleton;
     private final ControlMode controlMode;
 
     public static enum ControlMode {
-
         MouseRelational, ScreenRelational;
-    }
-
-    public static void create(Component c, KeyBinding keyBinding, ControlMode controlMode) {
-        if (singleton != null) {
-            throw new RuntimeException("UserInput already created!");
-        }
-        singleton = new UserInput(keyBinding, controlMode);
-        c.addMouseListener(singleton);
-        c.addMouseMotionListener(singleton);
-        c.addKeyListener(singleton);
     }
 
     public static void create(Input input, KeyBinding keyBinding, ControlMode controlMode) {
@@ -88,63 +68,13 @@ public class UserInput implements MouseListener, KeyListener, MouseMotionListene
         movement.setLength(1);
 
         if (controlMode == ControlMode.MouseRelational) {
-            movement.rotate(Player.humanPlayer.getPosition().angleBetween(mousePosition) - Math.PI / 2);
+            movement.rotate(Player.getHumanPlayer().getPosition().angleBetween(mousePosition) - Math.PI / 2);
         }
         return movement;
     }
 
     public Position.DoublePosition getMousePosition() {
         return mousePosition;
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        if (GameLoop.get().isRunning()) {
-            if (Ball.get().getState() instanceof Controlled) {
-                if (((Controlled) Ball.get().getState()).getBallCarrier().isHuman()) {
-                    Ball.get().throwBall(mousePosition);
-                }
-            }
-        }
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        pressedKeys[e.getKeyCode()] = true;
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        pressedKeys[e.getKeyCode()] = false;
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        mousePosition.set(e.getPoint());
     }
     //------------------
 
@@ -155,13 +85,26 @@ public class UserInput implements MouseListener, KeyListener, MouseMotionListene
             LogicCore.get().reset();
         }
 
-        if (keycode == Keys.TAB && !Ball.get().isControlledBy(Player.humanPlayer))  {
-            List<Player> members = Team.BLUE.getMembers();
-            int indx = members.indexOf(Player.humanPlayer);
-            members.get(indx).setController(new AIController());
-            members.get((indx+1)%members.size()).setController(HumanController.get());
+        if (keycode == Keys.TAB && !Ball.get().isControlledBy(Player.getHumanPlayer()))  {
+            switchPlayer();
         }
         return true;
+    }
+
+    private void switchPlayer() {
+        Player closest = null;
+        double bestDist = Double.POSITIVE_INFINITY;
+        for(Player p:Team.BLUE.getMembers()){
+            if(p.equals(Player.getHumanPlayer())){
+                continue;
+            }
+            double dist = p.getPosition().getDistance(Ball.get().getPosition());
+            if(dist<bestDist){
+                bestDist = dist;
+                closest = p;
+            }
+        }
+        Player.setHumanPlayer(closest);
     }
 
     @Override
@@ -177,7 +120,14 @@ public class UserInput implements MouseListener, KeyListener, MouseMotionListene
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        mousePressed(null);
+        if (GameLoop.get().isRunning()) {
+            if (Ball.get().getState() instanceof Controlled) {
+                Player ballCarrier = ((Controlled) Ball.get().getState()).getBallCarrier();
+                if (ballCarrier.isHuman()) {
+                    Ball.get().throwBall(mousePosition,ballCarrier.getThrowPower());
+                }
+            }
+        }
         return true;
     }
 
@@ -193,7 +143,7 @@ public class UserInput implements MouseListener, KeyListener, MouseMotionListene
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        mousePosition.setX(screenX - Court.getOFFSET_X());
+        mousePosition.setX(screenX - Court.OFFSET_X);
         mousePosition.setY(Gdx.graphics.getHeight() - screenY);
         return true;
     }

@@ -35,13 +35,13 @@ public class Util {
     
     public static DoublePosition bandenFkt(DoublePosition s,DoublePosition k, boolean isUpper){
         double xwert;
-            double wert = CollisionModell.yBound;
+            double wert = CollisionModell.Y_BOUND;
         if(isUpper){
             xwert = k.getX()+((wert-k.getY())/(1.5*wert-k.getY()))*(s.getX()-k.getX());
         }else{
             xwert = k.getX()-((wert-k.getY())/(-0.5*wert-k.getY()))*(s.getX()-k.getX());
         } 
-        return new DoublePosition(xwert, isUpper?CollisionModell.yBound:0);
+        return new DoublePosition(xwert, isUpper?CollisionModell.Y_BOUND:0);
     }
     
     
@@ -53,7 +53,7 @@ public class Util {
     public static BandenSeite BandenWurfTestFkt(){
         int k=1;
         Player bc = ((Controlled)Ball.get().getState()).getBallCarrier();
-        if(bc.getPosition().getY()>CollisionModell.yBound/2){
+        if(bc.getPosition().getY()>CollisionModell.Y_BOUND/2){
             for(Player gegner:bc.getTeam().getOpponent().getMembers()){
                 
             }
