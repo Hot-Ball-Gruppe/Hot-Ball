@@ -6,17 +6,20 @@
 package com.hot.ball.hotball.controller.ai.roles;
 
 import com.hot.ball.help.math.Vector;
+import com.hot.ball.hotball.universe.ball.Ball;
+import com.hot.ball.hotball.universe.ball.Controlled;
 import com.hot.ball.hotball.universe.player.Player;
 
 /**
  *
  * @author Dromlius
  */
-public class Piranha implements Behavior{
+public class Piranha extends Behavior{
 
     @Override
     public Vector action(Player p) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Player ballCarrier = ((Controlled)Ball.get().getState()).getBallCarrier();
+        return goToPlayer(p, ballCarrier);
     }
     
 }

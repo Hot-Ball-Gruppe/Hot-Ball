@@ -123,6 +123,10 @@ public class Player extends GameObject {
         return currentMaxSpeed;
     }
 
+    public double getTackleZoneSize() {
+        return tackleZone.getCurrentFactor()*tackleZone.maxSize;
+    }
+    
     private void setController(Controller controller) {
         this.controller = controller;
     }

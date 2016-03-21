@@ -12,8 +12,18 @@ import com.hot.ball.hotball.universe.player.Player;
  *
  * @author Dromlius
  */
-public interface Behavior {
+public abstract class Behavior {
+    public final static Behavior PIRANHA =new Piranha();
+    public final static Behavior DISRUPTOR= new Disruptor();
     
+    protected Behavior(){}
     
-    public Vector action(Player p);
+    public abstract Vector action(Player p);
+    
+    protected Vector goToPlayer(Player p,Player target){
+        if(p.getPosition().getDistance(target.getPosition())<2*p.getTackleZoneSize()/3){
+            
+        }
+        return new Vector(1, p.getPosition().angleBetween(target.getPosition()), null);
+    }
 }
