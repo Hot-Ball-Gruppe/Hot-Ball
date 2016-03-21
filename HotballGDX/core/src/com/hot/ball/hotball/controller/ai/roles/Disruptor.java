@@ -26,7 +26,7 @@ public class Disruptor extends Behavior {
         for (Player opponent : p.getTeam().getOpponent().getMembers()) {
             double dist = ballCarrier.getPosition().getDistance(opponent.getPosition());
             if (dist < closestDist) {
-                dist = closestDist;
+                closestDist = dist;
                 closestOpponentToBC = opponent;
             }
         }

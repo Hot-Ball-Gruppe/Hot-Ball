@@ -31,12 +31,12 @@ import com.hot.ball.hotball.universe.zone.Zone;
 public class Player extends GameObject {
 //---------DEFAULT PLAYERS----------------------
 
-    public static Player Felix = new Player("Felix", new Stats(7, 4, 2), null);
-    public static Player Adrian = new Player("Adrian", new Stats(4, 4, 7), null);
-    public static Player Leo = new Player("Leo", new Stats(3, 8, 5), null);
-    public static Player Patryk = new Player("Patryk", new Stats(2, 5, 8), null);
-    public static Player Friedrich = new Player("Friedrich", new Stats(6, 4, 4), null);
-    public static Player Thomas = new Player("Thomas", new Stats(2, 4, 5), null);
+    public static Player Felix = new Player("Felix", new Stats(0, 1, 0), Role.Aggressive);
+    public static Player Adrian = new Player("Adrian", new Stats(9, 0, 9), Role.Aggressive);//Role.Balanced);
+    public static Player Leo = new Player("Leo", new Stats(3, 8, 5), Role.Aggressive);
+    public static Player Patryk = new Player("Patryk", new Stats(2, 5, 8), Role.Aggressive);
+    public static Player Friedrich = new Player("Friedrich", new Stats(6, 4, 4), Role.Aggressive);
+    public static Player Thomas = new Player("Thomas", new Stats(2, 4, 5), Role.Aggressive);
 
     /*
     public static Player Dummy1 = new Player("Dummy1", new Stats(1, 1, 1), null);

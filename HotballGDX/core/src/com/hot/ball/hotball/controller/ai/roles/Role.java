@@ -20,5 +20,12 @@ public enum Role {
         this.offensiveBehavior = offensiveBehavior;
         this.defensiveBehavior = defensiveBehavior;
     }
-    
+
+    public Behavior getDefensiveBehavior() {
+        return defensiveBehavior;
+    }
+
+    public Behavior getOffensiveBehavior() {
+        return offensiveBehavior;
+    }    
 }

@@ -30,6 +30,7 @@ public class TackleZone implements Zone {
 
     @SuppressWarnings("LeakingThisInConstructor")
     public TackleZone(Player player, int maxSize) {
+        System.out.println("PLayer: "+player.getName()+" tz: "+maxSize);
         this.player = player;
         this.maxSize = maxSize;
 
