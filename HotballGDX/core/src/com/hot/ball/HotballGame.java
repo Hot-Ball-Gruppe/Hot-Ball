@@ -25,10 +25,12 @@ public class HotballGame extends ApplicationAdapter {
     @Override
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     public void create() {
-        Court.generate(Court.Type.Fire);
+        Court.generate(Court.Type.Wood);
         CollisionModell.generate();
 
-        Team.generate(new Player[]{Player.Felix, Player.Friedrich, Player.Adrian}, new Player[]{Player.Leo, Player.Thomas, Player.Patryk}, Court.get().getLeftBasket(), Court.get().getRightBasket());
+        Ball.create(new Position.DoublePosition(Court.COURT_WIDTH / 2, Court.COURT_HEIGHT / 2));
+       Team.generate(new Player[]{Player.Felix, Player.Friedrich, Player.Adrian}, new Player[]{Player.Leo, Player.Thomas, Player.Patryk}, Court.get().getLeftBasket(), Court.get().getRightBasket());
+      //  Team.generate(new Player[]{Player.Felix}, new Player[]{}, Court.get().getLeftBasket(), Court.get().getRightBasket());
 
         UserInput.create(Gdx.input, KeyBinding.GDX_WASD, UserInput.ControlMode.ScreenRelational);
         HumanController.create();
@@ -39,7 +41,6 @@ public class HotballGame extends ApplicationAdapter {
             System.out.println(p.getName());
         }
         
-        Ball.create(new Position.DoublePosition(Court.COURT_WIDTH / 2, Court.COURT_HEIGHT / 2));
 
         LogicCore.create();
         AudioManager.create();

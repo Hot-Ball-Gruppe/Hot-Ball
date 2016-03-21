@@ -94,7 +94,7 @@ public class GameLoop implements Runnable {
             while (running) {
                 // System.out.println("run");
                 long now = System.currentTimeMillis();
-                double timeDiff = (now - lastTime) / 1000d;
+                double timeDiff = (now - lastTime) / 4000d;
                 for (GameObject go : GameObject.ALL_GAMEOBJECTS) {
                     for (Zone z : Zone.ALL_ZONES) {
                         if (z.contains(go)) {

@@ -28,15 +28,15 @@ import com.hot.ball.hotball.universe.zone.Zone;
  *
  * @author Dromlius
  */
-public class Player extends GameObject {
+public final class Player extends GameObject {
 //---------DEFAULT PLAYERS----------------------
 
-    public static Player Felix = new Player("Felix", new Stats(0, 1, 0), Role.Aggressive);
-    public static Player Adrian = new Player("Adrian", new Stats(9, 0, 9), Role.Aggressive);//Role.Balanced);
-    public static Player Leo = new Player("Leo", new Stats(3, 8, 5), Role.Aggressive);
-    public static Player Patryk = new Player("Patryk", new Stats(2, 5, 8), Role.Aggressive);
-    public static Player Friedrich = new Player("Friedrich", new Stats(6, 4, 4), Role.Aggressive);
-    public static Player Thomas = new Player("Thomas", new Stats(2, 4, 5), Role.Aggressive);
+    public static Player Felix = new Player("Felix", new Stats(0, 1, 0), Role.Balanced);
+    public static Player Adrian = new Player("Adrian", new Stats(9, 0, 9), Role.Balanced);//Role.Balanced);
+    public static Player Leo = new Player("Leo", new Stats(3, 8, 5), Role.Balanced);
+    public static Player Patryk = new Player("Patryk", new Stats(2, 5, 8), Role.Balanced);
+    public static Player Friedrich = new Player("Friedrich", new Stats(6, 4, 4), Role.Balanced);
+    public static Player Thomas = new Player("Thomas", new Stats(2, 4, 5), Role.Balanced);
 
     /*
     public static Player Dummy1 = new Player("Dummy1", new Stats(1, 1, 1), null);
@@ -79,6 +79,8 @@ public class Player extends GameObject {
 
     private final double totalMaxSpeed;
     private final int throwPower;
+    
+    private final double maxThrowDist;
 
     private double currentMaxSpeed;
 
@@ -88,7 +90,12 @@ public class Player extends GameObject {
 
         totalMaxSpeed = 200 * stats.getSpeed();
         throwPower = (int) (1000 * stats.getPower());
-        tackleZone = new TackleZone(this, (int) (85* stats.getTackle()));
+        
+        final double zähler = Math.pow(Court.get().getDecayBase(),-Ball.get().getDECAY_FACTOR()*1.52)-1;
+        final double nenner = Ball.get().getDECAY_FACTOR()*Math.log(Court.get().getDecayBase());
+        maxThrowDist = (-zähler/nenner)*throwPower;
+        
+        tackleZone = new TackleZone(this, (int) (10* stats.getTackle()));
 
         currentMaxSpeed = totalMaxSpeed;
 
@@ -249,6 +256,10 @@ public class Player extends GameObject {
         accelerate(timeDiff, controller.getMoveVector(this));
         facing = controller.getFacing(this);
         tackleZone.action(timeDiff);
+    }
+    
+    public double getMaxThrowDist() {
+       return maxThrowDist;
     }
 
 }

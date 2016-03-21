@@ -20,6 +20,7 @@ import com.hot.ball.hotball.universe.player.Team;
 public class Marking extends Behavior {
 
     @Override
+    @SuppressWarnings("null")
     public Vector action(Player p) {
         Player marked = null;
         for (int indx = 0; indx < p.getTeam().getMembers().length; indx++) {
