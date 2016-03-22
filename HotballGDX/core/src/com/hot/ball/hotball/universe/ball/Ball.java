@@ -53,13 +53,23 @@ public class Ball extends GameObject {
     public BallState getState() {
         return state;
     }
-
+    
+    public Player getBallCarrier(){
+        if(state instanceof InAir){
+            System.out.println("WARNING: Ball in air! Returning thrower not carrier!!");
+            return ((InAir)state).getThrower();
+        }else{
+            return ((Controlled)state).getBallCarrier();
+        }
+        
+    }
+    
     public boolean isControlledBy(Player p) {
-        return (getState() instanceof Controlled) && p.equals(((Controlled) getState()).getBallCarrier());
+        return (getState() instanceof Controlled) && p.equals(getBallCarrier());
     }
 
     public void throwBall(Position.DoublePosition target, int power) {
-        Player carrier = ((Controlled) getState()).getBallCarrier();
+        Player carrier = getBallCarrier();
         setState(new InAir(carrier, new Vector(power, getPosition().angleBetween(target), null), carrier.getChanceToHit()));
     }
 

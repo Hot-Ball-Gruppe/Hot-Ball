@@ -22,7 +22,7 @@ public class InAir implements BallState {
 
     private final int id;
     
-    private final Player thrower;
+    private Player thrower;
     private final double chance;
 
     public InAir(Player thrower, Vector direction, double chance) {
@@ -96,6 +96,10 @@ public class InAir implements BallState {
 
     public Player getThrower() {
         return thrower;
+    }
+
+    public void setThrower(Player thrower) {
+        this.thrower = thrower;
     }
 
     public double getChance() {

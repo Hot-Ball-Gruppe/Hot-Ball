@@ -33,7 +33,7 @@ public class AIController implements Controller {
                 return Vector.NULL_VECTOR;
             }
         } else {
-            Player ballCarrier = ((Controlled) Ball.get().getState()).getBallCarrier();
+            Player ballCarrier =Ball.get().getBallCarrier();
             Team controllingTeam = ballCarrier.getTeam();
             if (player.getTeam().equals(controllingTeam)) {
                 if (player.equals(ballCarrier)) {

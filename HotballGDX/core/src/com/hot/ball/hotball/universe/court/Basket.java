@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.hot.ball.help.math.Position;
 import com.hot.ball.hotball.ui.Graphics;
 import com.hot.ball.hotball.universe.GameObject;
+import com.hot.ball.hotball.universe.player.Team;
 
 /**
  *
@@ -18,7 +19,9 @@ import com.hot.ball.hotball.universe.GameObject;
 public class Basket extends GameObject {
 
     private int lastAttack = -1;
-
+    
+    private Team attacking;
+    
     public Basket(Position.DoublePosition position) {
         super(position, 0);
     }
@@ -60,6 +63,14 @@ public class Basket extends GameObject {
 
     @Override
     public void action(double timeDiff) {
+    }
+
+    public Team getAttacking() {
+        return attacking;
+    }
+
+    public void setAttacking(Team attacking) {
+        this.attacking = attacking;
     }
 
 }

@@ -7,7 +7,6 @@ package com.hot.ball.hotball.controller.ai.roles;
 
 import com.hot.ball.help.math.Vector;
 import com.hot.ball.hotball.universe.ball.Ball;
-import com.hot.ball.hotball.universe.ball.Controlled;
 import com.hot.ball.hotball.universe.player.Player;
 
 /**
@@ -18,7 +17,7 @@ public class Disruptor extends Behavior {
 
     @Override
     public Vector action(Player p) {
-        Player ballCarrier = ((Controlled) Ball.get().getState()).getBallCarrier();
+        Player ballCarrier = Ball.get().getBallCarrier();
 
         Player closestOpponentToBC = null;
         double closestDist = Double.POSITIVE_INFINITY;

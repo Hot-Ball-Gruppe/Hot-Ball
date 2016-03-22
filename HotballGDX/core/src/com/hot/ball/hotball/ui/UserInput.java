@@ -11,10 +11,10 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.hot.ball.help.math.Position;
 import com.hot.ball.help.math.Vector;
+import com.hot.ball.hotball.logic.BlockCondition;
 import com.hot.ball.hotball.logic.GameLoop;
 import com.hot.ball.hotball.logic.LogicCore;
 import com.hot.ball.hotball.universe.ball.Ball;
-import com.hot.ball.hotball.universe.ball.Controlled;
 import com.hot.ball.hotball.universe.court.Court;
 import com.hot.ball.hotball.universe.player.Player;
 import com.hot.ball.hotball.universe.player.Team;
@@ -23,10 +23,12 @@ import com.hot.ball.hotball.universe.player.Team;
  *
  * @author Dromlius
  */
-public class UserInput implements InputProcessor {
+public class UserInput implements InputProcessor, BlockCondition {
 
     private static UserInput singleton;
     private final ControlMode controlMode;
+
+    
 
     public static enum ControlMode {
         MouseRelational, ScreenRelational;
@@ -121,11 +123,8 @@ public class UserInput implements InputProcessor {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (GameLoop.get().isRunning()) {
-            if (Ball.get().getState() instanceof Controlled) {
-                Player ballCarrier = ((Controlled) Ball.get().getState()).getBallCarrier();
-                if (ballCarrier.isHuman()) {
-                    Ball.get().throwBall(mousePosition,ballCarrier.getThrowPower());
-                }
+            if(Ball.get().isControlledBy(Player.getHumanPlayer())){
+                Ball.get().throwBall(mousePosition,Player.getHumanPlayer().getThrowPower());
             }
         }
         return true;
@@ -151,5 +150,16 @@ public class UserInput implements InputProcessor {
     @Override
     public boolean scrolled(int amount) {
         return false;
+    }
+    
+    
+    @Override
+    public boolean isBlocking() {
+       return pressedKeys[Keys.SPACE];
+    }
+
+    @Override
+    public boolean isPermanent() {
+        return true;
     }
 }

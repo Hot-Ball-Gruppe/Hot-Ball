@@ -16,6 +16,7 @@ public abstract class Behavior {
     public final static Behavior PIRANHA =new Piranha();
     public final static Behavior DISRUPTOR= new Disruptor();
     public final static Behavior MARKING= new Marking();
+    public final static Behavior FORWARD= new Forward();
     public final static Behavior STUPID = new Stupid();
     
     protected Behavior(){}

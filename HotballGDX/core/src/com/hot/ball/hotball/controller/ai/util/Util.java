@@ -32,14 +32,14 @@ public class Util {
         System.out.println(ClosestToStrecke(a, b, p));
     }
 
-    public static double radiusFkt(DoublePosition k, DoublePosition p, Vector r) {
+    public static double radiusFkt(Position k, Position p, Vector r) {
         // Math.sqrt(d);
         double bruch = (-k.getX() * r.getdX() + p.getX() * r.getdX() - k.getY() * r.getdY() + p.getY() * r.getdY()) / (Math.pow(r.getdX(), 2) + Math.pow(r.getdY(), 2));
         double radius = Math.sqrt(Math.pow((p.getX() - (k.getX() + bruch * r.getdX())), 2) + Math.pow((p.getY() - (k.getY() + bruch * r.getdY())), 2));
         return radius;
     }
 
-    public static DoublePosition bandenFkt(DoublePosition s, DoublePosition k, boolean isUpper) {
+    public static DoublePosition bandenFkt(Position s, Position k, boolean isUpper) {
         double xwert;
         double wert = Court.COURT_HEIGHT;
         if (isUpper) {
@@ -50,7 +50,7 @@ public class Util {
         return new DoublePosition(xwert, isUpper ? Court.COURT_HEIGHT : 0);
     }
 
-    public static boolean canThrow(Player player, DoublePosition target) {
+    public static boolean canThrow(Player player, Position target) {
         double dist = player.getPosition().getDistance(target);
         if (dist < player.getMaxThrowDist()) {
             //WARNING: THIS DISREGARDS HANDOFFS!!!!!!
@@ -65,7 +65,7 @@ public class Util {
         }
     }
 
-    public static Position ClosestToStrecke(DoublePosition a, DoublePosition b, DoublePosition p) {
+    public static Position ClosestToStrecke(Position a, Position b, Position p) {
         final Vector vector = new Vector(b.getX() - a.getX(), b.getY() - a.getY());
         double rad = radiusFkt(a, p, vector);
         vector.rotateClockwise();
@@ -95,7 +95,7 @@ public class Util {
 
     public static BandenSeite BandenWurfTestFkt() {
         int k = 1;
-        Player bc = ((Controlled) Ball.get().getState()).getBallCarrier();
+        Player bc = Ball.get().getBallCarrier();
         if (bc.getPosition().getY() > Court.COURT_HEIGHT / 2) {
             for (Player gegner : bc.getTeam().getOpponent().getMembers()) {
 

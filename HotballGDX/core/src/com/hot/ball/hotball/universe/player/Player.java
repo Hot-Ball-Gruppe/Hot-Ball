@@ -10,9 +10,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.hot.ball.help.math.Position.DoublePosition;
+import com.hot.ball.help.math.Vector;
 import com.hot.ball.hotball.controller.Controller;
 import com.hot.ball.hotball.controller.HumanController;
 import com.hot.ball.hotball.controller.ai.AIController;
+import com.hot.ball.hotball.controller.ai.analysis.VoronoiArea;
 import com.hot.ball.hotball.controller.ai.roles.Role;
 import com.hot.ball.hotball.ui.Graphics;
 import com.hot.ball.hotball.universe.GameObject;
@@ -31,12 +33,12 @@ import com.hot.ball.hotball.universe.zone.Zone;
 public final class Player extends GameObject {
 //---------DEFAULT PLAYERS----------------------
 
-    public static Player Felix = new Player("Felix", new Stats(0, 1, 0), Role.Balanced);
-    public static Player Adrian = new Player("Adrian", new Stats(9, 0, 9), Role.Balanced);//Role.Balanced);
-    public static Player Leo = new Player("Leo", new Stats(3, 8, 5), Role.Balanced);
-    public static Player Patryk = new Player("Patryk", new Stats(2, 5, 8), Role.Balanced);
-    public static Player Friedrich = new Player("Friedrich", new Stats(6, 4, 4), Role.Balanced);
-    public static Player Thomas = new Player("Thomas", new Stats(2, 4, 5), Role.Balanced);
+    public static Player Felix = new Player("Felix", new Stats(1, 1, 1), Role.Aggressive);
+    public static Player Adrian = new Player("Adrian", new Stats(1, 1, 1), Role.Aggressive);
+    public static Player Leo = new Player("Leo", new Stats(1, 1, 1), Role.Aggressive);
+    public static Player Patryk = new Player("Patryk", new Stats(1, 1, 1), Role.Balanced);
+    public static Player Friedrich = new Player("Friedrich", new Stats(1, 1, 1), Role.Balanced);
+    public static Player Thomas = new Player("Thomas", new Stats(1, 1, 1), Role.Balanced);
 
     /*
     public static Player Dummy1 = new Player("Dummy1", new Stats(1, 1, 1), null);
@@ -45,7 +47,6 @@ public final class Player extends GameObject {
     public static Player Dummy4 = new Player("Dummy4", new Stats(1, 1, 1), null);
     public static Player Dummy5 = new Player("Dummy5", new Stats(1, 1, 1), null);
     public static Player Dummy6 = new Player("Dummy6", new Stats(1, 1, 1), null);*/
-
     @Override
     protected double getDECAY_FACTOR() {
         return 4;
@@ -79,10 +80,12 @@ public final class Player extends GameObject {
 
     private final double totalMaxSpeed;
     private final int throwPower;
-    
+
     private final double maxThrowDist;
 
     private double currentMaxSpeed;
+
+    private VoronoiArea voronoiArea;
 
     private Player(String name, Stats stats, Role role) {
         super(new DoublePosition(0, 0), 24);
@@ -90,12 +93,12 @@ public final class Player extends GameObject {
 
         totalMaxSpeed = 200 * stats.getSpeed();
         throwPower = (int) (1000 * stats.getPower());
-        
-        final double zähler = Math.pow(Court.get().getDecayBase(),-Ball.get().getDECAY_FACTOR()*1.52)-1;
-        final double nenner = Ball.get().getDECAY_FACTOR()*Math.log(Court.get().getDecayBase());
-        maxThrowDist = (-zähler/nenner)*throwPower;
-        
-        tackleZone = new TackleZone(this, (int) (10* stats.getTackle()));
+
+        final double zähler = Math.pow(Court.get().getDecayBase(), -Ball.get().getDECAY_FACTOR() * 1.52) - 1;
+        final double nenner = Ball.get().getDECAY_FACTOR() * Math.log(Court.get().getDecayBase());
+        maxThrowDist = (-zähler / nenner) * throwPower;
+
+        tackleZone = new TackleZone(this, (int) (85 * stats.getTackle()));
 
         currentMaxSpeed = totalMaxSpeed;
 
@@ -127,15 +130,23 @@ public final class Player extends GameObject {
 
     @Override
     public double getCurrentMaxSpeed() {
-        return currentMaxSpeed;
+        return currentMaxSpeed * (Ball.get().isControlledBy(this) ? 0.8 : 1);
     }
 
     public double getTackleZoneSize() {
-        return tackleZone.getCurrentFactor()*tackleZone.maxSize;
+        return tackleZone.getCurrentFactor() * tackleZone.maxSize;
     }
-    
+
     private void setController(Controller controller) {
         this.controller = controller;
+    }
+
+    public VoronoiArea getVoronoiArea() {
+        return voronoiArea;
+    }
+
+    public void setVoronoiArea(VoronoiArea voronoiArea) {
+        this.voronoiArea = voronoiArea;
     }
 
     public boolean isHuman() {
@@ -150,6 +161,8 @@ public final class Player extends GameObject {
     private static final TextureRegion[] THROWING_TEXTURE;
 
     private float totalAnimationTime = (float) (Math.random() * 10);
+
+    private static final double ROTATION_PER_SECOND = Math.PI*2;
 
     static {
         TextureRegion[][][] split = new TextureRegion[][][]{TextureRegion.split(new Texture(Gdx.files.internal("res/player0.png")), 64, 64), TextureRegion.split(new Texture(Gdx.files.internal("res/player1.png")), 64, 64), TextureRegion.split(new Texture(Gdx.files.internal("res/player2.png")), 64, 64)};
@@ -192,6 +205,7 @@ public final class Player extends GameObject {
             keyFrame = STANDING_TEXTURE[spriteColor];
         }
         g.drawImage(keyFrame, getPosition().getRoundX(), getPosition().getRoundY(), 32, 32, facing);
+        // g.drawImage(keyFrame, voronoiArea.getCenter().getRoundX(), voronoiArea.getCenter().getRoundY(), 32, 32, facing);
         if (isHuman() && Ball.get().isControlledBy(this) && getChanceToHit() > 0) {
             g.drawString("" + (int) (100 * getChanceToHit()), 10, 40);
         }
@@ -252,14 +266,34 @@ public final class Player extends GameObject {
             currentTakeDownTime = Math.max(0, currentTakeDownTime - timeDiff);
         }
 
+        Vector accDir = controller.getMoveVector(this);
         clearInterfeeringZones();
-        accelerate(timeDiff, controller.getMoveVector(this));
-        facing = controller.getFacing(this);
+        if (accDir.getLength() > 1) {
+            accDir.setLength(1);
+        }
+        accelerate(timeDiff, accDir);
+        if (isHuman()) {
+            facing =  controller.getFacing(this);
+        } else {
+            facing = allignFacing(facing, controller.getFacing(this), timeDiff);
+        }
         tackleZone.action(timeDiff);
     }
-    
+
     public double getMaxThrowDist() {
-       return maxThrowDist;
+        return maxThrowDist;
+    }
+
+    private double allignFacing(double currentFacing, double towards, double timeDiff) {
+
+        double angle = towards - currentFacing;
+        angle += (angle > Math.PI) ? -2 * Math.PI : (angle < -Math.PI) ? 2 * Math.PI : 0;
+        double maxAngle = ROTATION_PER_SECOND * timeDiff;
+        if (maxAngle > Math.abs(angle)) {
+            return towards;
+        } else {
+            return currentFacing + Math.signum(angle) * maxAngle;
+        }
     }
 
 }

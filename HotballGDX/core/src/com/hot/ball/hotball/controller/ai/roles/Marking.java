@@ -29,7 +29,7 @@ public class Marking extends Behavior {
                 marked = opponentTeam.getMembers()[indx % opponentTeam.getMembers().length];
             }
         }
-        DoublePosition oponentTarget = Ball.get().isControlledBy(marked) ? marked.getTeam().getAttacking().getPosition() : ((Controlled) Ball.get().getState()).getBallCarrier().getPosition();
+        DoublePosition oponentTarget = Ball.get().isControlledBy(marked) ? marked.getTeam().getAttacking().getPosition() : Ball.get().getBallCarrier().getPosition();
         if (Util.canThrow(marked, oponentTarget)) {
             return new Vector(1, p.getPosition().angleBetween(Util.ClosestToStrecke(marked.getPosition(), oponentTarget, p.getPosition())), null);
         } else {
