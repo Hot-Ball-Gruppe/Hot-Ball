@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import com.hot.ball.help.math.Position;
 import com.hot.ball.help.math.Position.FinalPosition;
+import com.hot.ball.help.math.Vector;
 import com.hot.ball.hotball.controller.ai.util.Util;
 import com.hot.ball.hotball.universe.GameObject;
 import com.hot.ball.hotball.universe.ball.Ball;
@@ -67,6 +68,10 @@ public class Analysis {
                 va.setDefRating(Integer.decode(statsLine[1]));
                 va.setMobRating(Integer.decode(statsLine[2]));
 
+                if (va.getCenter().getX() == 50) {
+                    System.out.println("OUT: " + va);
+                }
+
                 connections.put(center, new HashSet<>());
                 for (String connectionPoint : connectionLine) {
                     connections.get(va.getCenter()).add(positionFromString(connectionPoint));
@@ -115,63 +120,80 @@ public class Analysis {
     }
 
     public static enum Filter {
+
         canBePassedTo {
-            @Override
-            public boolean applies(Player p, VoronoiArea toTest) {
-                return Util.canThrow(Ball.get().getBallCarrier(), toTest.getCenter());
-            }
-        }, noEnemies0 {
-            @Override
-            public boolean applies(Player p, VoronoiArea toTest) {
-                for (Player occupant : toTest.getOccupants()) {
-                    if (occupant.getTeam().equals(p.getTeam().getOpponent())) {
-                        return false;
+                    @Override
+                    public boolean applies(Player p, VoronoiArea toTest) {
+                        return Util.canThrow(Ball.get().getBallCarrier(), toTest.getCenter());
                     }
-                }
-                return true;
-            }
-        }, noEnemies1 {
-            @Override
-            public boolean applies(Player p, VoronoiArea toTest) {
-                if (noEnemies0.applies(p, toTest)) {
-                    for (VoronoiArea neighbor : toTest.getConnected()) {
-                        if (!noEnemies0.applies(p, neighbor)) {
-                            return false;
+                }, noEnemies0 {
+                    @Override
+                    public boolean applies(Player p, VoronoiArea toTest) {
+                        for (Player occupant : toTest.getOccupants()) {
+                            if (occupant.getTeam().equals(p.getTeam().getOpponent())) {
+                                return false;
+                            }
                         }
+                        return true;
                     }
-                }
-                return true;
-            }
-        }, AggroRatingBetterThanBC {
+                }, noEnemies1 {
+                    @Override
+                    public boolean applies(Player p, VoronoiArea toTest) {
+                        if (noEnemies0.applies(p, toTest)) {
+                            for (VoronoiArea neighbor : toTest.getConnected()) {
+                                if (!noEnemies0.applies(p, neighbor)) {
+                                    return false;
+                                }
+                            }
+                        }
+                        return true;
+                    }
+                }, AggroRatingBetterThanBC {
+                    @Override
+                    public boolean applies(Player p, VoronoiArea toTest) {
+                        Player ballCarrier = Ball.get().getBallCarrier();
+                        //  System.out.println("BC ATK: "+ballCarrier.getVoronoiArea().getAttackRating(p.getTeam()));
+                        return ballCarrier.getVoronoiArea().getAttackRating(p.getTeam()) < toTest.getAttackRating(p.getTeam());
+                    }
+                }, noAllys0 {
+                    @Override
+                    public boolean applies(Player p, VoronoiArea toTest) {
+                        for (Player occupant : toTest.getOccupants()) {
+                            if (p.equals(occupant)) {
+                                continue;
+                            }
+                            if (occupant.getTeam().equals(p.getTeam())) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+                }, noAllys1 {
+                    @Override
+                    public boolean applies(Player p, VoronoiArea toTest) {
+                        if (noAllys0.applies(p, toTest)) {
+                            for (VoronoiArea neighbor : toTest.getConnected()) {
+                                if (!noAllys0.applies(p, neighbor)) {
+                                    return false;
+                                }
+                            }
+                        }
+                        return true;
+                    }
+                }, isDefRatingBetterThanBC {
+
+                    @Override
+                    public boolean applies(Player p, VoronoiArea toTest) {
+                        Player ballCarrier = Ball.get().getBallCarrier();
+                        //  System.out.println("BC ATK: "+ballCarrier.getVoronoiArea().getAttackRating(p.getTeam()));
+                        return ballCarrier.getVoronoiArea().getDefenseRating(p.getTeam()) < toTest.getDefenseRating(p.getTeam());
+                    }
+                }, canBCScoreIfImThere {
+
             @Override
             public boolean applies(Player p, VoronoiArea toTest) {
                 Player ballCarrier = Ball.get().getBallCarrier();
-                return ballCarrier.getVoronoiArea().getAttackRating(p.getTeam()) < toTest.getAttackRating(p.getTeam());
-            }
-        }, noAllys0 {
-            @Override
-            public boolean applies(Player p, VoronoiArea toTest) {
-                for (Player occupant : toTest.getOccupants()) {
-                    if (p.equals(occupant)) {
-                        continue;
-                    }
-                    if (occupant.getTeam().equals(p.getTeam())) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-        },noAllys1 {
-            @Override
-            public boolean applies(Player p, VoronoiArea toTest) {
-                if (noAllys0.applies(p, toTest)) {
-                    for (VoronoiArea neighbor : toTest.getConnected()) {
-                        if (!noAllys0.applies(p, neighbor)) {
-                            return false;
-                        }
-                    }
-                }
-                return true;
+                return Util.radiusFkt(ballCarrier.getPosition(), toTest.getCenter(), new Vector(ballCarrier.getTeam().getAttacking().getPosition().getX()-ballCarrier.getPosition().getX(), ballCarrier.getTeam().getAttacking().getPosition().getY()-ballCarrier.getPosition().getY()))<p.getTackleZoneSize();
             }
         };
 
@@ -181,8 +203,10 @@ public class Analysis {
     public Set<VoronoiArea> processQuery(Filter[] query, Player p) {
         Set<VoronoiArea> currentSet = new HashSet<>(voronoiAreas.values());
         Set<VoronoiArea> backUpSet = new HashSet<>(currentSet);
-
+     //   System.out.println("\nPlayer "+p.getName());
+        //      System.out.println(currentSet);
         for (Filter f : query) {
+            //   System.out.println("Filter: "+f.name());
             for (Iterator<VoronoiArea> iterator = currentSet.iterator(); iterator.hasNext();) {
                 VoronoiArea next = iterator.next();
                 if (!f.applies(p, next)) {
@@ -190,11 +214,13 @@ public class Analysis {
                 }
             }
             if (currentSet.isEmpty()) {
+                //    System.out.println("Filter "+f.name()+" was too tight!");
                 currentSet.addAll(backUpSet);
             } else {
                 backUpSet.clear();
                 backUpSet.addAll(currentSet);
             }
+            //   System.out.println(currentSet);
         }
         return currentSet;
     }

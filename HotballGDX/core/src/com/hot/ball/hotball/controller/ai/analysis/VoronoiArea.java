@@ -60,7 +60,7 @@ public class VoronoiArea {
 
     public void setAtkRating(int atk) {
         Team team;
-        if (center.getX() < Court.COURT_WIDTH / 2 + 10) {
+        if (center.getX() < Court.COURT_WIDTH / 2 - 10) {
             team = Court.get().getLeftBasket().getAttacking();
             Rating r = ratings.get(team);
             if (r == null) {
@@ -70,7 +70,8 @@ public class VoronoiArea {
             r.setAtk(atk);
         }
 
-        if (center.getX() > Court.COURT_WIDTH / 2 - 10) {
+        if (center.getX() > Court.COURT_WIDTH / 2 + 10) {
+            
             team = Court.get().getRightBasket().getAttacking();
             Rating r = ratings.get(team);
             if (r == null) {
@@ -99,24 +100,24 @@ public class VoronoiArea {
 
     public void setDefRating(int def) {
         Team team;
-        if (center.getX() < Court.COURT_WIDTH / 2 + 10) {
+        if (center.getX() < Court.COURT_WIDTH / 2 - 10) {
             team = Court.get().getRightBasket().getAttacking();
             Rating r = ratings.get(team);
             if (r == null) {
                 r = new Rating();
                 ratings.put(team, r);
             }
-            r.setAtk(def);
+            r.setDef(def);
         }
 
-        if (center.getX() > Court.COURT_WIDTH / 2 - 10) {
+        if (center.getX() > Court.COURT_WIDTH / 2 + 10) {
             team = Court.get().getLeftBasket().getAttacking();
             Rating r = ratings.get(team);
             if (r == null) {
                 r = new Rating();
                 ratings.put(team, r);
             }
-            r.setAtk(def);
+            r.setDef(def);
         }
     }
 
@@ -159,5 +160,17 @@ public class VoronoiArea {
         public int getMob() {
             return mob;
         }
+
+        @Override
+        public String toString() {
+            return "ATK: "+getAtk();
+        }
+        
+        
+    }
+
+    @Override
+    public String toString() {
+        return center.toString()+": RED:"+getAttackRating(Team.RED)+", BLUE:"+getAttackRating(Team.BLUE);
     }
 }

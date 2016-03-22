@@ -20,33 +20,19 @@ import java.util.Set;
  *
  * @author Dromlius
  */
-public class Forward extends Behavior {
+public class ZoneDefense extends Behavior {
 
     @Override
     public Vector action(Player p) {
-        for (Zone z : p.getInterferingZones()) {
-            if (z instanceof TackleZone) {
-                Player tackler = ((TackleZone) z).getPlayer();
-                if (p.getTeam().getOpponent().isMember(tackler)) {
-                  //  return new Vector(p.getPosition().getX() -tackler.getPosition().getX(), p.getPosition().getY() -tackler.getPosition().getY(), 1);
-                }
-            }
-        }
-        Set<VoronoiArea> possibleFields = Analysis.get().processQuery(new Analysis.Filter[]{Filter.canBePassedTo, Filter.noEnemies0, Filter.AggroRatingBetterThanBC, Filter.noEnemies1, Filter.noAllys0, Filter.noAllys1}, p);
+        Set<VoronoiArea> possibleFields = Analysis.get().processQuery(new Analysis.Filter[]{Filter.isDefRatingBetterThanBC, Filter.canBCScoreIfImThere, Filter.noAllys0, Filter.noAllys1}, p);
         
         Position bestPoint = null;
-        int bestAtkValue=-1;
         double bestDistToBCAndBasket=Double.POSITIVE_INFINITY;
         
         for(VoronoiArea va:possibleFields){
-            int attackRating = va.getAttackRating(p.getTeam());
-            if(attackRating<bestAtkValue){
-                continue;
-            }
             double dist = va.getCenter().getDistance(Ball.get().getBallCarrier().getPosition()) + va.getCenter().getDistance(p.getTeam().getAttacking().getPosition());
-            if(attackRating>bestAtkValue || dist<bestDistToBCAndBasket){
+            if(dist<bestDistToBCAndBasket){
                 bestPoint = va.getCenter();
-                bestAtkValue = attackRating;
                 bestDistToBCAndBasket=dist;
             }
         }

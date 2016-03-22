@@ -87,7 +87,7 @@ public class CollisionModell {
     }
 
     private void collide(GameObject go, GameObject other) {
-        if (go instanceof Player && other instanceof Player) {
+        if (go instanceof Player && other instanceof Player){// && !((Player)go).getTeam().isMember((Player)other)) {
             go.setCurrentVelocity(new Vector(go.getCurrentVelocity().getLength(), other.getPosition().angleBetween(go.getPosition()), null));
             other.setCurrentVelocity(new Vector(other.getCurrentVelocity().getLength(), go.getPosition().angleBetween(other.getPosition()), null));
         }
