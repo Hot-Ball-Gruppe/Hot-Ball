@@ -146,7 +146,7 @@ public class Analysis {
             @Override
             public boolean applies(Player p, VoronoiArea toTest) {
                 Player ballCarrier = Ball.get().getBallCarrier();
-                return ballCarrier.getVoronoiArea().getAttackRating(p.getTeam()) <= toTest.getAttackRating(p.getTeam());
+                return ballCarrier.getVoronoiArea().getAttackRating(p.getTeam()) < toTest.getAttackRating(p.getTeam());
             }
         }, noAllys0 {
             @Override

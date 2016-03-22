@@ -18,6 +18,7 @@ public abstract class Behavior {
     public final static Behavior MARKING= new Marking();
     public final static Behavior FORWARD= new Forward();
     public final static Behavior STUPID = new Stupid();
+    public final static Behavior DEAD = new Dead();
     
     protected Behavior(){}
     
