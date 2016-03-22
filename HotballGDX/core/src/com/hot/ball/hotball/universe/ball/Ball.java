@@ -75,7 +75,7 @@ public class Ball extends GameObject {
 
     @Override
     public double getDECAY_FACTOR() {
-        return 0.62;
+        return 0.65;
     }
 
     @Override

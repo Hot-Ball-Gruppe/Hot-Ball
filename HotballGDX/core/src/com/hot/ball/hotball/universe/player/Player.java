@@ -84,6 +84,8 @@ public final class Player extends GameObject {
     private final double maxThrowDist;
 
     private double currentMaxSpeed;
+    
+    private double minChanceToHit;
 
     private VoronoiArea voronoiArea;
 
@@ -93,6 +95,8 @@ public final class Player extends GameObject {
 
         totalMaxSpeed = 200 * stats.getSpeed();
         throwPower = (int) (1000 * stats.getPower());
+
+        minChanceToHit = stats.getChance() / 100;
 
         final double zähler = Math.pow(Court.get().getDecayBase(), -Ball.get().getDECAY_FACTOR() * 1.52) - 1;
         final double nenner = Ball.get().getDECAY_FACTOR() * Math.log(Court.get().getDecayBase());
@@ -216,9 +220,10 @@ public final class Player extends GameObject {
     private final static double TAKEDOWNTIME = 1.0;
     private double currentTakeDownTime = 0;
 
-    public void calcChanceToHit(int enemyTZ) {
+     public void calcChanceToHit(int enemyTZ) {
+    	double adj_max_throw_dist = MAX_THROW_DIST + minChanceToHit * 800;
         double dist = getPosition().getDistance(getTeam().getAttacking().getPosition());
-        chanceToHit = Math.max(0, Math.min(0.99, -dist / MAX_THROW_DIST + (float) Court.BASKET_DIST_FROM_OUTLINE / MAX_THROW_DIST + 1)) / Math.pow(2, enemyTZ);
+        chanceToHit = Math.max(minChanceToHit, Math.min(0.99, (-dist / adj_max_throw_dist + (float) Court.BASKET_DIST_FROM_OUTLINE / adj_max_throw_dist + 0.95 + minChanceToHit)) / Math.pow(2, enemyTZ));
     }
 
     public double getChanceToHit() {
