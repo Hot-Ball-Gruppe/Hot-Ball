@@ -20,12 +20,6 @@ import com.hot.ball.hotball.universe.player.Team;
 public class Util {
 
     public static void main(String[] args) {
-        /*DoublePosition ball = new DoublePosition(2, 2);
-         Vector dir = new Vector(1, 3);
-         DoublePosition player = new DoublePosition(80, 300);
-         DoublePosition korb = new DoublePosition(0, 300);
-         System.out.println(bandenFkt(korb, player, false));*/
-        
         
         
     }
@@ -121,7 +115,27 @@ public class Util {
         }
     }
     
-    public static boolean doppelbandeCheckFkt(Position bande){
+    public static boolean doppelbandeCheckFkt(Player pl, boolean isUpper, Position bande){
+        Position s = pl.getTeam().getAttacking().getPosition();
+        double hBandeX;
+        if (Team.BLUE.isMember(pl)) {
+            hBandeX = Court.COURT_WIDTH + Court.OFFSET_X;
+        } else {
+            hBandeX = - Court.OFFSET_X;
+        }
+        Position k = pl.getPosition();
+        
+        Position.FinalPosition secondBandenPkt;
+        if(!isUpper){
+            double p = k.getY()+((hBandeX-k.getX())/(-s.getX()+2*hBandeX-k.getX()))*(-s.getY()-k.getY());
+            secondBandenPkt = new Position.FinalPosition(hBandeX, -p);
+        }else{
+            double p = k.getY()-2*s.getY()+((hBandeX-k.getX())/(-s.getX()+2*hBandeX-k.getX()))*(3*s.getY()-k.getY());
+            secondBandenPkt = new Position.FinalPosition(hBandeX,2*s.getY()-p);
+        }
+        //Von PLayerPos to bande mit WufrTextFkt
+        //Von bande to 2ndBande radiusFkt iteriert über alle gegnas
+        return false;
         
     }
 }

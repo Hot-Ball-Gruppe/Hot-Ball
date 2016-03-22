@@ -20,7 +20,7 @@ import com.hot.ball.hotball.universe.player.TeamColor;
  */
 public class TackleZone implements Zone {
 
-    public final static double MIN_SIZE_FACTOR = 0.6;
+    public final static double MIN_SIZE_FACTOR = 0.75;
     public final static double SIZE_CHANGE_PER_SECOND = 2;
 
     private final Player player;
