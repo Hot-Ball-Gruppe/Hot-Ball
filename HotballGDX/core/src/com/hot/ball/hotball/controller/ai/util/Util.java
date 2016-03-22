@@ -9,9 +9,9 @@ import com.hot.ball.help.math.Position;
 import com.hot.ball.help.math.Position.DoublePosition;
 import com.hot.ball.help.math.Vector;
 import com.hot.ball.hotball.universe.ball.Ball;
-import com.hot.ball.hotball.universe.ball.Controlled;
 import com.hot.ball.hotball.universe.court.Court;
 import com.hot.ball.hotball.universe.player.Player;
+import com.hot.ball.hotball.universe.player.Team;
 
 /**
  *
@@ -25,11 +25,9 @@ public class Util {
          DoublePosition player = new DoublePosition(80, 300);
          DoublePosition korb = new DoublePosition(0, 300);
          System.out.println(bandenFkt(korb, player, false));*/
-
-        DoublePosition a = new DoublePosition(0, 5);
-        DoublePosition b = new DoublePosition(10, 5);
-        DoublePosition p = new DoublePosition(3, 8);
-        System.out.println(ClosestToStrecke(a, b, p));
+        
+        
+        
     }
 
     public static double radiusFkt(Position k, Position p, Vector r) {
@@ -54,8 +52,8 @@ public class Util {
         double dist = player.getPosition().getDistance(target);
         if (dist < player.getMaxThrowDist()) {
             //WARNING: THIS DISREGARDS HANDOFFS!!!!!!
-            for(Player opponent:player.getTeam().getOpponent().getMembers()){
-                if(ClosestToStrecke(player.getPosition(), target, opponent.getPosition()).getDistance(opponent.getPosition())<opponent.getTackleZoneSize()){
+            for (Player opponent : player.getTeam().getOpponent().getMembers()) {
+                if (ClosestToStrecke(player.getPosition(), target, opponent.getPosition()).getDistance(opponent.getPosition()) < opponent.getTackleZoneSize()) {
                     return false;
                 }
             }
@@ -102,5 +100,28 @@ public class Util {
             }
         }
         return null;
+    }
+
+    public static Position doppelBandenFkt(Player pl, boolean isUpper) {
+        Position s = pl.getTeam().getAttacking().getPosition();
+        double hBandeX;
+        if (Team.BLUE.isMember(pl)) {
+            hBandeX = Court.COURT_WIDTH + Court.OFFSET_X;
+        } else {
+            hBandeX = - Court.OFFSET_X;
+        }
+        Position k = pl.getPosition();
+        double p = k.getX()- hBandeX;
+        if (!isUpper) {
+             p+= (-k.getY() / (-s.getY() - k.getY())) * (-s.getX() + 2 * hBandeX - k.getX()); 
+            return new Position.FinalPosition(hBandeX + p, 0);
+        } else {
+            p+= ((2*s.getY()-k.getY()) / (3*s.getY() - k.getY())) * (-s.getX() + 2 * hBandeX - k.getX());
+            return new Position.FinalPosition(hBandeX + p, 2*s.getY());
+        }
+    }
+    
+    public static boolean doppelbandeCheckFkt(Position bande){
+        
     }
 }

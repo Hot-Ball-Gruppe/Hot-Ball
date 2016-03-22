@@ -8,7 +8,15 @@
     </open-files>
     <editor-bookmarks lastBookmarkId="0" xmlns="http://www.netbeans.org/ns/editor-bookmarks/2"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-      <group/>
+      <group>
+        <file>file:/C:/Users/Inga/Documents/felix/gitStuff/Hot-Ball/HotballGDX/core/src/com/hot/ball/hotball/controller/ai/roles/Forward.java</file>
+        <file>file:/C:/Users/Inga/Documents/felix/gitStuff/Hot-Ball/HotballGDX/core/src/com/hot/ball/hotball/universe/player/Player.java</file>
+        <file>file:/C:/Users/Inga/Documents/felix/gitStuff/Hot-Ball/HotballGDX/core/src/com/hot/ball/hotball/controller/ai/roles/Role.java</file>
+        <file>file:/C:/Users/Inga/Documents/felix/gitStuff/Hot-Ball/HotballGDX/core/src/com/hot/ball/hotball/universe/court/Court.java</file>
+        <file>file:/C:/Users/Inga/Documents/felix/gitStuff/Hot-Ball/HotballGDX/core/src/com/hot/ball/hotball/controller/ai/roles/Behavior.java</file>
+        <file>file:/C:/Users/Inga/Documents/felix/gitStuff/Hot-Ball/HotballGDX/core/src/com/hot/ball/hotball/controller/ai/util/Util.java</file>
+        <file>file:/C:/Users/Inga/Documents/felix/gitStuff/Hot-Ball/HotballGDX/core/src/com/hot/ball/hotball/universe/GameObject.java</file>
+      </group>
     </open-files>
   </auxiliary>
 </gradle-project-properties>
