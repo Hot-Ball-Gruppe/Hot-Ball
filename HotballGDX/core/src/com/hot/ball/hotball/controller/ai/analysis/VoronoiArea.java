@@ -12,6 +12,7 @@ import com.hot.ball.hotball.universe.player.Team;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -167,6 +168,29 @@ public class VoronoiArea {
         }
         
         
+    }
+
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 43 * hash + Objects.hashCode(this.center);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final VoronoiArea other = (VoronoiArea) obj;
+        if (!Objects.equals(this.center, other.center)) {
+            return false;
+        }
+        return true;
     }
 
     @Override

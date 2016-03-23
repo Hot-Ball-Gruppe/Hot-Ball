@@ -7,6 +7,7 @@ package com.hot.ball.hotball.controller.ai.roles;
 
 import com.hot.ball.help.math.Position.DoublePosition;
 import com.hot.ball.help.math.Vector;
+import com.hot.ball.hotball.controller.ai.analysis.Tactic;
 import com.hot.ball.hotball.controller.ai.util.Util;
 import com.hot.ball.hotball.universe.ball.Ball;
 import com.hot.ball.hotball.universe.ball.Controlled;
@@ -31,8 +32,8 @@ public class Marking extends Behavior {
         }
         DoublePosition oponentTarget = Ball.get().isControlledBy(marked) ? marked.getTeam().getAttacking().getPosition() : Ball.get().getBallCarrier().getPosition();
         if (Util.canThrow(marked, oponentTarget)) {
-            return new Vector(1, p.getPosition().angleBetween(Util.ClosestToStrecke(marked.getPosition(), oponentTarget, p.getPosition())), null);
-        } else {
+            return goTo(p,tacticalMovement(p, Util.ClosestToStrecke(marked.getPosition(), oponentTarget, p.getPosition()), new Tactic[]{Tactic.noEnemies}));
+           } else {
             return goToPlayer(p, marked);
         }
     }

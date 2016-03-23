@@ -123,9 +123,7 @@ public class UserInput implements InputProcessor, BlockCondition {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (GameLoop.get().isRunning()) {
-            if(Ball.get().isControlledBy(Player.getHumanPlayer())){
-                Ball.get().throwBall(mousePosition,Player.getHumanPlayer().getThrowPower());
-            }
+            Player.getHumanPlayer().throwBall(mousePosition);
         }
         return true;
     }
@@ -144,6 +142,7 @@ public class UserInput implements InputProcessor, BlockCondition {
     public boolean mouseMoved(int screenX, int screenY) {
         mousePosition.setX(screenX - Court.OFFSET_X);
         mousePosition.setY(Gdx.graphics.getHeight() - screenY);
+      //  System.out.println(mousePosition);
         return true;
     }
 

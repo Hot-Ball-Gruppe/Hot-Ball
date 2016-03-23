@@ -8,7 +8,6 @@ package com.hot.ball.hotball.controller.ai;
 import com.hot.ball.help.math.Vector;
 import com.hot.ball.hotball.controller.Controller;
 import com.hot.ball.hotball.universe.ball.Ball;
-import com.hot.ball.hotball.universe.ball.Controlled;
 import com.hot.ball.hotball.universe.ball.InAir;
 import com.hot.ball.hotball.universe.player.Player;
 import com.hot.ball.hotball.universe.player.Team;
@@ -37,7 +36,7 @@ public class AIController implements Controller {
             Team controllingTeam = ballCarrier.getTeam();
             if (player.getTeam().equals(controllingTeam)) {
                 if (player.equals(ballCarrier)) {
-                    return ballCarrierAI(player);
+                    return BallCarrierAI.get().action(player);
                 } else {
                     return player.getRole().getOffensiveBehavior().action(player);
                 }

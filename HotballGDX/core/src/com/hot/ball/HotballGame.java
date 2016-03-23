@@ -1,8 +1,6 @@
 package com.hot.ball;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.hot.ball.help.math.Position;
 import com.hot.ball.hotball.controller.HumanController;
 import com.hot.ball.hotball.controller.ai.analysis.Analysis;
@@ -12,7 +10,6 @@ import com.hot.ball.hotball.ui.BallScoreAnimation;
 import com.hot.ball.hotball.ui.Graphics;
 import com.hot.ball.hotball.ui.KeyBinding;
 import com.hot.ball.hotball.ui.UserInput;
-import com.hot.ball.hotball.universe.GameObject;
 import com.hot.ball.hotball.universe.ball.Ball;
 import com.hot.ball.hotball.universe.collision.CollisionModell;
 import com.hot.ball.hotball.universe.court.Court;
@@ -20,10 +17,8 @@ import com.hot.ball.hotball.universe.player.Player;
 import com.hot.ball.hotball.universe.player.Team;
 
 //repmanntest
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.assets.AssetManager;
-import com.hot.ball.game.Assets;
+import com.hot.ball.hotball.controller.ai.BallCarrierAI;
 import com.hot.ball.screens.*;
 //repmanntest
 
@@ -38,9 +33,10 @@ public class HotballGame extends Game {//repmanntest
         CollisionModell.generate();
 
         Ball.create(new Position.DoublePosition(Court.COURT_WIDTH / 2, Court.COURT_HEIGHT / 2));
-        Team.generate(new Player[]{Player.Felix, Player.Friedrich, Player.Adrian}, new Player[]{Player.Leo, Player.Thomas, Player.Patryk}, Court.get().getLeftBasket(), Court.get().getRightBasket());
-        //  Team.generate(new Player[]{Player.Felix}, new Player[]{}, Court.get().getLeftBasket(), Court.get().getRightBasket());
-
+       // Team.generate(new Player[]{Player.Felix, Player.Friedrich, Player.Adrian}, new Player[]{Player.Leo, Player.Thomas, Player.Patryk}, Court.get().getLeftBasket(), Court.get().getRightBasket());
+          Team.generate(new Player[]{Player.Felix}, new Player[]{Player.Adrian}, Court.get().getLeftBasket(), Court.get().getRightBasket());
+        BallCarrierAI.create();
+        
         UserInput.create(Gdx.input, KeyBinding.GDX_WASD, UserInput.ControlMode.ScreenRelational);
         HumanController.create();
 
@@ -62,7 +58,7 @@ public class HotballGame extends Game {//repmanntest
       //repmanntest        drawing = true;
         //   tst = new Texture(Gdx.files.internal("res/scoreAnimation/sa_f0.png"));
     
-        setScreen(new MenuScreen(this));//repmanntest
+        setScreen(new GameScreen(this));//repmanntest
     }
 /*repmanntest
     // Texture tst;

@@ -9,9 +9,9 @@ import com.hot.ball.help.math.Position;
 import com.hot.ball.help.math.Vector;
 import com.hot.ball.hotball.controller.ai.analysis.Analysis;
 import com.hot.ball.hotball.controller.ai.analysis.Analysis.Filter;
+import com.hot.ball.hotball.controller.ai.analysis.Tactic;
 import com.hot.ball.hotball.controller.ai.analysis.VoronoiArea;
 import com.hot.ball.hotball.controller.ai.util.Util;
-import com.hot.ball.hotball.universe.ball.Ball;
 import com.hot.ball.hotball.universe.player.Player;
 import java.util.Set;
 
@@ -50,7 +50,7 @@ public class Center extends Behavior {
                 bestPossiblePasses = possiblePasses;
             }
         }
-        return new Vector(bestPoint.getX() - p.getPosition().getX(), bestPoint.getY() - p.getPosition().getY());
+        return goTo(p,tacticalMovement(p, bestPoint, new Tactic[]{Tactic.noEnemies}));
     }
 
 }

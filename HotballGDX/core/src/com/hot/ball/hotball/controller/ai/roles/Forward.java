@@ -9,6 +9,7 @@ import com.hot.ball.help.math.Position;
 import com.hot.ball.help.math.Vector;
 import com.hot.ball.hotball.controller.ai.analysis.Analysis;
 import com.hot.ball.hotball.controller.ai.analysis.Analysis.Filter;
+import com.hot.ball.hotball.controller.ai.analysis.Tactic;
 import com.hot.ball.hotball.controller.ai.analysis.VoronoiArea;
 import com.hot.ball.hotball.universe.ball.Ball;
 import com.hot.ball.hotball.universe.player.Player;
@@ -50,7 +51,7 @@ public class Forward extends Behavior {
                 bestDistToBCAndBasket=dist;
             }
         }
-        return new Vector(bestPoint.getX() - p.getPosition().getX(), bestPoint.getY() - p.getPosition().getY());
+       return goTo(p,tacticalMovement(p, bestPoint, new Tactic[]{Tactic.noEnemies}));
     }
 
 }

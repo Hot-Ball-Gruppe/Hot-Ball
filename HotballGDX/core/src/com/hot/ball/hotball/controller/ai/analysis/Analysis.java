@@ -119,6 +119,19 @@ public class Analysis {
         return new Position.FinalPosition(Integer.decode(split[0]), Integer.decode(split[1]));
     }
 
+    public VoronoiArea getVoronoi(Position position) {
+        FinalPosition bestCenter = null;
+        double bestDist = Double.POSITIVE_INFINITY;
+        for (FinalPosition center : voronoiAreas.keySet()) {
+            double dist = position.getDistance(center);
+            if (dist < bestDist) {
+                bestDist = dist;
+                bestCenter = center;
+            }
+        }
+        return voronoiAreas.get(bestCenter);
+    }
+
     public static enum Filter {
 
         canBePassedTo {
@@ -190,12 +203,12 @@ public class Analysis {
                     }
                 }, canBCScoreIfImThere {
 
-            @Override
-            public boolean applies(Player p, VoronoiArea toTest) {
-                Player ballCarrier = Ball.get().getBallCarrier();
-                return Util.radiusFkt(ballCarrier.getPosition(), toTest.getCenter(), new Vector(ballCarrier.getTeam().getAttacking().getPosition().getX()-ballCarrier.getPosition().getX(), ballCarrier.getTeam().getAttacking().getPosition().getY()-ballCarrier.getPosition().getY()))<p.getTackleZoneSize();
-            }
-        };
+                    @Override
+                    public boolean applies(Player p, VoronoiArea toTest) {
+                        Player ballCarrier = Ball.get().getBallCarrier();
+                        return Util.radiusFkt(ballCarrier.getPosition(), toTest.getCenter(), new Vector(ballCarrier.getTeam().getAttacking().getPosition().getX() - ballCarrier.getPosition().getX(), ballCarrier.getTeam().getAttacking().getPosition().getY() - ballCarrier.getPosition().getY())) < p.getTackleZoneSize();
+                    }
+                };
 
         public abstract boolean applies(Player p, VoronoiArea toTest);
     }
@@ -203,7 +216,7 @@ public class Analysis {
     public Set<VoronoiArea> processQuery(Filter[] query, Player p) {
         Set<VoronoiArea> currentSet = new HashSet<>(voronoiAreas.values());
         Set<VoronoiArea> backUpSet = new HashSet<>(currentSet);
-     //   System.out.println("\nPlayer "+p.getName());
+        //   System.out.println("\nPlayer "+p.getName());
         //      System.out.println(currentSet);
         for (Filter f : query) {
             //   System.out.println("Filter: "+f.name());

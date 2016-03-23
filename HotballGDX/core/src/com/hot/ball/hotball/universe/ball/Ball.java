@@ -68,7 +68,7 @@ public class Ball extends GameObject {
         return (getState() instanceof Controlled) && p.equals(getBallCarrier());
     }
 
-    public void throwBall(Position.DoublePosition target, int power) {
+    public void throwBall(Position target, int power) {
         Player carrier = getBallCarrier();
         setState(new InAir(carrier, new Vector(power, getPosition().angleBetween(target), null), carrier.getChanceToHit()));
     }

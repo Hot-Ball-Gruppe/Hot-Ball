@@ -9,6 +9,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.hot.ball.help.math.Position;
 import com.hot.ball.help.math.Position.DoublePosition;
 import com.hot.ball.help.math.Vector;
 import com.hot.ball.hotball.controller.Controller;
@@ -35,10 +36,10 @@ public final class Player extends GameObject {
 
     public static Player Felix = new Player("Felix", new Stats(2, 1, 1), Role.Balanced);
     public static Player Adrian = new Player("Adrian", new Stats(1, 2, 1), Role.Defensive);
-    public static Player Leo = new Player("Leo", new Stats(1, 1, 1), Role.Balanced);
+  /*  public static Player Leo = new Player("Leo", new Stats(1, 1, 1), Role.Balanced);
     public static Player Patryk = new Player("Patryk", new Stats(1, 1, 1), Role.Aggressive);
     public static Player Friedrich = new Player("Friedrich", new Stats(1, 1, 2), Role.Aggressive);
-    public static Player Thomas = new Player("Thomas", new Stats(1, 1, 1), Role.Defensive);
+    public static Player Thomas = new Player("Thomas", new Stats(1, 1, 1), Role.Defensive);*/
 
     /*
     public static Player Dummy1 = new Player("Dummy1", new Stats(1, 1, 1), null);
@@ -298,6 +299,12 @@ public final class Player extends GameObject {
             return towards;
         } else {
             return currentFacing + Math.signum(angle) * maxAngle;
+        }
+    }
+    
+    public void throwBall(Position target){
+        if(Ball.get().isControlledBy(this)){
+            Ball.get().throwBall(target, getThrowPower());
         }
     }
 

@@ -54,25 +54,25 @@ public class CollisionModell {
         double newY = y + dy;
 
         if (go instanceof Ball) {
-            if (newX - size < -Court.OFFSET_X && dx < 0) {
+            if (newX  < -Court.OFFSET_X && dx < 0) {
                 //go.getPosition().setX(X_BOUND - newX);
                 go.getCurrentVelocity().flipdX();
             }
-            if (newX + size > Court.COURT_WIDTH + Court.OFFSET_X && dx > 0) {
+            if (newX  > Court.COURT_WIDTH + Court.OFFSET_X && dx > 0) {
                 //  go.getPosition().setX(newX - X_BOUND);
                 go.getCurrentVelocity().flipdX();
             }
         } else {
-            if (newX - size < 0 && dx < 0) {
+            if (newX  < 0 && dx < 0) {
                 //go.getPosition().setX(X_BOUND - newX);
                 go.getCurrentVelocity().flipdX();
             }
-            if (newX + size > Court.COURT_WIDTH && dx > 0) {
+            if (newX > Court.COURT_WIDTH && dx > 0) {
                 //  go.getPosition().setX(newX - X_BOUND);
                 go.getCurrentVelocity().flipdX();
             }
         }
-        if (newY - size < 0 && dy < 0 || newY + size > Court.COURT_HEIGHT && dy > 0) {
+        if (newY < 0 && dy < 0 || newY  > Court.COURT_HEIGHT && dy > 0) {
             go.getCurrentVelocity().flipdY();
         }
         for (GameObject other : GameObject.ALL_GAMEOBJECTS) {
