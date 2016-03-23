@@ -18,8 +18,16 @@ import com.hot.ball.hotball.universe.court.Court;
 import com.hot.ball.hotball.universe.player.Player;
 import com.hot.ball.hotball.universe.player.Team;
 
-public class HotballGame extends ApplicationAdapter {
+//repmanntest
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.assets.AssetManager;
+import com.hot.ball.game.Assets;
+import com.hot.ball.screens.*;
+//repmanntest
 
+//repmanntest public class HotballGame extends ApplicationAdapter {
+public class HotballGame extends Game {//repmanntest
     private boolean drawing;
 
     @Override
@@ -48,10 +56,12 @@ public class HotballGame extends ApplicationAdapter {
         Graphics.create();
         BallScoreAnimation.supidLibGDX();
         System.out.println("SETUP COMPLETE");
-        drawing = true;
+      //repmanntest        drawing = true;
         //   tst = new Texture(Gdx.files.internal("res/scoreAnimation/sa_f0.png"));
+    
+        setScreen(new MenuScreen(this));//repmanntest
     }
-
+/*repmanntest
     // Texture tst;
     @Override
     public void render() {
@@ -68,5 +78,5 @@ public class HotballGame extends ApplicationAdapter {
             Graphics.get().draw(Gdx.graphics.getDeltaTime());
         }
     }
-
+repmanntest*/
 }

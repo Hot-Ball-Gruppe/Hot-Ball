@@ -7,7 +7,8 @@ import com.hot.ball.HotballGame;
 public class DesktopLauncher {
 
     public static void main(String[] arg) {
-        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+         
+    	LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
         config.title = "Hotball";
         config.width = 1600;
@@ -19,3 +20,4 @@ public class DesktopLauncher {
 
     }
 }
+

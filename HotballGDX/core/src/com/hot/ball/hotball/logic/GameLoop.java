@@ -12,13 +12,30 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.badlogic.gdx.Game;//repmanntest
+import com.hot.ball.screens.MenuScreen;//repmanntest
 /**
  *
  * @author Inga
  */
 public class GameLoop implements Runnable {
 
-    private static GameLoop singleton;
+// repmanntest; Start
+	private Game game;
+
+	private void backToMenu() {
+		// switch to menu screen
+		game.setScreen(new MenuScreen(game));
+	}
+
+	public GameLoop(Game game) {
+		this.game = game;
+		loop = new Thread(this);
+        blockConditions = new LinkedList<>();
+	}
+// repmanntest; Ende
+
+	private static GameLoop singleton;
 
     public static void create() {
         if (singleton == null) {
@@ -61,6 +78,8 @@ public class GameLoop implements Runnable {
         running = true;
         active = false;
         AudioManager.get().stop();
+        
+        backToMenu();//repmanntest
     }
 
     private void pause() {
@@ -70,6 +89,7 @@ public class GameLoop implements Runnable {
         }
         running = false;
         AudioManager.get().pause();
+        
     }
 
     private void resume() {
@@ -137,6 +157,8 @@ public class GameLoop implements Runnable {
             }
         }
         System.out.println("GameEnd");
+        
+        backToMenu();//repmanntest
     }
 
     public boolean isRunning() {
