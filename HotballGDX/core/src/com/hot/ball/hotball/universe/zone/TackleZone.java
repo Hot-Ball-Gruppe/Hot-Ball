@@ -21,7 +21,7 @@ import com.hot.ball.hotball.universe.player.TeamColor;
 public class TackleZone implements Zone {
 
     public final static double MIN_SIZE_FACTOR = 0.75;
-    public final static double SIZE_CHANGE_PER_SECOND = 1.5;
+    public final static double SIZE_CHANGE_PER_SECOND = 2;
 
     private final Player player;
     private double currentFactor = 1;
@@ -30,6 +30,7 @@ public class TackleZone implements Zone {
 
     @SuppressWarnings("LeakingThisInConstructor")
     public TackleZone(Player player, int maxSize) {
+        //System.out.println("PLayer: "+player.getName()+" tz: "+maxSize);
         this.player = player;
         this.maxSize = maxSize;
 

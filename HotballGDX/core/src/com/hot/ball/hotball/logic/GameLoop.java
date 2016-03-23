@@ -5,7 +5,9 @@
  */
 package com.hot.ball.hotball.logic;
 
+import com.hot.ball.hotball.controller.ai.analysis.Analysis;
 import com.hot.ball.hotball.ui.AudioManager;
+import com.hot.ball.hotball.ui.UserInput;
 import com.hot.ball.hotball.universe.GameObject;
 import com.hot.ball.hotball.universe.zone.Zone;
 import java.util.Iterator;
@@ -60,6 +62,7 @@ public class GameLoop implements Runnable {
     private GameLoop() {
         loop = new Thread(this);
         blockConditions = new LinkedList<>();
+        blockConditions.add(UserInput.get());
     }
 
     public void start() {
@@ -124,24 +127,10 @@ public class GameLoop implements Runnable {
                     go.action(timeDiff);
 
                 }
+
+                Analysis.get().recalculate();
+
                 lastTime = now;
-
-                /*  if (Ball.get().getState() instanceof InAir) {
-                    for (GameObject go : GameObject.ALL_GAMEOBJECTS) {
-                        if (go instanceof Player) {
-                            Player player = (Player) go;
-
-                            if (!player.equals(((InAir) Ball.get().getState()).getThrower()) && player.getPosition().getDistance(Ball.get().getPosition()) < 40) {
-                                Ball.get().setState(new Controlled(player));
-                                if (player.getTeam() == Team.Blue && !player.isHuman()) {
-                                    Player.humanPlayer.setController(new AIController());
-                                    player.setController(HumanController.get());
-                                }
-                                break;
-                            }
-                        }
-                    }
-                }*/
                 checkBlocked();
                 try {
                     Thread.sleep(12);
@@ -166,7 +155,7 @@ public class GameLoop implements Runnable {
     }
 
     public void addBlockCondition(BlockCondition bc) {
-       blockConditions.add(bc);
+        blockConditions.add(bc);
     }
 
     private void checkBlocked() {

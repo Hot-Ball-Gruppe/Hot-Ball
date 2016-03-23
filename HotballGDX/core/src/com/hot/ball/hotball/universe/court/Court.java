@@ -31,6 +31,7 @@ public class Court {
     }
 
     public static enum Type {
+
         Wood, Fire, Ice;
     }
 
@@ -52,6 +53,8 @@ public class Court {
 
     private final Type type;
 
+    private final double decayBase;
+
     private final Music themeMusic;
     private final Texture courtTexture;
 
@@ -60,11 +63,29 @@ public class Court {
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     private Court(Type type) {
         this.type = type;
+        switch (type) {
+            case Wood:
+                decayBase = 30;
+                break;
+            case Ice:
+                decayBase = 3;
+                break;
+            case Fire:
+                decayBase = 60;
+                break;
+            default:
+                decayBase = 30;
+        }
+
         themeMusic = Gdx.audio.newMusic(Gdx.files.internal("aud/" + type.name() + ".wav"));
         themeMusic.setLooping(true);
         courtTexture = new Texture(Gdx.files.internal("res/" + type.name() + ".png"));
         leftBasket = new Basket(new Position.DoublePosition(-OFFSET_X / 2, COURT_HEIGHT / 2));
         rightBasket = new Basket(new Position.DoublePosition(COURT_WIDTH + OFFSET_X / 2, COURT_HEIGHT / 2));
+    }
+
+    public double getDecayBase() {
+        return decayBase;
     }
 
     public Music getThemeMusic() {
@@ -78,7 +99,7 @@ public class Court {
     public Basket getRightBasket() {
         return rightBasket;
     }
-    
+
     public void draw(Graphics g) {
         for (int x = 0; x <= Gdx.graphics.getWidth() / courtTexture.getWidth(); x++) {
             for (int y = 0; y <= Gdx.graphics.getHeight() / courtTexture.getHeight(); y++) {

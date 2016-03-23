@@ -10,9 +10,8 @@ package com.hot.ball.hotball.controller.ai.roles;
  * @author Dromlius
  */
 public enum Role {
-    Aggressive(Behavior.DISRUPTOR,Behavior.PIRANHA),Balanced(null,null),Defensive(null,null);
-    
-    
+    Aggressive(Behavior.DISRUPTOR, Behavior.PIRANHA), Balanced(Behavior.FORWARD, Behavior.MARKING), Defensive(Behavior.CENTER, Behavior.ZONEDEFENSE), Stupid(Behavior.STUPID, Behavior.DEAD);
+
     private final Behavior offensiveBehavior;
     private final Behavior defensiveBehavior;
 
@@ -20,5 +19,12 @@ public enum Role {
         this.offensiveBehavior = offensiveBehavior;
         this.defensiveBehavior = defensiveBehavior;
     }
-    
+
+    public Behavior getDefensiveBehavior() {
+        return defensiveBehavior;
+    }
+
+    public Behavior getOffensiveBehavior() {
+        return offensiveBehavior;
+    }
 }

@@ -7,6 +7,7 @@ package com.hot.ball.hotball.universe.ball;
 
 import com.hot.ball.help.math.Vector;
 import com.hot.ball.hotball.universe.collision.CollisionModell;
+import com.hot.ball.hotball.universe.court.Court;
 import com.hot.ball.hotball.universe.player.Player;
 import com.hot.ball.hotball.universe.player.Team;
 import com.hot.ball.hotball.universe.zone.TackleZone;
@@ -21,7 +22,7 @@ public class InAir implements BallState {
 
     private final int id;
     
-    private final Player thrower;
+    private Player thrower;
     private final double chance;
 
     public InAir(Player thrower, Vector direction, double chance) {
@@ -46,7 +47,7 @@ public class InAir implements BallState {
                 Player tackler = tz.getPlayer();
                 if (tackler.equals(thrower)) {
                     inSafeZone = true;
-                    continue;
+                   continue;
                 }
                 if (Team.BLUE.isMember(tackler)) {
                     blueTZ++;
@@ -80,7 +81,7 @@ public class InAir implements BallState {
                 return;
             }
         }
-        if (Ball.get().getPosition().getX() < 0 || Ball.get().getPosition().getX() > CollisionModell.X_BOUND) {
+        if (Ball.get().getPosition().getX() < 0 || Ball.get().getPosition().getX() > Court.COURT_WIDTH) {
             Vector vector = new Vector(Ball.get().getCurrentVelocity());
             vector.multiply(1d / Ball.get().getCurrentMaxSpeed());
             Ball.get().accelerate(timeDiff, vector);
@@ -95,6 +96,10 @@ public class InAir implements BallState {
 
     public Player getThrower() {
         return thrower;
+    }
+
+    public void setThrower(Player thrower) {
+        this.thrower = thrower;
     }
 
     public double getChance() {

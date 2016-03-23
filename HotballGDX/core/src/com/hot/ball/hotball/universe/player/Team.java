@@ -35,6 +35,7 @@ public class Team {
     private Team(TeamColor color, Player[] team, Basket attacking) {
         this.color = color;
         this.attacking = attacking;
+        attacking.setAttacking(this);
         members = team;
         for(Player p:members){
             p.setTeam(this);

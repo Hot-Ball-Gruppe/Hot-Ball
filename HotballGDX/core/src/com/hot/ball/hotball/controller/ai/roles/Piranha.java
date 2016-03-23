@@ -18,7 +18,7 @@ public class Piranha extends Behavior{
 
     @Override
     public Vector action(Player p) {
-        Player ballCarrier = ((Controlled)Ball.get().getState()).getBallCarrier();
+        Player ballCarrier = Ball.get().getBallCarrier();
         return goToPlayer(p, ballCarrier);
     }
     

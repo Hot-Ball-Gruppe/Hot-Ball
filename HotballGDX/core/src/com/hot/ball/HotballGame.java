@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.hot.ball.help.math.Position;
 import com.hot.ball.hotball.controller.HumanController;
+import com.hot.ball.hotball.controller.ai.analysis.Analysis;
 import com.hot.ball.hotball.logic.LogicCore;
 import com.hot.ball.hotball.ui.AudioManager;
 import com.hot.ball.hotball.ui.BallScoreAnimation;
@@ -33,21 +34,23 @@ public class HotballGame extends Game {//repmanntest
     @Override
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     public void create() {
-        Court.generate(Court.Type.Fire);
+        Court.generate(Court.Type.Wood);
         CollisionModell.generate();
 
+        Ball.create(new Position.DoublePosition(Court.COURT_WIDTH / 2, Court.COURT_HEIGHT / 2));
         Team.generate(new Player[]{Player.Felix, Player.Friedrich, Player.Adrian}, new Player[]{Player.Leo, Player.Thomas, Player.Patryk}, Court.get().getLeftBasket(), Court.get().getRightBasket());
+        //  Team.generate(new Player[]{Player.Felix}, new Player[]{}, Court.get().getLeftBasket(), Court.get().getRightBasket());
 
         UserInput.create(Gdx.input, KeyBinding.GDX_WASD, UserInput.ControlMode.ScreenRelational);
         HumanController.create();
 
         Player.setHumanPlayer(Team.BLUE.getMembers()[0]);
-        
-        for(Player p:Team.BLUE.getMembers()){
+
+        for (Player p : Team.BLUE.getMembers()) {
             System.out.println(p.getName());
         }
-        
-        Ball.create(new Position.DoublePosition(Court.COURT_WIDTH / 2, Court.COURT_HEIGHT / 2));
+
+        Analysis.create("unweightedField");
 
         LogicCore.create();
         AudioManager.create();

@@ -9,8 +9,8 @@ import com.hot.ball.help.math.Position;
 import com.hot.ball.help.math.Vector;
 import com.hot.ball.hotball.ui.Graphics;
 import com.hot.ball.hotball.universe.collision.CollisionModell;
+import com.hot.ball.hotball.universe.court.Court;
 import com.hot.ball.hotball.universe.zone.Zone;
-import java.awt.Graphics2D;
 import java.util.Collection;
 import java.util.Stack;
 
@@ -73,7 +73,6 @@ public abstract class GameObject {
     }
 
     private Vector currentVelocity = new Vector();
-    private final double DECAY_BASE = 30;
 
     public Vector getCurrentVelocity() {
         return currentVelocity;
@@ -86,7 +85,7 @@ public abstract class GameObject {
     protected abstract double getDECAY_FACTOR();
 
     public void accelerate(double timeDiff, Vector accDir) {
-        double decayRate = Math.pow(DECAY_BASE, getDECAY_FACTOR() * (-timeDiff));
+        double decayRate = Math.pow(Court.get().getDecayBase(), getDECAY_FACTOR() * (-timeDiff));
         accDir.multiply(getCurrentMaxSpeed());
         currentVelocity.setdX(decayRate * (currentVelocity.getdX() - accDir.getdX()) + accDir.getdX());
         currentVelocity.setdY(decayRate * (currentVelocity.getdY() - accDir.getdY()) + accDir.getdY());

@@ -14,12 +14,29 @@ public class Stats {
     private final double speed;
     private final double tackle;
     private final double power;
+    
+    private final double speed_base = 1;
+    private final double tackle_base = 0.8;
+    private final double power_base = 0.8;
+    
+    private final double speed_factor = 0.5;
+    private final double tackle_factor = 0.6;
+    private final double power_factor = 1.05;
 
+    private final double hit_chance_per_power = 28;
+    
     public Stats(int speed, int tackle, int power) {
+    	
         double total = speed + tackle + power;
-        this.speed = 1 + speed / total;
-        this.tackle = 1 + tackle / total;
-        this.power = 1 + power / total;
+        if (total == 0) {
+        	speed = 1;
+        	tackle = 1;
+        	power = 1;
+        	total = 3;
+    	}
+        this.speed = speed_base + (speed * speed_factor) / total ;
+        this.tackle = tackle_base + (tackle * tackle_factor) / total;
+        this.power = power_base + (power * power_factor) / total;
     }
 
     public double getPower() {
@@ -33,4 +50,9 @@ public class Stats {
     public double getTackle() {
         return tackle;
     }
+    
+    public double getChance() {
+    	return (power - power_base) * hit_chance_per_power;
+    }
 }
+
