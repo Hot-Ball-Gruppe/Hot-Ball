@@ -19,9 +19,12 @@ public enum Tactic {
                 public double rate(VoronoiArea toRate, Player player) {
                     double enemiesTZOn = 0;
                     double enemiesTZNext = 0;
+                    int allyOn=0;
                     for (Player occupant : toRate.getOccupants()) {
                         if (player.getTeam().getOpponent().isMember(occupant)) {
                             enemiesTZOn += occupant.getTackleZoneSize();
+                        }else{
+                            allyOn++;
                         }
                     }
 
@@ -33,7 +36,7 @@ public enum Tactic {
                         }
                     }
 
-                    return Math.PI * (enemiesTZOn + 0.5 * enemiesTZNext);
+                    return 10*Math.PI * (2*enemiesTZOn + enemiesTZNext)+allyOn*64;
                 }
             };
 

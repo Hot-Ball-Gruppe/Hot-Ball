@@ -12,4 +12,5 @@ package com.hot.ball.hotball.logic;
 public interface BlockCondition {
     public boolean isBlocking();
     public boolean isPermanent();
+    public void end();
 }

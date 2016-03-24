@@ -28,7 +28,10 @@ public class UserInput implements InputProcessor, BlockCondition {
     private static UserInput singleton;
     private final ControlMode controlMode;
 
-    
+    @Override
+    public void end() {
+
+    }
 
     public static enum ControlMode {
         MouseRelational, ScreenRelational;
@@ -87,7 +90,7 @@ public class UserInput implements InputProcessor, BlockCondition {
             LogicCore.get().reset();
         }
 
-        if (keycode == Keys.TAB && !Ball.get().isControlledBy(Player.getHumanPlayer()))  {
+        if (keycode == Keys.TAB && !Ball.get().isControlledBy(Player.getHumanPlayer())) {
             switchPlayer();
         }
         return true;
@@ -96,17 +99,19 @@ public class UserInput implements InputProcessor, BlockCondition {
     private void switchPlayer() {
         Player closest = null;
         double bestDist = Double.POSITIVE_INFINITY;
-        for(Player p:Team.BLUE.getMembers()){
-            if(p.equals(Player.getHumanPlayer())){
+        for (Player p : Team.BLUE.getMembers()) {
+            if (p.equals(Player.getHumanPlayer())) {
                 continue;
             }
             double dist = p.getPosition().getDistance(Ball.get().getPosition());
-            if(dist<bestDist){
+            if (dist < bestDist) {
                 bestDist = dist;
                 closest = p;
             }
         }
-        Player.setHumanPlayer(closest);
+        if (closest != null) {
+            Player.setHumanPlayer(closest);
+        }
     }
 
     @Override
@@ -120,10 +125,40 @@ public class UserInput implements InputProcessor, BlockCondition {
         return false;
     }
 
+    private Player selected;
+
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if (GameLoop.get().isRunning()) {
-            Player.getHumanPlayer().throwBall(mousePosition);
+        if (button == 0) {
+            if (GameLoop.get().isRunning()) {
+                Player.getHumanPlayer().throwBall(mousePosition);
+            } else {
+
+                for (Player ally : Player.getHumanPlayer().getTeam().getMembers()) {
+                    if (ally.isHuman()) {
+                        continue;
+                    }
+                    if (ally.getPosition().getDistance(mousePosition) < ally.getSize()) {
+                        selected = ally;
+                        return true;
+                    }
+                }
+                selected = null;
+            }
+        }
+        if (button == 1) {
+            if (GameLoop.get().isRunning()) {
+                switchPlayer();
+            }else{
+                for (Player ally : Player.getHumanPlayer().getTeam().getMembers()) {
+                    if (ally.isHuman()) {
+                        continue;
+                    }
+                    if (ally.getPosition().getDistance(mousePosition) < ally.getSize()) {
+                        ally.order(null);
+                    }
+                }
+            }
         }
         return true;
     }
@@ -135,14 +170,18 @@ public class UserInput implements InputProcessor, BlockCondition {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
+        if (!GameLoop.get().isRunning() && selected != null) {
+            mouseMoved(screenX, screenY);
+            selected.order(new Position.FinalPosition(mousePosition));
+        }
+        return true;
     }
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        mousePosition.setX(screenX - Court.OFFSET_X);
-        mousePosition.setY(Gdx.graphics.getHeight() - screenY);
-      //  System.out.println(mousePosition);
+        mousePosition.setX(screenX - Court.OFFSET_X - Graphics.getXShift());
+        mousePosition.setY(Gdx.graphics.getHeight() - Graphics.get().yOffset - screenY);
+        //  System.out.println(mousePosition);
         return true;
     }
 
@@ -150,11 +189,10 @@ public class UserInput implements InputProcessor, BlockCondition {
     public boolean scrolled(int amount) {
         return false;
     }
-    
-    
+
     @Override
     public boolean isBlocking() {
-       return pressedKeys[Keys.SPACE];
+        return pressedKeys[Keys.SPACE];
     }
 
     @Override

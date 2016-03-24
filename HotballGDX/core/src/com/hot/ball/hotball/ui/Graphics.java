@@ -11,8 +11,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.hot.ball.help.math.Position;
 import com.hot.ball.hotball.universe.court.Court;
-import java.awt.Color;
+import com.hot.ball.hotball.universe.player.Player;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -38,18 +39,21 @@ public class Graphics {
         }
         return singleton;
     }
-
     private final ShapeRenderer shapeRenderer;
+
     private final SpriteBatch spriteBatch;
     private final BitmapFont font;
-    
+
     private final Queue<Overlay> overlays;
+
+    public final int yOffset;
 
     private Graphics() {
         this.shapeRenderer = new ShapeRenderer();
         this.spriteBatch = new SpriteBatch();
         this.font = new BitmapFont(Gdx.files.internal("other/font.fnt"));
         overlays = new LinkedList<>();
+        yOffset = (Gdx.graphics.getHeight() - Court.COURT_HEIGHT) / 2;
     }
 
     public void ready() {
@@ -65,55 +69,60 @@ public class Graphics {
         spriteBatch.end();
     }
 
-    public void drawString(String text, int x, int y){
+    public void drawLineRel(Position a, Position b) {
+        shapeRenderer.line(a.getRoundX()+ Court.OFFSET_X + getXShift(), a.getRoundY()+ yOffset, b.getRoundX()+ Court.OFFSET_X + getXShift(), b.getRoundY()+ yOffset);
+    }
+
+    public static int getXShift() {
+        return -(int) Math.min(2 * Court.OFFSET_X + Court.COURT_WIDTH - Gdx.graphics.getWidth(), Math.max(0, Player.getHumanPlayer().getPosition().getX() + Court.OFFSET_X - Gdx.graphics.getWidth() / 2));
+    }
+
+    public void drawStringAbs(String text, int x, int y) {
         font.draw(spriteBatch, text, x, y);
     }
-    
-    public void drawBackgroungImage(Texture img) {
-        spriteBatch.draw(img, 0, 0);
+
+    public void drawStringRel(String text, int x, int y) {
+        font.draw(spriteBatch, text, x + Court.OFFSET_X + getXShift(), y + yOffset);
     }
 
     public void drawImageScreenCenter(Texture img) {
         spriteBatch.draw(img, (Gdx.graphics.getWidth() - img.getWidth()) / 2, (Gdx.graphics.getHeight() - img.getHeight()) / 2);
     }
 
+    public void drawImageScreenCenterShake(Texture img, double intensity) {
+        spriteBatch.draw(img, (Gdx.graphics.getWidth() - img.getWidth()) / 2 + (float) (Math.random() * 10 * intensity), (Gdx.graphics.getHeight() - img.getHeight()) / 2 + (float) (Math.random() * 10 * intensity));
+    }
+
     public void drawImageScreenCenter(TextureRegion img) {
         spriteBatch.draw(img, (Gdx.graphics.getWidth() - img.getRegionWidth()) / 2, (Gdx.graphics.getHeight() - img.getRegionHeight()) / 2);
     }
 
-    public void drawImageNotCetral(Texture img, int x, int y) {
-        spriteBatch.draw(img, x + Court.OFFSET_X, y);
+    public void drawCourt(Texture court) {
+        spriteBatch.draw(court, Court.OFFSET_X + getXShift(), yOffset);
     }
 
-    public void drawImage(Texture img, int x, int y) {
-        spriteBatch.draw(img, x - img.getWidth() / 2 + Court.OFFSET_X, y - img.getHeight() / 2);
+    public void drawImageRel(Texture img, int x, int y) {
+        spriteBatch.draw(img, x - img.getWidth() / 2 + Court.OFFSET_X + getXShift(), y - img.getHeight() / 2 + yOffset);
     }
 
-    public void drawImage(TextureRegion img, int x, int y) {
-        spriteBatch.draw(img, x - img.getRegionWidth() / 2 + Court.OFFSET_X, y - img.getRegionHeight() / 2);
+    public void drawImageRel(TextureRegion img, int x, int y, double theta) {
+        spriteBatch.draw(img, x - img.getRegionWidth() / 2 + Court.OFFSET_X + getXShift(), y - img.getRegionHeight() / 2 + yOffset, img.getRegionWidth() / 2, img.getRegionHeight() / 2, img.getRegionWidth(), img.getRegionHeight(), 1, 1, (float) Math.toDegrees(theta - Math.PI / 2));
     }
 
-    public void drawImage(TextureRegion img, int x, int y, double theta) {
-        spriteBatch.draw(img, x - img.getRegionWidth() / 2 + Court.OFFSET_X, y - img.getRegionHeight() / 2, img.getRegionWidth() / 2, img.getRegionHeight() / 2, img.getRegionWidth(), img.getRegionHeight(), 1, 1, (float) Math.toDegrees(theta - Math.PI / 2));
-    }
-
-    public void drawImage(TextureRegion img, int x, int y, int origin_x, int origin_y, double theta) {
+    /*public void drawImage(TextureRegion img, int x, int y, int origin_x, int origin_y, double theta) {
         spriteBatch.draw(img, x - img.getRegionWidth() / 2 + Court.OFFSET_X, y - img.getRegionHeight() / 2, origin_x, origin_y, img.getRegionWidth(), img.getRegionHeight(), 1, 1, (float) Math.toDegrees(theta - Math.PI / 2));
-    }
-
-    public void drawImage(TextureRegion img, int x, int y, double factor, Object nullObj) {
-        spriteBatch.draw(img, x - img.getRegionWidth() / 2 + Court.OFFSET_X, y - img.getRegionHeight() / 2, img.getRegionWidth() / 2, img.getRegionHeight() / 2, img.getRegionWidth(), img.getRegionHeight(), (float) factor, (float) factor, 0);
-    }
-
-    @Deprecated
-    public void setColor(Color color) {
-        com.badlogic.gdx.graphics.Color gdxColor = new com.badlogic.gdx.graphics.Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-        // spriteBatch.setColor(gdxColor);
-        shapeRenderer.setColor(gdxColor);
+    }*/
+    public void drawImageRel(TextureRegion img, int x, int y, double factor, Object nullObj) {
+        spriteBatch.draw(img, x - img.getRegionWidth() / 2 + Court.OFFSET_X + getXShift(), y - img.getRegionHeight() / 2 + yOffset, img.getRegionWidth() / 2, img.getRegionHeight() / 2, img.getRegionWidth(), img.getRegionHeight(), (float) factor, (float) factor, 0);
     }
 
     public void addOverlay(Overlay o) {
         overlays.add(o);
+    }
+
+    public void drawImageScreenCenter(Texture img, double fac) {
+        TextureRegion textureRegion = new TextureRegion(img, 0, 0, (int) (img.getWidth() * fac), img.getHeight());
+        spriteBatch.draw(textureRegion, (float) ((Gdx.graphics.getWidth() - textureRegion.getRegionWidth() - (img.getWidth() * (1 - fac)))) / 2, (Gdx.graphics.getHeight() - textureRegion.getRegionHeight()) / 2);
     }
 
 }

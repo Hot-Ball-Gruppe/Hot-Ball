@@ -45,9 +45,9 @@ public class Basket extends GameObject {
     @Override
     public void draw(Graphics g) {
         if (getPosition().getX() > 0) {
-            g.drawImage(TEXTURE_FLIPPED, getPosition().getRoundX(), getPosition().getRoundY());
+            g.drawImageRel(TEXTURE_FLIPPED, getPosition().getRoundX(), getPosition().getRoundY());
         } else {
-            g.drawImage(TEXTURE, getPosition().getRoundX(), getPosition().getRoundY());
+            g.drawImageRel(TEXTURE, getPosition().getRoundX(), getPosition().getRoundY());
         }
     }
 

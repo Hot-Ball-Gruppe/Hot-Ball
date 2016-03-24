@@ -166,6 +166,7 @@ public class GameLoop implements Runnable {
                 return;
             } else if (!bc.isPermanent()) {
                 iterator.remove();
+                bc.end();
             }
         }
         resume();

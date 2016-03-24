@@ -12,9 +12,9 @@ import com.hot.ball.hotball.universe.player.Team;
  * @author Inga
  */
 public class LogicCore {
-
+    
     private static LogicCore singleton;
-
+    
     public static void create() {
         if (singleton == null) {
             singleton = new LogicCore();
@@ -32,7 +32,9 @@ public class LogicCore {
 
     private LogicCore() {
     }
-
+    
+    public int blueScore,redScore;
+    
     public void start() {
         GameLoop.create();
         GameLoop.get().start();

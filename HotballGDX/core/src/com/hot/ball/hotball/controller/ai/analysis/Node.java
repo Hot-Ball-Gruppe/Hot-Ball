@@ -22,7 +22,7 @@ public class Node implements Comparable<Node> {
     public Node(VoronoiArea voronoiArea, Node predecessor, Position target, Tactic[] tactics, Player player) {
         this.voronoiArea = voronoiArea;
         this.predecessor = predecessor;
-        this.heuristic = (predecessor != null)?predecessor.getHeuristic():0 + heuristic(voronoiArea.getCenter(), target);
+        this.heuristic = ((predecessor != null)?predecessor.getHeuristic():0) + heuristic(voronoiArea.getCenter(), target);
         double tmpRating = (predecessor != null)?predecessor.getRating():0;
         for (Tactic t : tactics) {
             tmpRating += t.rate(voronoiArea, player);
@@ -49,6 +49,10 @@ public class Node implements Comparable<Node> {
 
     public VoronoiArea getVoronoiArea() {
         return voronoiArea;
+    }
+
+    public Node getPredecessor() {
+        return predecessor;
     }
     
     

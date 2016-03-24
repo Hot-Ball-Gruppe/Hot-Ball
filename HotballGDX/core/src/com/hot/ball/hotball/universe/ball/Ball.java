@@ -88,7 +88,7 @@ public class Ball extends GameObject {
     @Override
     public void draw(Graphics g) {
         if (getState() instanceof InAir) {
-            g.drawImage(texture, getPosition().getRoundX(), getPosition().getRoundY(), getCurrentVelocity().getTheta());
+            g.drawImageRel(texture, getPosition().getRoundX(), getPosition().getRoundY(), getCurrentVelocity().getTheta());
         }
     }
 

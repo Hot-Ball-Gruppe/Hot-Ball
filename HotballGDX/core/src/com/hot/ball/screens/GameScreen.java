@@ -2,8 +2,8 @@ package com.hot.ball.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
+import com.hot.ball.hotball.logic.LogicCore;
 import com.hot.ball.hotball.ui.Graphics;
 import com.hot.ball.hotball.universe.GameObject;
 import com.hot.ball.hotball.universe.court.Court;
@@ -18,20 +18,13 @@ public class GameScreen extends AbstractGameScreen {
 		drawing=true;
 	}
 
-/*	@Override
-	public void render(float deltaTime) {
-		// TODO Auto-generated method stub
-
-	}
-	   // Texture tst;
- */
     @Override
     public void render(float deltaTime) {//repmann: deltaTime ist Echtzeit; kann benutzt 
     	//werden, um Geschwindigkeitsunterschiede des Systems rauszurechnen
-       if (Gdx.input.isKeyJustPressed(Keys.M) || Gdx.input.isKeyJustPressed(Keys.F1) ){
+     /*  if (Gdx.input.isKeyJustPressed(Keys.M) || Gdx.input.isKeyJustPressed(Keys.F1) ){
 			game.setScreen(new MenuScreen(game));
 			drawing = false;
-       }
+       }*/
        if (drawing) {
             Gdx.gl.glClearColor(0, 0, 0, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -41,7 +34,7 @@ public class GameScreen extends AbstractGameScreen {
             for (GameObject toDraw : GameObject.ALL_GAMEOBJECTS) {
                 toDraw.draw(Graphics.get());
             }
-            //   Graphics.get().drawImageScreenCenter(tst);
+            Graphics.get().drawStringRel(LogicCore.get().blueScore+"  "+LogicCore.get().redScore, Court.COURT_WIDTH/2-50,Court.COURT_HEIGHT+60);
             Graphics.get().draw(Gdx.graphics.getDeltaTime());
         }
     }

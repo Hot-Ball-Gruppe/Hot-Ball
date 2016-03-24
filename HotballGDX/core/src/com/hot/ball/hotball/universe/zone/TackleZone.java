@@ -70,12 +70,11 @@ public class TackleZone implements Zone {
 
     static {
         for (int i = 0; i < 4; i++) {
-            TEXTURE[i] = new TextureRegion(new Texture(Gdx.files.internal("res/Tackle" + i + ".png")));
+            TEXTURE[i] = new TextureRegion(new Texture(Gdx.files.internal("res/tackle" + i + ".png")));
         }
     }
 
-    public void draw(Graphics g) {
-        int spriteColor = player.isHuman() ? 0 : ((player.getTeam().getColor() == TeamColor.Blue) ? 1 : ((Ball.get().isControlledBy(player) ? 3 : 2)));
-        g.drawImage(TEXTURE[spriteColor], player.getPosition().getRoundX(), player.getPosition().getRoundY(), drawScale * currentFactor, null);
+    public void draw(Graphics g,int spriteColor) {
+        g.drawImageRel(TEXTURE[spriteColor], player.getPosition().getRoundX(), player.getPosition().getRoundY(), drawScale * currentFactor, null);
     }
 }

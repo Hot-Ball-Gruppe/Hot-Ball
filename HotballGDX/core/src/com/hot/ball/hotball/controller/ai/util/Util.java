@@ -20,8 +20,7 @@ import com.hot.ball.hotball.universe.player.Team;
 public class Util {
 
     public static void main(String[] args) {
-        
-        
+
     }
 
     public static double radiusFkt(Position k, Position p, Vector r) {
@@ -41,103 +40,105 @@ public class Util {
         }
         return new DoublePosition(xwert, isUpper ? Court.COURT_HEIGHT : 0);
     }
-    
-    public static BandenSeite BandenCheckFKT(Player player, Position ziel){
+
+    public static BandenSeite BandenCheckFKT(Player player, Position ziel) {
         boolean upper;
         boolean oben = true;
         boolean unten = true;
         BandenSeite result;
-        upper = player.getPosition().getY()>Court.COURT_HEIGHT/2;
+        upper = player.getPosition().getY() > Court.COURT_HEIGHT / 2;
         for (Player opponent : player.getTeam().getOpponent().getMembers()) {
             Position u = bandenFkt(ziel, player.getPosition(), true);
-            if (radiusFkt(player.getPosition(), opponent.getPosition(), new Vector(u.getX()-player.getPosition().getX(), u.getY()-player.getPosition().getY()))>opponent.getTackleZoneSize()){
-                if (radiusFkt(u, opponent.getPosition(), new Vector(ziel.getX()-u.getX(), ziel.getY()-u.getY()))>opponent.getTackleZoneSize()){
+            if (radiusFkt(player.getPosition(), opponent.getPosition(), new Vector(u.getX() - player.getPosition().getX(), u.getY() - player.getPosition().getY())) > opponent.getTackleZoneSize()) {
+                if (radiusFkt(u, opponent.getPosition(), new Vector(ziel.getX() - u.getX(), ziel.getY() - u.getY())) > opponent.getTackleZoneSize()) {
                     continue;
-                }else{
-                    oben =  false;
+                } else {
+                    oben = false;
                 }
-            }else{
+            } else {
                 oben = false;
             }
         }
         for (Player opponent : player.getTeam().getOpponent().getMembers()) {
             Position u = bandenFkt(ziel, player.getPosition(), false);
-            if (radiusFkt(player.getPosition(), opponent.getPosition(), new Vector(u.getX()-player.getPosition().getX(), u.getY()-player.getPosition().getY()))>opponent.getTackleZoneSize()){
-                if (radiusFkt(u, opponent.getPosition(), new Vector(ziel.getX()-u.getX(), ziel.getY()-u.getY()))>opponent.getTackleZoneSize()){
+            if (radiusFkt(player.getPosition(), opponent.getPosition(), new Vector(u.getX() - player.getPosition().getX(), u.getY() - player.getPosition().getY())) > opponent.getTackleZoneSize()) {
+                if (radiusFkt(u, opponent.getPosition(), new Vector(ziel.getX() - u.getX(), ziel.getY() - u.getY())) > opponent.getTackleZoneSize()) {
                     continue;
-                }else{
-                    unten =  false;
+                } else {
+                    unten = false;
                 }
-            }else{
+            } else {
                 unten = false;
             }
         }
-        if (upper){
-            if(oben){
+        if (upper) {
+            if (oben) {
                 return BandenSeite.oben;
-            }if(unten){
+            }
+            if (unten) {
+                return BandenSeite.unten;
+            } else {
+                return BandenSeite.keins;
+            }
+        } else {
+            if (unten) {
                 return BandenSeite.unten;
             }
-            else{
-            return BandenSeite.keins;
-            }      
-        }else{
-            if (unten){
-                return BandenSeite.unten;
-            }if(oben){
+            if (oben) {
                 return BandenSeite.oben;
-            }else{
+            } else {
                 return BandenSeite.keins;
             }
         }
     }
-    
-     public static BandenSeite DoppelBandenCheckFKT(Player player){
+
+    public static BandenSeite DoppelBandenCheckFKT(Player player) {
         boolean upper;
         boolean oben = true;
         boolean unten = true;
-        upper = player.getPosition().getY()>Court.COURT_HEIGHT/2;
+        upper = player.getPosition().getY() > Court.COURT_HEIGHT / 2;
         Position ziel = doppelbandeHinten(player, true);
         Position u = doppelBandenFkt(player, true);
         for (Player opponent : player.getTeam().getOpponent().getMembers()) {
-            if (radiusFkt(player.getPosition(), opponent.getPosition(), new Vector(u.getX()-player.getPosition().getX(), u.getY()-player.getPosition().getY()))>opponent.getTackleZoneSize()){
-                if (radiusFkt(u, opponent.getPosition(), new Vector(ziel.getX()-u.getX(), ziel.getY()-u.getY()))>opponent.getTackleZoneSize()){
+            if (radiusFkt(player.getPosition(), opponent.getPosition(), new Vector(u.getX() - player.getPosition().getX(), u.getY() - player.getPosition().getY())) > opponent.getTackleZoneSize()) {
+                if (radiusFkt(u, opponent.getPosition(), new Vector(ziel.getX() - u.getX(), ziel.getY() - u.getY())) > opponent.getTackleZoneSize()) {
                     continue;
-                }else{
-                    oben =  false;
+                } else {
+                    oben = false;
                 }
-            }else{
+            } else {
                 oben = false;
             }
         }
         ziel = doppelbandeHinten(player, false);
         u = doppelBandenFkt(player, false);
         for (Player opponent : player.getTeam().getOpponent().getMembers()) {
-            if (radiusFkt(player.getPosition(), opponent.getPosition(), new Vector(u.getX()-player.getPosition().getX(), u.getY()-player.getPosition().getY()))>opponent.getTackleZoneSize()){
-                if (radiusFkt(u, opponent.getPosition(), new Vector(ziel.getX()-u.getX(), ziel.getY()-u.getY()))>opponent.getTackleZoneSize()){
+            if (radiusFkt(player.getPosition(), opponent.getPosition(), new Vector(u.getX() - player.getPosition().getX(), u.getY() - player.getPosition().getY())) > opponent.getTackleZoneSize()) {
+                if (radiusFkt(u, opponent.getPosition(), new Vector(ziel.getX() - u.getX(), ziel.getY() - u.getY())) > opponent.getTackleZoneSize()) {
                     continue;
-                }else{
-                    unten =  false;
+                } else {
+                    unten = false;
                 }
-            }else{
+            } else {
                 unten = false;
             }
         }
-        if (upper){
-            if(oben){
+        if (upper) {
+            if (oben) {
                 return BandenSeite.oben;
-            }if(unten){
+            }
+            if (unten) {
+                return BandenSeite.unten;
+            } else {
+                return BandenSeite.keins;
+            }
+        } else {
+            if (unten) {
                 return BandenSeite.unten;
             }
-            else{
-            return BandenSeite.keins;
-            }      
-        }else{
-            if (unten){
-                return BandenSeite.unten;
-            }if(oben){
+            if (oben) {
                 return BandenSeite.oben;
-            }else{
+            } else {
                 return BandenSeite.keins;
             }
         }
@@ -146,9 +147,24 @@ public class Util {
     public static boolean canThrow(Player player, Position target) {
         double dist = player.getPosition().getDistance(target);
         if (dist < player.getMaxThrowDist()) {
-            //WARNING: THIS DISREGARDS HANDOFFS!!!!!!
             for (Player opponent : player.getTeam().getOpponent().getMembers()) {
-                if (ClosestToStrecke(player.getPosition(), target, opponent.getPosition()).getDistance(opponent.getPosition()) < opponent.getTackleZoneSize()) {
+                Position closestToStrecke = ClosestToStrecke(player.getPosition(), target, opponent.getPosition());
+                if (closestToStrecke.equals(player.getPosition()) && player.getPosition().getDistance(opponent.getPosition()) < opponent.getTackleZoneSize()) {
+                    //panicThrow
+                 /*   double[] panicAngle = new double[2];
+                    double angle = opponent.getPosition().angleBetween(player.getPosition());
+                    panicAngle[0] = angle - Math.PI / 2;
+                    panicAngle[0] += (panicAngle[0] < 0) ? 2 * Math.PI : 0;
+                    panicAngle[1] = angle + Math.PI / 2;
+                    panicAngle[1] += (panicAngle[0] < 0) ? 2 * Math.PI : 0;
+                    panicAngle[1] += (panicAngle[1] < panicAngle[0]) ? 2 * Math.PI : 0;
+
+                    double throwAngle = player.getPosition().angleBetween(target);
+                    throwAngle += (throwAngle < 0) ? 2 * Math.PI : 0;
+                    if(panicAngle[0]>throwAngle || throwAngle>panicAngle[1]){*/
+                        return false;
+                //    }
+                } else if (closestToStrecke.getDistance(opponent.getPosition()) < opponent.getTackleZoneSize()) {
                     return false;
                 }
             }
@@ -203,40 +219,40 @@ public class Util {
         if (Team.BLUE.isMember(pl)) {
             hBandeX = Court.COURT_WIDTH + Court.OFFSET_X;
         } else {
-            hBandeX = - Court.OFFSET_X;
+            hBandeX = -Court.OFFSET_X;
         }
         Position k = pl.getPosition();
-        double p = k.getX()- hBandeX;
+        double p = k.getX() - hBandeX;
         if (!isUpper) {
-             p+= (-k.getY() / (-s.getY() - k.getY())) * (-s.getX() + 2 * hBandeX - k.getX()); 
+            p += (-k.getY() / (-s.getY() - k.getY())) * (-s.getX() + 2 * hBandeX - k.getX());
             return new Position.FinalPosition(hBandeX + p, 0);
         } else {
-            p+= ((2*s.getY()-k.getY()) / (3*s.getY() - k.getY())) * (-s.getX() + 2 * hBandeX - k.getX());
-            return new Position.FinalPosition(hBandeX + p, 2*s.getY());
+            p += ((2 * s.getY() - k.getY()) / (3 * s.getY() - k.getY())) * (-s.getX() + 2 * hBandeX - k.getX());
+            return new Position.FinalPosition(hBandeX + p, 2 * s.getY());
         }
     }
-    
-    public static Position doppelbandeHinten(Player pl, boolean isUpper){
+
+    public static Position doppelbandeHinten(Player pl, boolean isUpper) {
         Position s = pl.getTeam().getAttacking().getPosition();
         double hBandeX;
         if (Team.BLUE.isMember(pl)) {
             hBandeX = Court.COURT_WIDTH + Court.OFFSET_X;
         } else {
-            hBandeX = - Court.OFFSET_X;
+            hBandeX = -Court.OFFSET_X;
         }
         Position k = pl.getPosition();
-        
+
         Position.FinalPosition secondBandenPkt;
-        if(!isUpper){
-            double p = k.getY()+((hBandeX-k.getX())/(-s.getX()+2*hBandeX-k.getX()))*(-s.getY()-k.getY());
+        if (!isUpper) {
+            double p = k.getY() + ((hBandeX - k.getX()) / (-s.getX() + 2 * hBandeX - k.getX())) * (-s.getY() - k.getY());
             secondBandenPkt = new Position.FinalPosition(hBandeX, -p);
-        }else{
-            double p = k.getY()-2*s.getY()+((hBandeX-k.getX())/(-s.getX()+2*hBandeX-k.getX()))*(3*s.getY()-k.getY());
-            secondBandenPkt = new Position.FinalPosition(hBandeX,2*s.getY()-p);
+        } else {
+            double p = k.getY() - 2 * s.getY() + ((hBandeX - k.getX()) / (-s.getX() + 2 * hBandeX - k.getX())) * (3 * s.getY() - k.getY());
+            secondBandenPkt = new Position.FinalPosition(hBandeX, 2 * s.getY() - p);
         }
         //Von PLayerPos to bande mit WufrTextFkt
         //Von bande to 2ndBande radiusFkt iteriert über alle gegnas
         return secondBandenPkt;
-        
+
     }
 }

@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.hot.ball.hotball.logic.BlockCondition;
+import com.hot.ball.hotball.logic.LogicCore;
 import com.hot.ball.hotball.universe.player.Team;
 
 /**
@@ -88,8 +89,8 @@ public class BallScoreAnimation implements Overlay, BlockCondition {
             boolean animationFinished = SCORE_FAIL.isAnimationFinished(ellapsedTime - tensionTime);
             done = animationFinished;
         }
-        g.drawImageScreenCenter(DIGIT_FIRST[probability/10]);
-        g.drawImageScreenCenter(DIGIT_SECOND[probability%10]);
+        g.drawImageScreenCenter(DIGIT_FIRST[probability / 10]);
+        g.drawImageScreenCenter(DIGIT_SECOND[probability % 10]);
         return done;
     }
 
@@ -103,6 +104,21 @@ public class BallScoreAnimation implements Overlay, BlockCondition {
     @Override
     public boolean isPermanent() {
         return false;
+    }
+
+    @Override
+    public void end() {
+        if (success) {
+            LogicCore.get().reset();
+            switch (thrower.getColor()) {
+                case Blue:
+                    LogicCore.get().blueScore++;
+                    break;
+                case Red:
+                    LogicCore.get().redScore++;
+                    break;
+            }
+        }
     }
 
 }

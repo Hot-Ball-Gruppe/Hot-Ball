@@ -15,6 +15,7 @@ import com.hot.ball.help.math.Vector;
 import com.hot.ball.hotball.controller.Controller;
 import com.hot.ball.hotball.controller.HumanController;
 import com.hot.ball.hotball.controller.ai.AIController;
+import com.hot.ball.hotball.controller.ai.AI_Difficulty;
 import com.hot.ball.hotball.controller.ai.analysis.VoronoiArea;
 import com.hot.ball.hotball.controller.ai.roles.Role;
 import com.hot.ball.hotball.ui.Graphics;
@@ -34,12 +35,13 @@ import com.hot.ball.hotball.universe.zone.Zone;
 public final class Player extends GameObject {
 //---------DEFAULT PLAYERS----------------------
 
-    public static Player Felix = new Player("Felix", new Stats(2, 1, 1), Role.Balanced);
-    public static Player Adrian = new Player("Adrian", new Stats(1, 2, 1), Role.Defensive);
-  /*  public static Player Leo = new Player("Leo", new Stats(1, 1, 1), Role.Balanced);
-    public static Player Patryk = new Player("Patryk", new Stats(1, 1, 1), Role.Aggressive);
-    public static Player Friedrich = new Player("Friedrich", new Stats(1, 1, 2), Role.Aggressive);
-    public static Player Thomas = new Player("Thomas", new Stats(1, 1, 1), Role.Defensive);*/
+    public static Player Felix = new Player("Felix", new Stats(1, 1, 1), Role.Balanced);
+    public static Player Adrian = new Player("Adrian", new Stats(1, 1, 1), Role.Defensive);
+
+    public static Player Leo = new Player("Leo", new Stats(1, 1, 1), Role.Balanced);
+    public static Player Patryk = new Player("Patryk", new Stats(1, 1, 1), Role.Balanced);
+    public static Player Friedrich = new Player("Friedrich", new Stats(1, 1, 1), Role.Aggressive);
+    public static Player Thomas = new Player("Thomas", new Stats(1, 1, 1), Role.Defensive);
 
     /*
     public static Player Dummy1 = new Player("Dummy1", new Stats(1, 1, 1), null);
@@ -85,7 +87,7 @@ public final class Player extends GameObject {
     private final double maxThrowDist;
 
     private double currentMaxSpeed;
-    
+
     private double minChanceToHit;
 
     private VoronoiArea voronoiArea;
@@ -135,7 +137,7 @@ public final class Player extends GameObject {
 
     @Override
     public double getCurrentMaxSpeed() {
-        return currentMaxSpeed * (Ball.get().isControlledBy(this) ? 0.8 : 1);
+        return currentMaxSpeed * (Ball.get().isControlledBy(this) ? 0.8 : 1) * (Team.RED.isMember(this) ? AI_Difficulty.getDifficulty().getSpeedFactor() : 1);
     }
 
     public double getTackleZoneSize() {
@@ -165,25 +167,37 @@ public final class Player extends GameObject {
     private static final TextureRegion[] HOLDING_TEXTURE;
     private static final TextureRegion[] THROWING_TEXTURE;
 
+    private static final Texture DANGER_FRAME;
+    private static final Texture DANGER_BAR;
+    private static final Texture DANGER_SIGN;
+
+    private static final Texture WAYPOINT;
+
     private float totalAnimationTime = (float) (Math.random() * 10);
 
-    private static final double ROTATION_PER_SECOND = Math.PI*2;
+    private static final double ROTATION_PER_SECOND = Math.PI * 2;
 
     static {
-        TextureRegion[][][] split = new TextureRegion[][][]{TextureRegion.split(new Texture(Gdx.files.internal("res/player0.png")), 64, 64), TextureRegion.split(new Texture(Gdx.files.internal("res/player1.png")), 64, 64), TextureRegion.split(new Texture(Gdx.files.internal("res/player2.png")), 64, 64)};
+        TextureRegion[][][] split = new TextureRegion[][][]{TextureRegion.split(new Texture(Gdx.files.internal("res/player0.png")), 64, 64), TextureRegion.split(new Texture(Gdx.files.internal("res/player1.png")), 64, 64), TextureRegion.split(new Texture(Gdx.files.internal("res/player2.png")), 64, 64), TextureRegion.split(new Texture(Gdx.files.internal("res/player3.png")), 64, 64)};
 
-        WALKING_ANIMATION = new Animation[3];
-        DRIBBLING_ANIMATION = new Animation[3];
-        STANDING_TEXTURE = new TextureRegion[3];
-        HOLDING_TEXTURE = new TextureRegion[3];
-        THROWING_TEXTURE = new TextureRegion[3];
-        for (int i = 0; i < 3; i++) {
+        WALKING_ANIMATION = new Animation[4];
+        DRIBBLING_ANIMATION = new Animation[4];
+        STANDING_TEXTURE = new TextureRegion[4];
+        HOLDING_TEXTURE = new TextureRegion[4];
+        THROWING_TEXTURE = new TextureRegion[4];
+        for (int i = 0; i < 4; i++) {
             WALKING_ANIMATION[i] = new Animation(ANIMATION_TIMER, split[i][1]);
             DRIBBLING_ANIMATION[i] = new Animation(ANIMATION_TIMER, split[i][0]);
             STANDING_TEXTURE[i] = split[i][1][0];
             HOLDING_TEXTURE[i] = split[i][2][0];
             THROWING_TEXTURE[i] = split[i][2][1];
         }
+
+        DANGER_FRAME = new Texture(Gdx.files.internal("res/Rahmen.png"));
+        DANGER_BAR = new Texture(Gdx.files.internal("res/Farbleiste.png"));
+        DANGER_SIGN = new Texture(Gdx.files.internal("res/DANGER.png"));
+
+        WAYPOINT = new Texture(Gdx.files.internal("res/waypoint.png"));
     }
 
     public double getFacing() {
@@ -192,13 +206,14 @@ public final class Player extends GameObject {
 
     @Override
     public void draw(Graphics g) {
-        tackleZone.draw(g);
-        int spriteColor = isHuman() ? 0 : ((team.getColor() == TeamColor.Blue) ? 1 : 2);
+        int spriteColor = (team.getColor() == TeamColor.Blue) ? 0 : 2;
+        spriteColor += (Ball.get().isControlledBy(this) || isHuman()) ? 1 : 0;
+        tackleZone.draw(g,spriteColor);
         TextureRegion keyFrame;
         BallState ballState = Ball.get().getState();
         if (ballState instanceof InAir && this.equals(((InAir) ballState).getThrower()) && ((InAir) ballState).getAirTime() < 0.2) {
             keyFrame = THROWING_TEXTURE[spriteColor];
-        } else if (getCurrentVelocity().getLength() > 12) {
+        } else if (getCurrentVelocity().getLength() > getCurrentMaxSpeed() / 3) {
             if (Ball.get().isControlledBy(this)) {
                 keyFrame = DRIBBLING_ANIMATION[spriteColor].getKeyFrame(totalAnimationTime, true);
             } else {
@@ -209,10 +224,22 @@ public final class Player extends GameObject {
         } else {
             keyFrame = STANDING_TEXTURE[spriteColor];
         }
-        g.drawImage(keyFrame, getPosition().getRoundX(), getPosition().getRoundY(), 32, 32, facing);
+        if (controller instanceof AIController && ((AIController) controller).getOrder() != null) {
+            Position order = ((AIController) controller).getOrder();
+            g.drawLineRel(getPosition(), order);
+            g.drawImageRel(WAYPOINT, order.getRoundX(), order.getRoundY() + WAYPOINT.getHeight() / 2);
+        }
+        g.drawImageRel(keyFrame, getPosition().getRoundX(), getPosition().getRoundY(), facing);
+        //  g.drawString((int)getVoronoiArea().getCenter().getX()+" "+(int)getVoronoiArea().getCenter().getY(),  getPosition().getRoundX()+100, getPosition().getRoundY()+100);
         // g.drawImage(keyFrame, voronoiArea.getCenter().getRoundX(), voronoiArea.getCenter().getRoundY(), 32, 32, facing);
-        if (isHuman() && Ball.get().isControlledBy(this) && getChanceToHit() > 0) {
-            g.drawString("" + (int) (100 * getChanceToHit()), 10, 40);
+        if (isHuman() && inDanger) {
+            g.drawImageScreenCenter(DANGER_BAR, currentTakeDownTime / TAKEDOWNTIME);
+            g.drawImageScreenCenter(DANGER_FRAME);
+            g.drawImageScreenCenterShake(DANGER_SIGN, currentTakeDownTime / TAKEDOWNTIME);
+        }
+
+        if (isHuman() && Ball.get().isControlledBy(this) && getChanceToHit() > minChanceToHit) {
+            g.drawStringRel("" + (int) (100 * getChanceToHit()), getTeam().getAttacking().getPosition().getRoundX() - 25, getTeam().getAttacking().getPosition().getRoundY() + 65);
         }
     }
 
@@ -221,8 +248,8 @@ public final class Player extends GameObject {
     private final static double TAKEDOWNTIME = 1.0;
     private double currentTakeDownTime = 0;
 
-     public void calcChanceToHit(int enemyTZ) {
-    	double adj_max_throw_dist = MAX_THROW_DIST + minChanceToHit * 800;
+    public void calcChanceToHit(int enemyTZ) {
+        double adj_max_throw_dist = MAX_THROW_DIST + minChanceToHit * 800;
         double dist = getPosition().getDistance(getTeam().getAttacking().getPosition());
         chanceToHit = Math.max(minChanceToHit, Math.min(0.99, (-dist / adj_max_throw_dist + (float) Court.BASKET_DIST_FROM_OUTLINE / adj_max_throw_dist + 0.95 + minChanceToHit)) / Math.pow(2, enemyTZ));
     }
@@ -230,6 +257,8 @@ public final class Player extends GameObject {
     public double getChanceToHit() {
         return chanceToHit;
     }
+
+    private boolean inDanger;
 
     @Override
     public void action(double timeDiff) {
@@ -259,31 +288,47 @@ public final class Player extends GameObject {
         }
         calcChanceToHit(enemyTZ);
         currentMaxSpeed = totalMaxSpeed / (1 + Math.max(0, enemyTZ - friendlyTZ));
-        if (enemyTZ > 0) {
-            if (Ball.get().isControlledBy(this)) {
-                currentTakeDownTime = Math.min(TAKEDOWNTIME, currentTakeDownTime + timeDiff);
-                if (currentTakeDownTime >= TAKEDOWNTIME) {
-                    Ball.get().setState(new Controlled(closestEnemy));
-                    tackleZone.reset();
-                    currentTakeDownTime = 0;
-                }
+        if (Ball.get().isControlledBy(this) && enemyTZ > 0) {
+            currentTakeDownTime = Math.min(TAKEDOWNTIME, currentTakeDownTime + timeDiff);
+            if (currentTakeDownTime >= TAKEDOWNTIME) {
+                Ball.get().setState(new Controlled(closestEnemy));
+                closestEnemy.thrown = true;
+                closestEnemy.throwTimeOut = MAXTHROWTIMEOUT / 2;
+                tackleZone.reset();
+                currentTakeDownTime = 0;
             }
+            inDanger = true;
         } else {
             currentTakeDownTime = Math.max(0, currentTakeDownTime - timeDiff);
+            inDanger = false;
         }
 
         Vector accDir = controller.getMoveVector(this);
+
         clearInterfeeringZones();
-        if (accDir.getLength() > 1) {
+
+        if (accDir.getLength()
+                > 1) {
             accDir.setLength(1);
         }
+
         accelerate(timeDiff, accDir);
+
         if (isHuman()) {
-            facing =  controller.getFacing(this);
+            facing = controller.getFacing(this);
         } else {
             facing = allignFacing(facing, controller.getFacing(this), timeDiff);
         }
+
         tackleZone.action(timeDiff);
+
+        if (thrown) {
+            throwTimeOut += timeDiff;
+            if (throwTimeOut > MAXTHROWTIMEOUT) {
+                throwTimeOut = 0;
+                thrown = false;
+            }
+        }
     }
 
     public double getMaxThrowDist() {
@@ -301,10 +346,23 @@ public final class Player extends GameObject {
             return currentFacing + Math.signum(angle) * maxAngle;
         }
     }
-    
-    public void throwBall(Position target){
-        if(Ball.get().isControlledBy(this)){
-            Ball.get().throwBall(target, getThrowPower());
+    private final static double MAXTHROWTIMEOUT = TAKEDOWNTIME + 0.2;
+    private double throwTimeOut = 0;
+    boolean thrown;
+
+    public void throwBall(Position target) {
+        if (!thrown) {
+            if (Ball.get().isControlledBy(this)) {
+                Ball.get().throwBall(target, getThrowPower());
+                facing = getPosition().angleBetween(target);
+                thrown = true;
+            }
+        }
+    }
+
+    public void order(Position p) {
+        if (!isHuman()) {
+            ((AIController) controller).setOrder(p);
         }
     }
 

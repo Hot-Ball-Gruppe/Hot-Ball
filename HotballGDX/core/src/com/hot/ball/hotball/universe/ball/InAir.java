@@ -6,7 +6,6 @@
 package com.hot.ball.hotball.universe.ball;
 
 import com.hot.ball.help.math.Vector;
-import com.hot.ball.hotball.universe.collision.CollisionModell;
 import com.hot.ball.hotball.universe.court.Court;
 import com.hot.ball.hotball.universe.player.Player;
 import com.hot.ball.hotball.universe.player.Team;

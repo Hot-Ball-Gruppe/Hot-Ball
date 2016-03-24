@@ -15,8 +15,6 @@ import com.hot.ball.hotball.universe.player.Player;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  *
@@ -44,36 +42,46 @@ public abstract class Behavior {
         }
         return new Vector(1, p.getPosition().angleBetween(target.getPosition()), null);
     }
-    
-    protected Position tacticalMovement(Player p,Position target,Tactic[] tactics){
+
+    protected Position tacticalMovement(Player p, Position target, Tactic[] tactics) {
         PriorityQueue<Node> openNodes = new PriorityQueue<>();
         Set<VoronoiArea> visitedNodes = new HashSet<>();
-        
-        if(p.getPosition().getDistance(target)<10){
+
+        if (p.getPosition().getDistance(target) < 10) {
             return target;
         }
-        
+
         Node startNode = new Node(Analysis.get().getVoronoi(target), null, p.getPosition(), tactics, p);
         openNodes.add(startNode);
         visitedNodes.add(p.getVoronoiArea());
-        
-        while(!openNodes.isEmpty()){
+        //VoronoiArea voronoi420 = Analysis.get().getVoronoi(new Position.DoublePosition(420, 391));
+
+        while (!openNodes.isEmpty()) {
             Node currentNode = openNodes.poll();
-            for(VoronoiArea neighbor:currentNode.getVoronoiArea().getConnected()){
-                if(p.getVoronoiArea().equals(neighbor)){
+            for (VoronoiArea neighbor : currentNode.getVoronoiArea().getConnected()) {
+                if (p.getVoronoiArea().equals(neighbor)) {
+                    /* Node prev = currentNode;
+                    System.out.println("PL: "+p.getVoronoiArea().getCenter());
+                    System.out.print(neighbor.getCenter());
+                    while(prev != null){
+                        System.out.print("-> "+prev.getVoronoiArea().getCenter());
+                        prev = prev.getPredecessor();
+                    }
+                    System.out.println();*/
                     return currentNode.getVoronoiArea().getCenter();
                 }
-                if(visitedNodes.add(neighbor)){
+                if (visitedNodes.add(neighbor)) {
                     openNodes.add(new Node(neighbor, currentNode, p.getPosition(), tactics, p));
+
                 }
             }
         }
         System.out.println("PATHFIND-FAIL!");
         return target;
     }
-    
-    protected Vector goTo(Player p, Position target) {
-        if(p.getPosition().getDistance(target)<10){
+
+    public Vector goTo(Player p, Position target) {
+        if (p.getPosition().getDistance(target) < 10) {
             return Vector.NULL_VECTOR;
         }
         return new Vector(target.getX() - p.getPosition().getX(), target.getY() - p.getPosition().getY()).setLength(Math.min(1, p.getPosition().getDistance(target)));

@@ -18,7 +18,7 @@ import com.hot.ball.hotball.universe.player.Team;
 
 //repmanntest
 import com.badlogic.gdx.Game;
-import com.hot.ball.hotball.controller.ai.BallCarrierAI;
+import com.hot.ball.hotball.controller.ai.roles.BallCarrierAI;
 import com.hot.ball.screens.*;
 //repmanntest
 
@@ -33,8 +33,8 @@ public class HotballGame extends Game {//repmanntest
         CollisionModell.generate();
 
         Ball.create(new Position.DoublePosition(Court.COURT_WIDTH / 2, Court.COURT_HEIGHT / 2));
-       // Team.generate(new Player[]{Player.Felix, Player.Friedrich, Player.Adrian}, new Player[]{Player.Leo, Player.Thomas, Player.Patryk}, Court.get().getLeftBasket(), Court.get().getRightBasket());
-          Team.generate(new Player[]{Player.Felix}, new Player[]{Player.Adrian}, Court.get().getLeftBasket(), Court.get().getRightBasket());
+       Team.generate(new Player[]{Player.Felix, Player.Friedrich, Player.Adrian}, new Player[]{Player.Leo, Player.Thomas, Player.Patryk}, Court.get().getLeftBasket(), Court.get().getRightBasket());
+          //Team.generate(new Player[]{Player.Felix}, new Player[]{}, Court.get().getLeftBasket(), Court.get().getRightBasket());
         BallCarrierAI.create();
         
         UserInput.create(Gdx.input, KeyBinding.GDX_WASD, UserInput.ControlMode.ScreenRelational);
@@ -49,7 +49,8 @@ public class HotballGame extends Game {//repmanntest
         Analysis.create("unweightedField");
 
         LogicCore.create();
-        AudioManager.create();
+        AudioManager.create();        
+        
         LogicCore.get().start();
         AudioManager.get().start();
         Graphics.create();
@@ -73,7 +74,7 @@ public class HotballGame extends Game {//repmanntest
             for (GameObject toDraw : GameObject.ALL_GAMEOBJECTS) {
                 toDraw.draw(Graphics.get());
             }
-            //   Graphics.get().drawImageScreenCenter(tst);
+            //   Graphics.get().drawImageScreenCenterShake(tst);
             Graphics.get().draw(Gdx.graphics.getDeltaTime());
         }
     }

@@ -105,9 +105,6 @@ public class CollisionModell {
             GameLoop.get().addBlockCondition(new BallScoreAnimation(state.getThrower().getTeam(), state.getChance(), success));
             basket.setLastAttack(bs.getID());
             state.setThrower(null);
-            if (success) {
-                LogicCore.get().reset();
-            }
         }
     }
 }

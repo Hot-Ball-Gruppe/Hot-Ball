@@ -101,11 +101,11 @@ public class Court {
     }
 
     public void draw(Graphics g) {
-        for (int x = 0; x <= Gdx.graphics.getWidth() / courtTexture.getWidth(); x++) {
+        for (int x = 0; x <= 2*OFFSET_X+COURT_WIDTH / courtTexture.getWidth(); x++) {
             for (int y = 0; y <= Gdx.graphics.getHeight() / courtTexture.getHeight(); y++) {
-                g.drawImageNotCetral(courtTexture, x * courtTexture.getWidth() - OFFSET_X, y * courtTexture.getHeight());
+                g.drawImageRel(courtTexture, x * courtTexture.getWidth() - OFFSET_X, y * courtTexture.getHeight());
             }
         }
-        g.drawImageNotCetral(COURT_LINES_TEXTURE, 0, 0);
+        g.drawCourt(COURT_LINES_TEXTURE);
     }
 }
