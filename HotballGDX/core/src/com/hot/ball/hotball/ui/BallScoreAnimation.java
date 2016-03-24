@@ -26,24 +26,24 @@ public class BallScoreAnimation implements Overlay, BlockCondition {
     private final static Texture[] DIGIT_FIRST;
     private final static Texture[] DIGIT_SECOND;
 
-    private final static float FRAME_DURATION = 0.50f;
+    private final static float FRAME_DURATION = 0.125f;
 
     static {
-        TextureRegion[] undecided = new TextureRegion[2];
+        TextureRegion[] undecided = new TextureRegion[10];
         for (int i = 0; i < undecided.length; i++) {
-            undecided[i] = new TextureRegion(new Texture(Gdx.files.internal("res/scoreAnimation/sa_u" + i + ".png")));
+            undecided[i] = new TextureRegion(new Texture(Gdx.files.internal("res/scoreAnimation/throw" + (i + 1) + ".png")));
         }
-        TextureRegion[] win = new TextureRegion[10];
+        TextureRegion[] win = new TextureRegion[12];
         for (int i = 0; i < win.length; i++) {
-            win[i] = new TextureRegion(new Texture(Gdx.files.internal("res/scoreAnimation/sa_w" + i + ".png")));
+            win[i] = new TextureRegion(new Texture(Gdx.files.internal("res/scoreAnimation/hit" + (i + 1) + ".png")));
         }
-        TextureRegion[] fail = new TextureRegion[10];
+        TextureRegion[] fail = new TextureRegion[6];
         for (int i = 0; i < fail.length; i++) {
-            fail[i] = new TextureRegion(new Texture(Gdx.files.internal("res/scoreAnimation/sa_f" + i + ".png")));
+            fail[i] = new TextureRegion(new Texture(Gdx.files.internal("res/scoreAnimation/miss" + (i + 1) + ".png")));
         }
         SCORE_UNDECIDED = new Animation(FRAME_DURATION, undecided);
-        SCORE_WIN = new Animation(FRAME_DURATION / 2f, win);
-        SCORE_FAIL = new Animation(FRAME_DURATION / 2f, fail);
+        SCORE_WIN = new Animation(FRAME_DURATION, win);
+        SCORE_FAIL = new Animation(FRAME_DURATION, fail);
 
         DIGIT_FIRST = new Texture[10];
         DIGIT_SECOND = new Texture[10];
