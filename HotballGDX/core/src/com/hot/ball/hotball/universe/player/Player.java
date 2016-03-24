@@ -35,12 +35,12 @@ import com.hot.ball.hotball.universe.zone.Zone;
 public final class Player extends GameObject {
 //---------DEFAULT PLAYERS----------------------
 
-    public static Player Felix = new Player("Felix", new Stats(1, 1, 1), Role.Balanced);
+    public static Player Felix = new Player("Felix", new Stats(1, 1, 1), Role.Aggressive);
     public static Player Adrian = new Player("Adrian", new Stats(1, 1, 1), Role.Defensive);
 
-    public static Player Leo = new Player("Leo", new Stats(1, 1, 1), Role.Balanced);
+    public static Player Leo = new Player("Leo", new Stats(1, 1, 1), Role.Aggressive);
     public static Player Patryk = new Player("Patryk", new Stats(1, 1, 1), Role.Balanced);
-    public static Player Friedrich = new Player("Friedrich", new Stats(1, 1, 1), Role.Aggressive);
+    public static Player Friedrich = new Player("Friedrich", new Stats(1, 1, 1), Role.Balanced);
     public static Player Thomas = new Player("Thomas", new Stats(1, 1, 1), Role.Defensive);
 
     /*
@@ -63,7 +63,7 @@ public final class Player extends GameObject {
 
     public static void setHumanPlayer(Player human) {
         if (!human.equals(humanPlayer)) {
-      //      human.setController(HumanController.get());
+            human.setController(HumanController.get());
             if (humanPlayer != null) {
                 humanPlayer.setController(new AIController());
             }

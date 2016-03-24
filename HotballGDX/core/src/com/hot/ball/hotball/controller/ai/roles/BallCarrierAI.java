@@ -42,14 +42,24 @@ public class BallCarrierAI extends Behavior {
     public Vector action(Player p) {
         Basket attacking = p.getTeam().getAttacking();
         //try To Score
-        if (p.getChanceToHit() > CHANCETOHITTHRESHOLD + Math.random() * 0.3) {
+       /* if (p.getChanceToHit() > CHANCETOHITTHRESHOLD + Math.random() * 0.3) {
             if (Util.canThrow(p, attacking.getPosition())) {
                 p.throwBall(attacking.getPosition());
                 return Vector.NULL_VECTOR;
-            }
+            }*/
+        
             Util.BandenSeite bande = Util.BandenCheckFKT(p, attacking.getPosition());
             Util.BandenSeite bande2 = Util.DoppelBandenCheckFKT(p);
             boolean isUpper = p.getPosition().getY() > Court.COURT_HEIGHT / 2;
+            
+            if (p.getChanceToHit() > CHANCETOHITTHRESHOLD + Math.random() * 0.1) {
+            if (Util.canThrow(p, attacking.getPosition()) && ((isUpper && bande2 == Util.BandenSeite.oben && bande != Util.BandenSeite.oben) || (!isUpper && bande2 == Util.BandenSeite.unten && bande != Util.BandenSeite.unten) || (bande2 != Util.BandenSeite.keins))) {
+                if (Math.random()>0.2){
+                p.throwBall(attacking.getPosition());
+                return Vector.NULL_VECTOR;
+                }
+            }
+                
             if (isUpper && bande2 == Util.BandenSeite.oben && bande != Util.BandenSeite.oben) {
                 p.throwBall(Util.doppelBandenFkt(p, true));
                 return Vector.NULL_VECTOR;
@@ -60,15 +70,15 @@ public class BallCarrierAI extends Behavior {
                 return Vector.NULL_VECTOR;
             }
 
+            if (bande2 != Util.BandenSeite.keins) {
+                p.throwBall(Util.doppelBandenFkt(p, bande2 == Util.BandenSeite.oben));
+                return Vector.NULL_VECTOR;
+            }
+            
             if (bande != Util.BandenSeite.keins) {
                 p.throwBall(Util.bandenFkt(attacking.getPosition(), p.getPosition(), bande == Util.BandenSeite.oben));
                 return Vector.NULL_VECTOR;
 
-            }
-
-            if (bande2 != Util.BandenSeite.keins) {
-                p.throwBall(Util.doppelBandenFkt(p, bande2 == Util.BandenSeite.oben));
-                return Vector.NULL_VECTOR;
             }
         }
         //can Someone else score
@@ -88,7 +98,7 @@ public class BallCarrierAI extends Behavior {
                         return Vector.NULL_VECTOR;
                     }
 
-                    Util.BandenSeite bande = Util.BandenCheckFKT(p, ally.getPosition());
+                    /*Util.BandenSeite*/ bande = Util.BandenCheckFKT(p, ally.getPosition());
                     if (bande != Util.BandenSeite.keins) {
                         p.throwBall(Util.bandenFkt(ally.getPosition(), p.getPosition(), bande == Util.BandenSeite.oben));
                         return Vector.NULL_VECTOR;

@@ -30,8 +30,8 @@ public class GameScreen extends AbstractGameScreen {
         CollisionModell.generate();
 
         Ball.create(new Position.DoublePosition(Court.COURT_WIDTH / 2, Court.COURT_HEIGHT / 2));
-        Team.generate(new Player[]{Player.Felix, Player.Friedrich, Player.Adrian}, new Player[]{Player.Leo, Player.Thomas, Player.Patryk}, Court.get().getLeftBasket(), Court.get().getRightBasket());
-   //     Team.generate(new Player[]{Player.Felix}, new Player[]{}, Court.get().getLeftBasket(), Court.get().getRightBasket());
+        Team.generate(new Player[]{Player.Felix, Player.Friedrich, Player.Adrian, Player.Friedrich}, new Player[]{Player.Leo, Player.Thomas, Player.Patryk}, Court.get().getLeftBasket(), Court.get().getRightBasket());
+     //   Team.generate(new Player[]{Player.Felix}, new Player[]{Player.Adrian}, Court.get().getLeftBasket(), Court.get().getRightBasket());
         BallCarrierAI.create();
 
         UserInput.create(Gdx.input, KeyBinding.GDX_WASD, UserInput.ControlMode.ScreenRelational);
