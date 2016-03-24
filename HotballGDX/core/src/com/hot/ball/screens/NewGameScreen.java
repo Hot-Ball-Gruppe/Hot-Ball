@@ -24,15 +24,15 @@ public class NewGameScreen extends AbstractGameScreen {
     public void create() {
         batch = new SpriteBatch();
 
-        Hintergrund = new Texture(Gdx.files.internal("res/NewGBcgnd.png"));
-        Headline = new Texture(Gdx.files.internal("res/NewGHeadln.png"));
-        Schaltflaechen[0] = new Texture(Gdx.files.internal("res/NewGItem1.png"));
-        Schaltflaechen[1] = new Texture(Gdx.files.internal("res/NewGItem2.png"));
-        Schaltflaechen[2] = new Texture(Gdx.files.internal("res/NewGItem3.png"));
-        Schaltflaechen[3] = new Texture(Gdx.files.internal("res/NewGItem4.png"));
-        Schaltflaechen[4] = new Texture(Gdx.files.internal("res/NewGItem5.png"));
-        Schaltflaechen[5] = new Texture(Gdx.files.internal("res/NewGItem6.png"));
-        Schaltflaechen[6] = new Texture(Gdx.files.internal("res/NewGItem7.png"));
+        Hintergrund = new Texture(Gdx.files.internal("res/menu/NewGBcgnd.png"));
+        Headline = new Texture(Gdx.files.internal("res/menu/NewGHeadln.png"));
+        Schaltflaechen[0] = new Texture(Gdx.files.internal("res/menu/NewGItem1.png"));
+        Schaltflaechen[1] = new Texture(Gdx.files.internal("res/menu/NewGItem2.png"));
+        Schaltflaechen[2] = new Texture(Gdx.files.internal("res/menu/NewGItem3.png"));
+        Schaltflaechen[3] = new Texture(Gdx.files.internal("res/menu/NewGItem4.png"));
+        Schaltflaechen[4] = new Texture(Gdx.files.internal("res/menu/NewGItem5.png"));
+        Schaltflaechen[5] = new Texture(Gdx.files.internal("res/menu/NewGItem6.png"));
+        Schaltflaechen[6] = new Texture(Gdx.files.internal("res/menu/NewGItem7.png"));
 
     }
 

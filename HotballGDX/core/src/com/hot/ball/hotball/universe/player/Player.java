@@ -63,7 +63,7 @@ public final class Player extends GameObject {
 
     public static void setHumanPlayer(Player human) {
         if (!human.equals(humanPlayer)) {
-            human.setController(HumanController.get());
+      //      human.setController(HumanController.get());
             if (humanPlayer != null) {
                 humanPlayer.setController(new AIController());
             }

@@ -9,7 +9,6 @@ import com.hot.ball.help.math.Position;
 import com.hot.ball.help.math.Vector;
 import com.hot.ball.hotball.controller.ai.analysis.Analysis;
 import com.hot.ball.hotball.controller.ai.analysis.Analysis.Filter;
-import com.hot.ball.hotball.controller.ai.analysis.Tactic;
 import com.hot.ball.hotball.controller.ai.analysis.VoronoiArea;
 import com.hot.ball.hotball.universe.ball.Ball;
 import com.hot.ball.hotball.universe.player.Player;
@@ -23,6 +22,7 @@ public class ZoneDefense extends Behavior {
 
     @Override
     public Vector action(Player p) {
+        
         Set<VoronoiArea> possibleFields = Analysis.get().processQuery(new Analysis.Filter[]{Filter.isDefRatingBetterThanBC, Filter.canBCScoreIfImThere, Filter.noAllys0, Filter.noAllys1}, p);
 
         Position bestPoint = null;
@@ -30,6 +30,10 @@ public class ZoneDefense extends Behavior {
 
         for (VoronoiArea va : possibleFields) {
             double dist = va.getCenter().getDistance(Ball.get().getBallCarrier().getPosition()) + va.getCenter().getDistance(p.getTeam().getAttacking().getPosition());
+            /*if(va.getOccupants().contains(Ball.get().getBallCarrier())){
+                bestPoint = va.getCenter();
+                break;
+            }*/
             if (dist < bestDistToBCAndBasket) {
                 bestPoint = va.getCenter();
                 bestDistToBCAndBasket = dist;

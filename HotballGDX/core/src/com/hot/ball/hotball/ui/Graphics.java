@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.hot.ball.help.math.Position;
+import com.hot.ball.hotball.universe.GameObject;
+import com.hot.ball.hotball.universe.ball.Ball;
 import com.hot.ball.hotball.universe.court.Court;
 import com.hot.ball.hotball.universe.player.Player;
 import java.util.LinkedList;
@@ -74,7 +76,14 @@ public class Graphics {
     }
 
     public static int getXShift() {
-        return -(int) Math.min(2 * Court.OFFSET_X + Court.COURT_WIDTH - Gdx.graphics.getWidth(), Math.max(0, Player.getHumanPlayer().getPosition().getX() + Court.OFFSET_X - Gdx.graphics.getWidth() / 2));
+        GameObject focus = Player.getHumanPlayer();
+        if(focus == null){
+            focus = Ball.get().getBallCarrier();
+        }
+        if(focus == null){
+            focus = Ball.get();
+        }
+        return -(int) Math.min(2 * Court.OFFSET_X + Court.COURT_WIDTH - Gdx.graphics.getWidth(), Math.max(0, focus.getPosition().getX() + Court.OFFSET_X - Gdx.graphics.getWidth() / 2));
     }
 
     public void drawStringAbs(String text, int x, int y) {

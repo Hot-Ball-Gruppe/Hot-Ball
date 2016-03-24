@@ -26,14 +26,14 @@ public class MenuScreen extends AbstractGameScreen {
     public final void create() {
         batch = new SpriteBatch();
 
-        Hintergrund = new Texture(Gdx.files.internal("res/MenuBcgnd.png"));
-        Headline = new Texture(Gdx.files.internal("res/MenuHeadln.png"));
-        Schaltflaechen[0] = new Texture(Gdx.files.internal("res/MenuItem1.png"));
-        Schaltflaechen[1] = new Texture(Gdx.files.internal("res/MenuItem2.png"));
-        Schaltflaechen[2] = new Texture(Gdx.files.internal("res/MenuItem3.png"));
-        Schaltflaechen[3] = new Texture(Gdx.files.internal("res/MenuItem4.png"));
-        Schaltflaechen[4] = new Texture(Gdx.files.internal("res/MenuItem5.png"));
-        Schaltflaechen[5] = new Texture(Gdx.files.internal("res/MenuItem6.png"));
+        Hintergrund = new Texture(Gdx.files.internal("res/menu/MenuBcgnd.png"));
+        Headline = new Texture(Gdx.files.internal("res/menu/MenuHeadln.png"));
+        Schaltflaechen[0] = new Texture(Gdx.files.internal("res/menu/MenuItem1.png"));
+        Schaltflaechen[1] = new Texture(Gdx.files.internal("res/menu/MenuItem2.png"));
+        Schaltflaechen[2] = new Texture(Gdx.files.internal("res/menu/MenuItem3.png"));
+        Schaltflaechen[3] = new Texture(Gdx.files.internal("res/menu/MenuItem4.png"));
+        Schaltflaechen[4] = new Texture(Gdx.files.internal("res/menu/MenuItem5.png"));
+        Schaltflaechen[5] = new Texture(Gdx.files.internal("res/menu/MenuItem6.png"));
 
     }
 
@@ -41,9 +41,15 @@ public class MenuScreen extends AbstractGameScreen {
     public void render(float deltaTime) {
         Gdx.gl.glClearColor(0.5f, 0.5f, 0.0f, 1.0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        if (Gdx.input.isTouched()) //		if (Gdx.input.isKeyJustPressed(Keys.ALT_LEFT))
-        {
-            game.setScreen(new OptionScreen(game));
+        if (Gdx.input.isTouched()) {
+           if (Gdx.input.getY() > 3*Gdx.graphics.getHeight() / 4) {
+              //  System.exit(1);
+            } else if (Gdx.input.getY() > 2 * Gdx.graphics.getHeight() / 4) {
+                game.setScreen(new OptionScreen(game));
+            } else if (Gdx.input.getY() > 1 * Gdx.graphics.getHeight() / 4) {
+                game.setScreen(new GameScreen(game));
+            }
+
         }
 
         batch.begin();
