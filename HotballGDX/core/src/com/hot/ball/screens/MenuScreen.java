@@ -5,6 +5,7 @@ package com.hot.ball.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -22,7 +23,7 @@ public class MenuScreen extends AbstractGameScreen {
         super(game);
         create();
     }
-
+private  Music menuMusic;
     public final void create() {
         batch = new SpriteBatch();
 
@@ -34,7 +35,10 @@ public class MenuScreen extends AbstractGameScreen {
         Schaltflaechen[3] = new Texture(Gdx.files.internal("res/menu/MenuItem4.png"));
         Schaltflaechen[4] = new Texture(Gdx.files.internal("res/menu/MenuItem5.png"));
         Schaltflaechen[5] = new Texture(Gdx.files.internal("res/menu/MenuItem6.png"));
-
+        
+        menuMusic=Gdx.audio.newMusic(Gdx.files.internal("aud/Hauptmenue_loop.wav"));
+        menuMusic.setLooping(true);
+        menuMusic.play();
     }
 
     @Override
@@ -45,9 +49,14 @@ public class MenuScreen extends AbstractGameScreen {
            if (Gdx.input.getY() > 3*Gdx.graphics.getHeight() / 4) {
               //  System.exit(1);
             } else if (Gdx.input.getY() > 2 * Gdx.graphics.getHeight() / 4) {
+                menuMusic.stop();
+                menuMusic.dispose();
                 game.setScreen(new OptionScreen(game));
             } else if (Gdx.input.getY() > 1 * Gdx.graphics.getHeight() / 4) {
+                menuMusic.stop();
+                menuMusic.dispose();
                 game.setScreen(new GameScreen(game));
+                
             }
 
         }

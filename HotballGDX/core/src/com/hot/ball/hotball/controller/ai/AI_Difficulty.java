@@ -12,7 +12,7 @@ package com.hot.ball.hotball.controller.ai;
 public enum AI_Difficulty {
     EASY(0.6),MEDIUM(1),HARD(1.3);
     
-    private static AI_Difficulty difficulty= HARD;
+    private static AI_Difficulty difficulty= MEDIUM;
     
     private final double speedFactor;
 
