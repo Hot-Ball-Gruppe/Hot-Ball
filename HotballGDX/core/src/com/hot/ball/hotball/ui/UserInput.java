@@ -147,7 +147,7 @@ public class UserInput implements InputProcessor, BlockCondition {
             }
         }
         if (button == 1) {
-            if (GameLoop.get().isRunning()) {
+            if (GameLoop.get().isRunning()&& Ball.get().getBallCarrier()!= null&&!Ball.get().getBallCarrier().isHuman()) {
                 switchPlayer();
             }else{
                 for (Player ally : Player.getHumanPlayer().getTeam().getMembers()) {

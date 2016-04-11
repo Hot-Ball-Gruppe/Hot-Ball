@@ -6,9 +6,11 @@ package com.hot.ball.screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.hot.ball.hotball.controller.ai.AI_Difficulty;
 
 public class MenuScreen extends AbstractGameScreen {
 
@@ -23,7 +25,7 @@ public class MenuScreen extends AbstractGameScreen {
         super(game);
         create();
     }
-private  Music menuMusic;
+private  Sound menuMusic;
     public final void create() {
         batch = new SpriteBatch();
 
@@ -36,9 +38,9 @@ private  Music menuMusic;
         Schaltflaechen[4] = new Texture(Gdx.files.internal("res/menu/MenuItem5.png"));
         Schaltflaechen[5] = new Texture(Gdx.files.internal("res/menu/MenuItem6.png"));
         
-        menuMusic=Gdx.audio.newMusic(Gdx.files.internal("aud/Hauptmenue_loop.wav"));
-        menuMusic.setLooping(true);
-        menuMusic.play();
+        menuMusic=Gdx.audio.newSound(Gdx.files.internal("aud/Hauptmenue_loop.wav"));
+       
+        menuMusic.loop();
     }
 
     @Override
@@ -55,8 +57,17 @@ private  Music menuMusic;
             } else if (Gdx.input.getY() > 1 * Gdx.graphics.getHeight() / 4) {
                 menuMusic.stop();
                 menuMusic.dispose();
+                if(Gdx.input.getX()<Gdx.graphics.getWidth()/3){
+                	System.out.println("easy");
+                	AI_Difficulty.difficulty=AI_Difficulty.EASY;
+                }else if(Gdx.input.getX()<2*Gdx.graphics.getWidth()/3){
+                	System.out.println("medium");
+                	AI_Difficulty.difficulty=AI_Difficulty.MEDIUM;
+                }else if(Gdx.input.getX()<3*Gdx.graphics.getWidth()/3){
+                	System.out.println("hard");
+                	AI_Difficulty.difficulty=AI_Difficulty.HARD;
+                }
                 game.setScreen(new GameScreen(game));
-                
             }
 
         }

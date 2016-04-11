@@ -365,5 +365,9 @@ public final class Player extends GameObject {
             ((AIController) controller).setOrder(p);
         }
     }
-
+@Override
+public String toString() {
+	// TODO Auto-generated method stub
+	return name+": "+role.name();
+}
 }

@@ -7,6 +7,7 @@ package com.hot.ball.hotball.universe.court;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.hot.ball.help.math.Position;
 import com.hot.ball.hotball.ui.Graphics;
@@ -55,7 +56,7 @@ public class Court {
 
     private final double decayBase;
 
-    private final Music themeMusic;
+    private final Sound themeMusic;
     private final Texture courtTexture;
 
     private final Basket leftBasket, rightBasket;
@@ -77,8 +78,7 @@ public class Court {
                 decayBase = 30;
         }
 
-        themeMusic = Gdx.audio.newMusic(Gdx.files.internal("aud/" + type.name() + ".wav"));
-        themeMusic.setLooping(true);
+        themeMusic = Gdx.audio.newSound(Gdx.files.internal("aud/" + type.name() + ".wav"));
         courtTexture = new Texture(Gdx.files.internal("res/" + type.name() + ".png"));
         leftBasket = new Basket(new Position.DoublePosition(-OFFSET_X / 2, COURT_HEIGHT / 2));
         rightBasket = new Basket(new Position.DoublePosition(COURT_WIDTH + OFFSET_X / 2, COURT_HEIGHT / 2));
@@ -88,7 +88,7 @@ public class Court {
         return decayBase;
     }
 
-    public Music getThemeMusic() {
+    public Sound getThemeMusic() {
         return themeMusic;
     }
 

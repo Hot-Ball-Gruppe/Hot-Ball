@@ -7,6 +7,8 @@ package com.hot.ball.hotball.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.hot.ball.hotball.universe.court.Court;
 
 /**
@@ -32,32 +34,44 @@ public class AudioManager {
         return singleton;
     }
     
-    private final Music timeBreak,realTime;
+    private final Sound timeBreak;
+    private	final	Sound realTime;
+    
+    private long realtimeID;
     
     private AudioManager() {
         timeBreak=Court.get().getThemeMusic();
-        realTime=Gdx.audio.newMusic(Gdx.files.internal("aud/realTime.wav"));
-        realTime.setLooping(true);
+        realTime=Gdx.audio.newSound(Gdx.files.internal("aud/realtime.wav"));
     }
 
     public void start() {
-        timeBreak.play();
-        realTime.play();
+
+        timeBreak.loop();
+        realtimeID = realTime.loop();
+     //   realTime.play();
+      //  System.out.println(realTime.isPlaying());
+      /*  System.out.println("Audio start "+(realTime==null)+" "+(timeBreak==null));
+        System.out.println(realTime.getVolume());
+        System.out.println(realTime.toString());
+        System.out.println(realTime.isPlaying());*/
     }
     
     public void pause(){
-        realTime.setVolume(0);
+        realTime.setVolume(realtimeID, 0);
+      //  System.out.println("Pause");
     }
     
     public void resume(){
-        realTime.setVolume(1);
+    	 realTime.setVolume(realtimeID, 1); //    realTime.setVolume(1);
+        System.out.println("Resume");
     }
     
     public void stop(){
+     //   System.out.println("ST:"+realTime.isPlaying());
         timeBreak.stop();
         timeBreak.dispose();
         realTime.stop();
         realTime.dispose();
-        
+        System.out.println("STOP");
     }
 }
